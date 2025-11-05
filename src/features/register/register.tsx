@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useSignupMutation } from "../register/registerAPI";
 import ReCAPTCHA from "react-google-recaptcha";
 
 const Register: React.FC = () => {
-  const [signup, { isLoading, isSuccess }] =
+  const [signup, { isLoading, isSuccess}] =
     useSignupMutation();
-
   const [formData, setFormData] = useState({
     username: "",
     phone_number: "",
@@ -13,8 +12,8 @@ const Register: React.FC = () => {
     invite_code: "",
     recaptcha_token: localStorage.getItem("recaptcha_token") || "",
   });
-
   const [serverError, setServerError] = useState<string | null>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   const handleCaptchaChange = (token: string | null) => {
     const value = token || "";
@@ -40,22 +39,17 @@ const Register: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!formData.recaptcha_token) {
       alert("Please verify you are human!");
       return;
     }
-
-    setServerError(null); // reset before new request
-
+    setServerError(null);
     try {
       await signup(formData).unwrap();
       alert("Registration successful!");
       localStorage.removeItem("recaptcha_token");
     } catch (err: any) {
       console.error("Signup failed:", err);
-
-      // Extract human-readable error
       if (err?.data?.detail) {
         setServerError(err.data.detail);
       } else if (err?.error) {
@@ -63,6 +57,12 @@ const Register: React.FC = () => {
       } else {
         setServerError("An unexpected error occurred. Please try again.");
       }
+      // Reset reCAPTCHA
+      if (recaptchaRef.current) {
+        recaptchaRef.current.reset();
+      }
+      localStorage.removeItem("recaptcha_token");
+      setFormData((prev) => ({ ...prev, recaptcha_token: "" }));
     }
   };
 
@@ -72,7 +72,6 @@ const Register: React.FC = () => {
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Create Account
         </h2>
-
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -86,7 +85,6 @@ const Register: React.FC = () => {
               className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 outline-none"
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Phone Number
@@ -99,7 +97,6 @@ const Register: React.FC = () => {
               className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 outline-none"
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Password
@@ -113,7 +110,6 @@ const Register: React.FC = () => {
               className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 outline-none"
             />
           </div>
-
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Invite Code (Optional)
@@ -125,14 +121,13 @@ const Register: React.FC = () => {
               className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 outline-none"
             />
           </div>
-
           <div className="flex justify-center mt-4">
             <ReCAPTCHA
+              ref={recaptchaRef}
               sitekey="6LfIBgMsAAAAAFyzXNqSXiI_qk5Tm15lcqrHPgqn"
               onChange={handleCaptchaChange}
             />
           </div>
-
           <button
             type="submit"
             disabled={isLoading}
@@ -141,8 +136,6 @@ const Register: React.FC = () => {
             {isLoading ? "Registering..." : "Register"}
           </button>
         </form>
-
-        {/* ✅ Show dynamic messages */}
         {isSuccess && (
           <p className="text-green-600 text-sm mt-4 text-center">
             Registration successful!
