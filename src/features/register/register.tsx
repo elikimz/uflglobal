@@ -69,7 +69,7 @@ const Register: React.FC = () => {
       className="min-h-screen flex items-center justify-center p-4"
       style={{
         backgroundImage:
-          "url('https://thumbs.dreamstime.com/b/couple-playing-video-games-13658594.jpg')",
+          "url('https://us.123rf.com/450wm/wavebreakmediamicro/wavebreakmediamicro1402/wavebreakmediamicro140201252/25708850-silly-friends-playing-video-games-and-laughing-at-home-on-the-couch.jpg?ver=6')",
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundAttachment: "fixed", // Ensures the background covers the entire viewport
