@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useSignupMutation } from "../register/registerAPI";
 import ReCAPTCHA from "react-google-recaptcha";
+import { FiUser, FiPhone, FiLock, FiTag } from "react-icons/fi";
 
 const Register: React.FC = () => {
   const [signup, { isLoading, isSuccess }] = useSignupMutation();
@@ -65,83 +66,91 @@ const Register: React.FC = () => {
   };
 
   const inputClass =
-    "w-full px-4 py-3 rounded-lg bg-gray-700 border border-purple-500 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500";
+    "w-full px-4 py-3 pl-12 rounded-full bg-indigo-50 border border-indigo-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-purple-900 p-4">
-      <div className="w-full max-w-md bg-gray-800 rounded-xl p-8 shadow-xl border border-purple-500">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 p-4">
+      <div className="w-full max-w-md bg-indigo-50 rounded-xl p-8 shadow-xl border border-indigo-200">
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <img
-            src="/vite.svg" // Load logo from public directory
-            alt="Logo"
-            className="h-12 text-purple-400"
-          />
+          <img src="/ustwo.png" alt="Logo" className="h-16" />
         </div>
 
-        <h2 className="text-2xl font-semibold mb-6 text-center text-purple-300">
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Create Your Account
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Username */}
-          <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Username
             </label>
-            <input
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              required
-              className={inputClass}
-              placeholder="Enter your username"
-            />
+            <div className="relative">
+              <FiUser className="absolute left-4 top-3.5 text-indigo-500" />
+              <input
+                name="username"
+                value={formData.username}
+                onChange={handleChange}
+                required
+                className={inputClass}
+                placeholder="Enter your username"
+              />
+            </div>
           </div>
 
           {/* Phone Number */}
-          <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Phone Number
             </label>
-            <input
-              name="phone_number"
-              value={formData.phone_number}
-              onChange={handleChange}
-              required
-              className={inputClass}
-              placeholder="+254 712 345678"
-            />
+            <div className="relative">
+              <FiPhone className="absolute left-4 top-3.5 text-indigo-500" />
+              <input
+                name="phone_number"
+                value={formData.phone_number}
+                onChange={handleChange}
+                required
+                className={inputClass}
+                placeholder="+254 712 345678"
+              />
+            </div>
           </div>
 
           {/* Password */}
-          <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
-            <input
-              type="password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className={inputClass}
-              placeholder="••••••••"
-            />
+            <div className="relative">
+              <FiLock className="absolute left-4 top-3.5 text-indigo-500" />
+              <input
+                type="password"
+                name="password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                className={inputClass}
+                placeholder="••••••••"
+              />
+            </div>
           </div>
 
           {/* Invite Code */}
-          <div>
-            <label className="block text-sm font-medium text-gray-200 mb-1">
+          <div className="relative">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Invite Code (Optional)
             </label>
-            <input
-              name="invite_code"
-              value={formData.invite_code}
-              onChange={handleChange}
-              className={inputClass}
-              placeholder="Enter invite code (if any)"
-            />
+            <div className="relative">
+              <FiTag className="absolute left-4 top-3.5 text-indigo-500" />
+              <input
+                name="invite_code"
+                value={formData.invite_code}
+                onChange={handleChange}
+                className={inputClass}
+                placeholder="Enter invite code (if any)"
+              />
+            </div>
           </div>
 
           {/* reCAPTCHA */}
@@ -157,7 +166,7 @@ const Register: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors disabled:opacity-70"
+            className="w-full py-3 px-6 bg-purple-600 hover:bg-purple-700 text-white rounded-full font-medium transition-colors disabled:opacity-70"
           >
             {isLoading ? (
               <span className="flex items-center justify-center">
@@ -191,24 +200,24 @@ const Register: React.FC = () => {
 
         {/* Success/Error Messages */}
         {isSuccess && (
-          <p className="text-green-400 text-sm mt-4 text-center font-medium">
+          <p className="text-green-600 text-sm mt-4 text-center font-medium">
             Registration successful! Welcome aboard.
           </p>
         )}
         {serverError && (
-          <p className="text-red-400 text-sm mt-4 text-center font-medium">
+          <p className="text-red-600 text-sm mt-4 text-center font-medium">
             {serverError}
           </p>
         )}
 
         {/* Footer */}
-        <p className="text-gray-300 text-xs text-center mt-6">
+        <p className="text-gray-600 text-xs text-center mt-6">
           By signing up, you agree to our{" "}
-          <a href="#" className="text-purple-400 hover:underline">
+          <a href="#" className="text-purple-600 hover:underline">
             Terms of Service
           </a>{" "}
           and{" "}
-          <a href="#" className="text-purple-400 hover:underline">
+          <a href="#" className="text-purple-600 hover:underline">
             Privacy Policy
           </a>
           .
