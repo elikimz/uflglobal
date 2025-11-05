@@ -69,7 +69,7 @@ const Register: React.FC = () => {
       className="min-h-screen flex items-center justify-center p-4"
       style={{
         backgroundImage:
-          "url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRLody7DvmoxInFatOjLk-cPqfY8ZftfZYnOiLYuXfHj2rykEWKE8klmuEsL8VqechqQNE&usqp=CAU')",
+          "url('https://thumbs.dreamstime.com/b/couple-playing-video-games-13658594.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
       }}
