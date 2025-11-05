@@ -73,7 +73,7 @@ const Register: React.FC = () => {
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <img
-            src="https://chatgpt.com/backend-api/estuary/content?id=file_00000000cb0871f58794b2b0c0bd6df3&ts=489540&p=fs&cid=1&sig=9b9dd78190a1a7f879b34e49301d97a267a2ed95a8ca11cdb32c05bfc0967e63&v=0"
+            src="vite.svg"
             alt="Logo"
             className="h-10"
           />
