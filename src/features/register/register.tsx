@@ -64,13 +64,12 @@ const Register: React.FC = () => {
     }
   };
 
-  // Input field style
   const inputClass =
-    "w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-colors";
+    "w-full px-4 py-3 rounded-lg bg-gray-800 border border-gray-700 text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="w-full max-w-md bg-white shadow-lg rounded-xl p-8 border border-gray-200">
+    <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
+      <div className="w-full max-w-md bg-gray-800 rounded-xl p-8 shadow-xl border border-gray-700">
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <img
@@ -80,14 +79,14 @@ const Register: React.FC = () => {
           />
         </div>
 
-        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-white">
           Create Your Account
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Username */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Username
             </label>
             <input
@@ -102,7 +101,7 @@ const Register: React.FC = () => {
 
           {/* Phone Number */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Phone Number
             </label>
             <input
@@ -117,7 +116,7 @@ const Register: React.FC = () => {
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Password
             </label>
             <input
@@ -133,7 +132,7 @@ const Register: React.FC = () => {
 
           {/* Invite Code */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-gray-300 mb-1">
               Invite Code (Optional)
             </label>
             <input
@@ -158,7 +157,7 @@ const Register: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition-colors disabled:opacity-70"
+            className="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors disabled:opacity-70"
           >
             {isLoading ? (
               <span className="flex items-center justify-center">
@@ -192,24 +191,24 @@ const Register: React.FC = () => {
 
         {/* Success/Error Messages */}
         {isSuccess && (
-          <p className="text-green-600 text-sm mt-4 text-center font-medium">
+          <p className="text-green-400 text-sm mt-4 text-center font-medium">
             Registration successful! Welcome aboard.
           </p>
         )}
         {serverError && (
-          <p className="text-red-600 text-sm mt-4 text-center font-medium">
+          <p className="text-red-400 text-sm mt-4 text-center font-medium">
             {serverError}
           </p>
         )}
 
         {/* Footer */}
-        <p className="text-gray-500 text-xs text-center mt-6">
+        <p className="text-gray-400 text-xs text-center mt-6">
           By signing up, you agree to our{" "}
-          <a href="#" className="text-blue-600 hover:underline">
+          <a href="#" className="text-purple-400 hover:underline">
             Terms of Service
           </a>{" "}
           and{" "}
-          <a href="#" className="text-blue-600 hover:underline">
+          <a href="#" className="text-purple-400 hover:underline">
             Privacy Policy
           </a>
           .
