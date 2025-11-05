@@ -72,10 +72,14 @@ const Register: React.FC = () => {
           "url('https://thumbs.dreamstime.com/b/couple-playing-video-games-13658594.jpg')",
         backgroundSize: "cover",
         backgroundPosition: "center",
+        backgroundAttachment: "fixed", // Ensures the background covers the entire viewport
+        backgroundRepeat: "no-repeat",
+        minHeight: "100vh", // Ensures full viewport height
+        width: "100vw", // Ensures full viewport width
       }}
     >
       <div
-        className="backdrop-blur-md bg-transparent shadow-2xl rounded-2xl p-8 w-full max-w-md border border-white/20"
+        className="backdrop-blur-md bg-transparent shadow-2xl rounded-2xl p-8 w-full max-w-md mx-4 border border-white/20"
         style={{
           backdropFilter: "blur(10px)",
         }}
