@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSignupMutation } from "../register/registerAPI";
 import ReCAPTCHA from "react-google-recaptcha";
 
@@ -6,21 +6,37 @@ const Register: React.FC = () => {
   const [signup, { isLoading, isSuccess, isError, error }] =
     useSignupMutation();
 
+  // Initialize recaptcha_token from localStorage if it exists
   const [formData, setFormData] = useState({
     username: "",
     phone_number: "",
     password: "",
     invite_code: "",
-    recaptcha_token: "",
+    recaptcha_token: localStorage.getItem("recaptcha_token") || "",
   });
+
+  // Whenever the recaptcha token changes, store it in localStorage
+  const handleCaptchaChange = (token: string | null) => {
+    const value = token || "";
+    setFormData((prev) => ({ ...prev, recaptcha_token: value }));
+    if (value) {
+      localStorage.setItem("recaptcha_token", value);
+    } else {
+      localStorage.removeItem("recaptcha_token");
+    }
+  };
+
+  // If user refreshes or returns, automatically reuse saved token (if still valid)
+  useEffect(() => {
+    const savedToken = localStorage.getItem("recaptcha_token");
+    if (savedToken) {
+      setFormData((prev) => ({ ...prev, recaptcha_token: savedToken }));
+    }
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleCaptchaChange = (token: string | null) => {
-    setFormData((prev) => ({ ...prev, recaptcha_token: token || "" }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -34,6 +50,7 @@ const Register: React.FC = () => {
     try {
       await signup(formData).unwrap();
       alert("Registration successful!");
+      localStorage.removeItem("recaptcha_token"); // clear token after success
     } catch (err) {
       console.error("Signup failed:", err);
     }
