@@ -64,9 +64,13 @@ const Register: React.FC = () => {
     }
   };
 
+  // Input field style
+  const inputClass =
+    "w-full px-4 py-3 rounded-md border border-slate-600 bg-slate-900/60 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent";
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
-      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md border border-gray-200">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#0a0f3c] via-[#001a33] to-[#003366] p-4">
+      <div className="w-full max-w-md bg-slate-900/70 backdrop-blur-lg border border-slate-700 text-white p-6 sm:p-8 rounded-3xl shadow-xl">
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <img
@@ -76,14 +80,14 @@ const Register: React.FC = () => {
           />
         </div>
 
-        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-cyan-400">
           Create Your Account
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           {/* Username */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-slate-300 mb-1">
               Username
             </label>
             <input
@@ -91,14 +95,14 @@ const Register: React.FC = () => {
               value={formData.username}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition duration-200"
+              className={inputClass}
               placeholder="Enter your username"
             />
           </div>
 
           {/* Phone Number */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-slate-300 mb-1">
               Phone Number
             </label>
             <input
@@ -106,14 +110,14 @@ const Register: React.FC = () => {
               value={formData.phone_number}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition duration-200"
+              className={inputClass}
               placeholder="+254 712 345678"
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-slate-300 mb-1">
               Password
             </label>
             <input
@@ -122,21 +126,21 @@ const Register: React.FC = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition duration-200"
+              className={inputClass}
               placeholder="••••••••"
             />
           </div>
 
           {/* Invite Code */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-slate-300 mb-1">
               Invite Code (Optional)
             </label>
             <input
               name="invite_code"
               value={formData.invite_code}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition duration-200"
+              className={inputClass}
               placeholder="Enter invite code (if any)"
             />
           </div>
@@ -154,7 +158,7 @@ const Register: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full py-3 px-4 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg font-medium transition duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <span className="flex items-center justify-center">
@@ -188,24 +192,24 @@ const Register: React.FC = () => {
 
         {/* Success/Error Messages */}
         {isSuccess && (
-          <p className="text-green-600 text-sm mt-4 text-center font-medium">
+          <p className="text-green-400 text-sm mt-4 text-center font-medium">
             Registration successful! Welcome aboard.
           </p>
         )}
         {serverError && (
-          <p className="text-red-600 text-sm mt-4 text-center font-medium">
+          <p className="text-red-400 text-sm mt-4 text-center font-medium">
             {serverError}
           </p>
         )}
 
         {/* Footer */}
-        <p className="text-gray-500 text-xs text-center mt-6">
+        <p className="text-slate-400 text-xs text-center mt-6">
           By signing up, you agree to our{" "}
-          <a href="#" className="text-blue-600 hover:underline">
+          <a href="#" className="text-cyan-400 hover:underline">
             Terms of Service
           </a>{" "}
           and{" "}
-          <a href="#" className="text-blue-600 hover:underline">
+          <a href="#" className="text-cyan-400 hover:underline">
             Privacy Policy
           </a>
           .
