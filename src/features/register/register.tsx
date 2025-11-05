@@ -65,25 +65,8 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div
-      className="min-h-screen flex items-center justify-center p-4"
-      style={{
-        backgroundImage:
-          "url('https://us.123rf.com/450wm/wavebreakmediamicro/wavebreakmediamicro1402/wavebreakmediamicro140201252/25708850-silly-friends-playing-video-games-and-laughing-at-home-on-the-couch.jpg?ver=6')",
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        backgroundAttachment: "fixed", // Ensures the background covers the entire viewport
-        backgroundRepeat: "no-repeat",
-        minHeight: "100vh", // Ensures full viewport height
-        width: "100vw", // Ensures full viewport width
-      }}
-    >
-      <div
-        className="backdrop-blur-md bg-transparent shadow-2xl rounded-2xl p-8 w-full max-w-md mx-4 border border-white/20"
-        style={{
-          backdropFilter: "blur(10px)",
-        }}
-      >
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-white p-4">
+      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <img
@@ -93,14 +76,14 @@ const Register: React.FC = () => {
           />
         </div>
 
-        <h2 className="text-2xl font-bold mb-6 text-center text-white">
+        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Create Your Account
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Username */}
           <div>
-            <label className="block text-sm font-medium text-white/90 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Username
             </label>
             <input
@@ -108,14 +91,14 @@ const Register: React.FC = () => {
               value={formData.username}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-lg bg-transparent border border-white/30 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-white placeholder-white/70 outline-none transition duration-200"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition duration-200"
               placeholder="Enter your username"
             />
           </div>
 
           {/* Phone Number */}
           <div>
-            <label className="block text-sm font-medium text-white/90 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Phone Number
             </label>
             <input
@@ -123,14 +106,14 @@ const Register: React.FC = () => {
               value={formData.phone_number}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-lg bg-transparent border border-white/30 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-white placeholder-white/70 outline-none transition duration-200"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition duration-200"
               placeholder="+254 712 345678"
             />
           </div>
 
           {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-white/90 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
             <input
@@ -139,21 +122,21 @@ const Register: React.FC = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-lg bg-transparent border border-white/30 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-white placeholder-white/70 outline-none transition duration-200"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition duration-200"
               placeholder="••••••••"
             />
           </div>
 
           {/* Invite Code */}
           <div>
-            <label className="block text-sm font-medium text-white/90 mb-1">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Invite Code (Optional)
             </label>
             <input
               name="invite_code"
               value={formData.invite_code}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg bg-transparent border border-white/30 focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 text-white placeholder-white/70 outline-none transition duration-200"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition duration-200"
               placeholder="Enter invite code (if any)"
             />
           </div>
@@ -205,24 +188,24 @@ const Register: React.FC = () => {
 
         {/* Success/Error Messages */}
         {isSuccess && (
-          <p className="text-green-400 text-sm mt-4 text-center font-medium">
+          <p className="text-green-600 text-sm mt-4 text-center font-medium">
             Registration successful! Welcome aboard.
           </p>
         )}
         {serverError && (
-          <p className="text-red-400 text-sm mt-4 text-center font-medium">
+          <p className="text-red-600 text-sm mt-4 text-center font-medium">
             {serverError}
           </p>
         )}
 
         {/* Footer */}
-        <p className="text-white/80 text-xs text-center mt-6">
+        <p className="text-gray-600 text-xs text-center mt-6">
           By signing up, you agree to our{" "}
-          <a href="#" className="text-indigo-300 hover:underline">
+          <a href="#" className="text-indigo-600 hover:underline">
             Terms of Service
           </a>{" "}
           and{" "}
-          <a href="#" className="text-indigo-300 hover:underline">
+          <a href="#" className="text-indigo-600 hover:underline">
             Privacy Policy
           </a>
           .
