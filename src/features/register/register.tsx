@@ -65,21 +65,21 @@ const Register: React.FC = () => {
   };
 
   const inputClass =
-    "w-full px-4 py-3 rounded-lg bg-gray-700 border border-gray-600 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-teal-400";
+    "w-full px-4 py-3 rounded-lg bg-gray-700 border border-purple-500 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500";
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-900 p-4">
-      <div className="w-full max-w-md bg-gray-800 rounded-xl p-8 shadow-xl border border-teal-500">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-900 to-purple-900 p-4">
+      <div className="w-full max-w-md bg-gray-800 rounded-xl p-8 shadow-xl border border-purple-500">
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <img
-            src="vite.svg"
+            src="/vite.svg" // Load logo from public directory
             alt="Logo"
-            className="h-10"
+            className="h-12 text-purple-400"
           />
         </div>
 
-        <h2 className="text-2xl font-semibold mb-6 text-center text-teal-300">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-purple-300">
           Create Your Account
         </h2>
 
@@ -157,7 +157,7 @@ const Register: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-4 bg-teal-500 hover:bg-teal-600 text-white rounded-lg font-medium transition-colors disabled:opacity-70"
+            className="w-full py-3 px-4 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors disabled:opacity-70"
           >
             {isLoading ? (
               <span className="flex items-center justify-center">
@@ -204,11 +204,11 @@ const Register: React.FC = () => {
         {/* Footer */}
         <p className="text-gray-300 text-xs text-center mt-6">
           By signing up, you agree to our{" "}
-          <a href="#" className="text-teal-400 hover:underline">
+          <a href="#" className="text-purple-400 hover:underline">
             Terms of Service
           </a>{" "}
           and{" "}
-          <a href="#" className="text-teal-400 hover:underline">
+          <a href="#" className="text-purple-400 hover:underline">
             Privacy Policy
           </a>
           .
