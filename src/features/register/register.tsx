@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { useSignupMutation } from "../register/registerAPI"
+import { useSignupMutation } from "../register/registerAPI";
+import ReCAPTCHA from "react-google-recaptcha";
 
 const Register: React.FC = () => {
   const [signup, { isLoading, isSuccess, isError, error }] =
@@ -18,8 +19,18 @@ const Register: React.FC = () => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const handleCaptchaChange = (token: string | null) => {
+    setFormData((prev) => ({ ...prev, recaptcha_token: token || "" }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!formData.recaptcha_token) {
+      alert("Please verify you are human!");
+      return;
+    }
+
     try {
       await signup(formData).unwrap();
       alert("Registration successful!");
@@ -88,16 +99,11 @@ const Register: React.FC = () => {
             />
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              reCAPTCHA Token
-            </label>
-            <input
-              name="recaptcha_token"
-              value={formData.recaptcha_token}
-              onChange={handleChange}
-              required
-              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 outline-none"
+          {/* Google reCAPTCHA */}
+          <div className="flex justify-center mt-4">
+            <ReCAPTCHA
+              sitekey="6LfIBgMsAAAAAFyzXNqSXiI_qk5Tm15lcqrHPgqn"
+              onChange={handleCaptchaChange}
             />
           </div>
 
