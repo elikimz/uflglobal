@@ -3,8 +3,7 @@ import { useSignupMutation } from "../register/registerAPI";
 import ReCAPTCHA from "react-google-recaptcha";
 
 const Register: React.FC = () => {
-  const [signup, { isLoading, isSuccess}] =
-    useSignupMutation();
+  const [signup, { isLoading, isSuccess }] = useSignupMutation();
   const [formData, setFormData] = useState({
     username: "",
     phone_number: "",
@@ -57,7 +56,6 @@ const Register: React.FC = () => {
       } else {
         setServerError("An unexpected error occurred. Please try again.");
       }
-      // Reset reCAPTCHA
       if (recaptchaRef.current) {
         recaptchaRef.current.reset();
       }
@@ -67,14 +65,33 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-50">
-      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
+    <div
+      className="min-h-screen flex items-center justify-center bg-gray-50"
+      style={{
+        backgroundImage:
+          "url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1974&q=80')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+      }}
+    >
+      <div className="bg-white/90 backdrop-blur-sm shadow-2xl rounded-2xl p-8 w-full max-w-md border border-gray-100">
+        {/* Logo */}
+        <div className="flex justify-center mb-6">
+          <img
+            src="https://via.placeholder.com/150x50?text=Your+Logo"
+            alt="Logo"
+            className="h-10"
+          />
+        </div>
+
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
-          Create Account
+          Create Your Account
         </h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
+
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Username */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Username
             </label>
             <input
@@ -82,11 +99,14 @@ const Register: React.FC = () => {
               value={formData.username}
               onChange={handleChange}
               required
-              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 outline-none"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition duration-200"
+              placeholder="Enter your username"
             />
           </div>
+
+          {/* Phone Number */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Phone Number
             </label>
             <input
@@ -94,11 +114,14 @@ const Register: React.FC = () => {
               value={formData.phone_number}
               onChange={handleChange}
               required
-              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 outline-none"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition duration-200"
+              placeholder="+254 712 345678"
             />
           </div>
+
+          {/* Password */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Password
             </label>
             <input
@@ -107,43 +130,94 @@ const Register: React.FC = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 outline-none"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition duration-200"
+              placeholder="••••••••"
             />
           </div>
+
+          {/* Invite Code */}
           <div>
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-medium text-gray-700 mb-1">
               Invite Code (Optional)
             </label>
             <input
               name="invite_code"
               value={formData.invite_code}
               onChange={handleChange}
-              className="mt-1 w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring focus:ring-blue-200 outline-none"
+              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition duration-200"
+              placeholder="Enter invite code (if any)"
             />
           </div>
-          <div className="flex justify-center mt-4">
+
+          {/* reCAPTCHA */}
+          <div className="flex justify-center mt-2">
             <ReCAPTCHA
               ref={recaptchaRef}
               sitekey="6LfIBgMsAAAAAFyzXNqSXiI_qk5Tm15lcqrHPgqn"
               onChange={handleCaptchaChange}
             />
           </div>
+
+          {/* Submit Button */}
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-2 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition duration-200 disabled:opacity-50"
+            className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
           >
-            {isLoading ? "Registering..." : "Register"}
+            {isLoading ? (
+              <span className="flex items-center justify-center">
+                <svg
+                  className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle
+                    className="opacity-25"
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    stroke="currentColor"
+                    strokeWidth="4"
+                  ></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+                Processing...
+              </span>
+            ) : (
+              "Create Account"
+            )}
           </button>
         </form>
+
+        {/* Success/Error Messages */}
         {isSuccess && (
-          <p className="text-green-600 text-sm mt-4 text-center">
-            Registration successful!
+          <p className="text-green-600 text-sm mt-4 text-center font-medium">
+            Registration successful! Welcome aboard.
           </p>
         )}
         {serverError && (
-          <p className="text-red-600 text-sm mt-4 text-center">{serverError}</p>
+          <p className="text-red-600 text-sm mt-4 text-center font-medium">
+            {serverError}
+          </p>
         )}
+
+        {/* Footer */}
+        <p className="text-gray-600 text-xs text-center mt-6">
+          By signing up, you agree to our{" "}
+          <a href="#" className="text-indigo-600 hover:underline">
+            Terms of Service
+          </a>{" "}
+          and{" "}
+          <a href="#" className="text-indigo-600 hover:underline">
+            Privacy Policy
+          </a>
+          .
+        </p>
       </div>
     </div>
   );
