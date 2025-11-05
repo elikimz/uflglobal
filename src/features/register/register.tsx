@@ -3,10 +3,9 @@ import { useSignupMutation } from "../register/registerAPI";
 import ReCAPTCHA from "react-google-recaptcha";
 
 const Register: React.FC = () => {
-  const [signup, { isLoading, isSuccess, isError, error }] =
+  const [signup, { isLoading, isSuccess }] =
     useSignupMutation();
 
-  // Initialize recaptcha_token from localStorage if it exists
   const [formData, setFormData] = useState({
     username: "",
     phone_number: "",
@@ -15,7 +14,8 @@ const Register: React.FC = () => {
     recaptcha_token: localStorage.getItem("recaptcha_token") || "",
   });
 
-  // Whenever the recaptcha token changes, store it in localStorage
+  const [serverError, setServerError] = useState<string | null>(null);
+
   const handleCaptchaChange = (token: string | null) => {
     const value = token || "";
     setFormData((prev) => ({ ...prev, recaptcha_token: value }));
@@ -26,7 +26,6 @@ const Register: React.FC = () => {
     }
   };
 
-  // If user refreshes or returns, automatically reuse saved token (if still valid)
   useEffect(() => {
     const savedToken = localStorage.getItem("recaptcha_token");
     if (savedToken) {
@@ -47,12 +46,23 @@ const Register: React.FC = () => {
       return;
     }
 
+    setServerError(null); // reset before new request
+
     try {
       await signup(formData).unwrap();
       alert("Registration successful!");
-      localStorage.removeItem("recaptcha_token"); // clear token after success
-    } catch (err) {
+      localStorage.removeItem("recaptcha_token");
+    } catch (err: any) {
       console.error("Signup failed:", err);
+
+      // Extract human-readable error
+      if (err?.data?.detail) {
+        setServerError(err.data.detail);
+      } else if (err?.error) {
+        setServerError(err.error);
+      } else {
+        setServerError("An unexpected error occurred. Please try again.");
+      }
     }
   };
 
@@ -116,7 +126,6 @@ const Register: React.FC = () => {
             />
           </div>
 
-          {/* Google reCAPTCHA */}
           <div className="flex justify-center mt-4">
             <ReCAPTCHA
               sitekey="6LfIBgMsAAAAAFyzXNqSXiI_qk5Tm15lcqrHPgqn"
@@ -133,15 +142,14 @@ const Register: React.FC = () => {
           </button>
         </form>
 
+        {/* ✅ Show dynamic messages */}
         {isSuccess && (
           <p className="text-green-600 text-sm mt-4 text-center">
             Registration successful!
           </p>
         )}
-        {isError && (
-          <p className="text-red-600 text-sm mt-4 text-center">
-            {error && "An error occurred. Please try again."}
-          </p>
+        {serverError && (
+          <p className="text-red-600 text-sm mt-4 text-center">{serverError}</p>
         )}
       </div>
     </div>
