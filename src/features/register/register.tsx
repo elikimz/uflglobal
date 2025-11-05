@@ -65,8 +65,8 @@ const Register: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-white p-4">
-      <div className="bg-white shadow-xl rounded-2xl p-8 w-full max-w-md">
+    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-4">
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-md border border-gray-200">
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <img
@@ -76,11 +76,11 @@ const Register: React.FC = () => {
           />
         </div>
 
-        <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
+        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
           Create Your Account
         </h2>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-6">
           {/* Username */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -91,7 +91,7 @@ const Register: React.FC = () => {
               value={formData.username}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition duration-200"
+              className="w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition duration-200"
               placeholder="Enter your username"
             />
           </div>
@@ -106,7 +106,7 @@ const Register: React.FC = () => {
               value={formData.phone_number}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition duration-200"
+              className="w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition duration-200"
               placeholder="+254 712 345678"
             />
           </div>
@@ -122,7 +122,7 @@ const Register: React.FC = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition duration-200"
+              className="w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition duration-200"
               placeholder="••••••••"
             />
           </div>
@@ -136,7 +136,7 @@ const Register: React.FC = () => {
               name="invite_code"
               value={formData.invite_code}
               onChange={handleChange}
-              className="w-full px-4 py-3 rounded-lg border border-gray-300 focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 outline-none transition duration-200"
+              className="w-full px-4 py-3 rounded-md border border-gray-300 focus:ring-2 focus:ring-blue-600 focus:border-blue-600 outline-none transition duration-200"
               placeholder="Enter invite code (if any)"
             />
           </div>
@@ -154,7 +154,7 @@ const Register: React.FC = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full py-3 px-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
+            className="w-full py-3 px-4 bg-blue-600 hover:bg-blue-700 text-white rounded-md font-medium transition duration-200 disabled:opacity-70 disabled:cursor-not-allowed"
           >
             {isLoading ? (
               <span className="flex items-center justify-center">
@@ -199,13 +199,13 @@ const Register: React.FC = () => {
         )}
 
         {/* Footer */}
-        <p className="text-gray-600 text-xs text-center mt-6">
+        <p className="text-gray-500 text-xs text-center mt-6">
           By signing up, you agree to our{" "}
-          <a href="#" className="text-indigo-600 hover:underline">
+          <a href="#" className="text-blue-600 hover:underline">
             Terms of Service
           </a>{" "}
           and{" "}
-          <a href="#" className="text-indigo-600 hover:underline">
+          <a href="#" className="text-blue-600 hover:underline">
             Privacy Policy
           </a>
           .
