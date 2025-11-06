@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useSignupMutation } from "../register/registerAPI";
 import ReCAPTCHA from "react-google-recaptcha";
 import { FiUser, FiPhone, FiLock, FiTag } from "react-icons/fi";
+import { Link } from "react-router-dom"; // For navigation to login
 
 const Register: React.FC = () => {
   const [signup, { isLoading, isSuccess }] = useSignupMutation();
@@ -13,6 +14,7 @@ const Register: React.FC = () => {
     recaptcha_token: localStorage.getItem("recaptcha_token") || "",
   });
   const [serverError, setServerError] = useState<string | null>(null);
+  const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
 
   const handleCaptchaChange = (token: string | null) => {
@@ -32,6 +34,15 @@ const Register: React.FC = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (isSuccess) {
+      setShowSuccess(true);
+      localStorage.removeItem("recaptcha_token");
+      const timer = setTimeout(() => setShowSuccess(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [isSuccess]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -40,14 +51,12 @@ const Register: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!formData.recaptcha_token) {
-      alert("Please verify you are human!");
+      setServerError("Please verify you are human!");
       return;
     }
     setServerError(null);
     try {
       await signup(formData).unwrap();
-      alert("Registration successful!");
-      localStorage.removeItem("recaptcha_token");
     } catch (err: any) {
       console.error("Signup failed:", err);
       if (err?.data?.detail) {
@@ -75,10 +84,23 @@ const Register: React.FC = () => {
         <div className="flex justify-center mb-6">
           <img src="/ustwo.png" alt="Logo" className="h-16" />
         </div>
-
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Create Your Account
         </h2>
+
+        {/* Success Notification */}
+        {showSuccess && (
+          <div className="mb-4 p-3 bg-green-100 text-green-700 rounded-lg text-center">
+            Registration successful! Welcome aboard.
+          </div>
+        )}
+
+        {/* Error Notification */}
+        {serverError && (
+          <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-lg text-center">
+            {serverError}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           {/* Username */}
@@ -198,20 +220,19 @@ const Register: React.FC = () => {
           </button>
         </form>
 
-        {/* Success/Error Messages */}
-        {isSuccess && (
-          <p className="text-green-600 text-sm mt-4 text-center font-medium">
-            Registration successful! Welcome aboard.
-          </p>
-        )}
-        {serverError && (
-          <p className="text-red-600 text-sm mt-4 text-center font-medium">
-            {serverError}
-          </p>
-        )}
+        {/* Login Link */}
+        <p className="text-gray-600 text-sm text-center mt-4">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-purple-600 hover:underline font-medium"
+          >
+            Log in
+          </Link>
+        </p>
 
         {/* Footer */}
-        <p className="text-gray-600 text-xs text-center mt-6">
+        <p className="text-gray-500 text-xs text-center mt-4">
           By signing up, you agree to our{" "}
           <a href="#" className="text-purple-600 hover:underline">
             Terms of Service
