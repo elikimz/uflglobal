@@ -72,7 +72,7 @@ const Register: React.FC = () => {
       localStorage.removeItem("recaptcha_token");
       setFormData((prev) => ({ ...prev, recaptcha_token: "" }));
     }
-  };V
+  };
 
   const inputClass =
     "w-full px-4 py-3 pl-12 rounded-full bg-indigo-50 border border-indigo-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent";
