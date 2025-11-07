@@ -1,6 +1,11 @@
 
 
 
+
+
+
+
+
 // import React, { useState, useRef } from "react";
 // import { motion, AnimatePresence } from "framer-motion";
 // import {
@@ -78,11 +83,17 @@
 //       setTimeout(() => {
 //         navigate(role === "admin" ? "/admin/dashboard" : "/user/dashboard");
 //       }, 1200);
-//     } catch {
-//       setMessage({
-//         type: "error",
-//         text: "Login failed. Please check your credentials.",
-//       });
+//     } catch (err: any) {
+//       // Extract backend error message
+//       let errorMsg = "Login failed. Please check your credentials.";
+//       if (err?.data?.detail) {
+//         if (typeof err.data.detail === "string") {
+//           errorMsg = err.data.detail;
+//         } else if (Array.isArray(err.data.detail) && err.data.detail[0]?.msg) {
+//           errorMsg = err.data.detail[0].msg;
+//         }
+//       }
+//       setMessage({ type: "error", text: errorMsg });
 //     }
 //   };
 
@@ -106,8 +117,17 @@
 //         setIsLogin(true);
 //         recaptchaRef.current?.reset();
 //       }, 1500);
-//     } catch {
-//       setMessage({ type: "error", text: "Signup failed. Please try again." });
+//     } catch (err: any) {
+//       // Extract backend error message
+//       let errorMsg = "Signup failed. Please try again.";
+//       if (err?.data?.detail) {
+//         if (typeof err.data.detail === "string") {
+//           errorMsg = err.data.detail;
+//         } else if (Array.isArray(err.data.detail) && err.data.detail[0]?.msg) {
+//           errorMsg = err.data.detail[0].msg;
+//         }
+//       }
+//       setMessage({ type: "error", text: errorMsg });
 //     }
 //   };
 
@@ -145,7 +165,7 @@
 //             {isLogin ? "Welcome Back" : "Create Your Account"}
 //           </h2>
 
-//           {/* SaaS-style message box */}
+//           {/* Message Box */}
 //           <AnimatePresence>
 //             {message && (
 //               <motion.div
@@ -291,12 +311,6 @@
 
 
 
-
-
-
-
-
-
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -375,7 +389,6 @@ const AuthPage: React.FC = () => {
         navigate(role === "admin" ? "/admin/dashboard" : "/user/dashboard");
       }, 1200);
     } catch (err: any) {
-      // Extract backend error message
       let errorMsg = "Login failed. Please check your credentials.";
       if (err?.data?.detail) {
         if (typeof err.data.detail === "string") {
@@ -409,7 +422,6 @@ const AuthPage: React.FC = () => {
         recaptchaRef.current?.reset();
       }, 1500);
     } catch (err: any) {
-      // Extract backend error message
       let errorMsg = "Signup failed. Please try again.";
       if (err?.data?.detail) {
         if (typeof err.data.detail === "string") {
@@ -418,7 +430,11 @@ const AuthPage: React.FC = () => {
           errorMsg = err.data.detail[0].msg;
         }
       }
+
       setMessage({ type: "error", text: errorMsg });
+
+      // ✅ Reset reCAPTCHA after any signup failure
+      recaptchaRef.current?.reset();
     }
   };
 
