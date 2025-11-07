@@ -2,10 +2,6 @@
 
 
 
-
-
-
-
 // import React, { useState, useRef } from "react";
 // import { motion, AnimatePresence } from "framer-motion";
 // import {
@@ -84,7 +80,6 @@
 //         navigate(role === "admin" ? "/admin/dashboard" : "/user/dashboard");
 //       }, 1200);
 //     } catch (err: any) {
-//       // Extract backend error message
 //       let errorMsg = "Login failed. Please check your credentials.";
 //       if (err?.data?.detail) {
 //         if (typeof err.data.detail === "string") {
@@ -118,7 +113,6 @@
 //         recaptchaRef.current?.reset();
 //       }, 1500);
 //     } catch (err: any) {
-//       // Extract backend error message
 //       let errorMsg = "Signup failed. Please try again.";
 //       if (err?.data?.detail) {
 //         if (typeof err.data.detail === "string") {
@@ -127,7 +121,11 @@
 //           errorMsg = err.data.detail[0].msg;
 //         }
 //       }
+
 //       setMessage({ type: "error", text: errorMsg });
+
+//       // ✅ Reset reCAPTCHA after any signup failure
+//       recaptchaRef.current?.reset();
 //     }
 //   };
 
@@ -311,6 +309,13 @@
 
 
 
+
+
+
+
+
+
+
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -326,6 +331,18 @@ import { useLoginUserMutation } from "../login/loginAPI";
 import { useSignupMutation } from "../register/registerAPI";
 import { useNavigate } from "react-router-dom";
 
+// Define types for the decoded token and message
+interface DecodedToken {
+  role?: string;
+  sub?: string;
+  [key: string]: any;
+}
+
+interface Message {
+  type: "success" | "error";
+  text: string;
+}
+
 const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
@@ -336,25 +353,24 @@ const AuthPage: React.FC = () => {
     password: "",
     invite_code: "",
   });
-  const [message, setMessage] = useState<{
-    type: "success" | "error";
-    text: string;
-  } | null>(null);
+  const [message, setMessage] = useState<Message | null>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const navigate = useNavigate();
 
+  // Toggle between login and signup forms
   const toggleMode = () => {
     setMessage(null);
     setIsLogin((prev) => !prev);
   };
 
+  // Handle input changes
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Decode JWT token to extract role
-  const decodeToken = (token: string) => {
+  // Decode JWT token to extract role and other payload data
+  const decodeToken = (token: string): DecodedToken => {
     try {
       const base64Url = token.split(".")[1];
       const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
@@ -365,11 +381,13 @@ const AuthPage: React.FC = () => {
           .join("")
       );
       return JSON.parse(jsonPayload);
-    } catch {
+    } catch (e) {
+      console.error("Failed to decode token:", e);
       return {};
     }
   };
 
+  // Handle login form submission
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
@@ -379,12 +397,17 @@ const AuthPage: React.FC = () => {
         password: formData.password,
       }).unwrap();
 
+      // Store the access token
       localStorage.setItem("access_token", res.access_token);
+
+      // Decode the token to get the user's role
       const decoded = decodeToken(res.access_token);
       const role = decoded?.role || "user";
 
+      // Show success message
       setMessage({ type: "success", text: "Login successful!" });
 
+      // Redirect based on role
       setTimeout(() => {
         navigate(role === "admin" ? "/admin/dashboard" : "/user/dashboard");
       }, 1200);
@@ -401,16 +424,15 @@ const AuthPage: React.FC = () => {
     }
   };
 
+  // Handle signup form submission
   const handleSignup = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
-
     const token = recaptchaRef.current?.getValue() || "";
     if (!token) {
       setMessage({ type: "error", text: "Please complete the reCAPTCHA." });
       return;
     }
-
     try {
       await signup({ ...formData, recaptcha_token: token }).unwrap();
       setMessage({
@@ -430,21 +452,18 @@ const AuthPage: React.FC = () => {
           errorMsg = err.data.detail[0].msg;
         }
       }
-
       setMessage({ type: "error", text: errorMsg });
-
-      // ✅ Reset reCAPTCHA after any signup failure
       recaptchaRef.current?.reset();
     }
   };
 
+  // Input field styling
   const inputClass =
     "w-full px-4 py-3 pl-12 rounded-full bg-indigo-50 border border-indigo-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent";
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 overflow-hidden relative">
       <div className="absolute w-[150%] h-[150%] bg-indigo-100/20 rounded-[50%] -top-1/4 -right-1/4 blur-3xl"></div>
-
       <div className="relative w-full max-w-5xl bg-white/90 rounded-3xl shadow-2xl flex overflow-hidden backdrop-blur-md border border-indigo-200">
         {/* Left Image */}
         <motion.div
@@ -467,7 +486,6 @@ const AuthPage: React.FC = () => {
           <div className="flex justify-center mb-4 md:hidden">
             <img src="/ustwo.png" alt="Logo" className="h-14" />
           </div>
-
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
             {isLogin ? "Welcome Back" : "Create Your Account"}
           </h2>
@@ -491,6 +509,7 @@ const AuthPage: React.FC = () => {
             )}
           </AnimatePresence>
 
+          {/* Login/Signup Forms */}
           <AnimatePresence mode="wait">
             {isLogin ? (
               <motion.form
@@ -598,6 +617,7 @@ const AuthPage: React.FC = () => {
             )}
           </AnimatePresence>
 
+          {/* Toggle between login and signup */}
           <p className="text-center text-gray-600 mt-6">
             {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
             <button
