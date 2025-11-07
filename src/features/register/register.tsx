@@ -311,11 +311,6 @@
 
 
 
-
-
-
-
-
 import React, { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -342,6 +337,8 @@ interface Message {
   type: "success" | "error";
   text: string;
 }
+
+
 
 const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -434,15 +431,32 @@ const AuthPage: React.FC = () => {
       return;
     }
     try {
+      // Register the user
       await signup({ ...formData, recaptcha_token: token }).unwrap();
+
+      // Auto-login after successful registration
+      const loginRes = await loginUser({
+        username: formData.username,
+        password: formData.password,
+      }).unwrap();
+
+      // Store the access token
+      localStorage.setItem("access_token", loginRes.access_token);
+
+      // Decode the token to get the user's role
+      const decoded = decodeToken(loginRes.access_token);
+      const role = decoded?.role || "user";
+
+      // Show success message
       setMessage({
         type: "success",
-        text: "Registration successful! You can now log in.",
+        text: "Registration successful! Redirecting...",
       });
+
+      // Redirect based on role
       setTimeout(() => {
-        setIsLogin(true);
-        recaptchaRef.current?.reset();
-      }, 1500);
+        navigate(role === "admin" ? "/admin/dashboard" : "/user/dashboard");
+      }, 1200);
     } catch (err: any) {
       let errorMsg = "Signup failed. Please try again.";
       if (err?.data?.detail) {
