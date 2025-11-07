@@ -6,7 +6,8 @@ import {
 } from "react-router-dom";
 
 import ErrorPage from "./components/errorpage";
-import Register from "./features/register/register";
+
+import AuthPage from "./features/register/register";
 
 // Define routes
 const router = createBrowserRouter([
@@ -16,7 +17,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/register",
-    element: <Register />,
+    element: <AuthPage />,
     errorElement: (
       <ErrorPage
         code="🚧"
@@ -24,7 +25,7 @@ const router = createBrowserRouter([
       />
     ),
   },
- 
+  
 
   // Catch-all route (for 404)
   {
