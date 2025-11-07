@@ -82,7 +82,11 @@ const Register: React.FC = () => {
       <div className="w-full max-w-md bg-indigo-50 rounded-xl p-8 shadow-xl border border-indigo-200">
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <img src="/ustwo.png" alt="Logo" className="h-16" />
+          <img
+            src="/ustwo.png"
+            alt="Logo"
+            className="h-16 border-4 border-red-500 bg-white"
+          />
         </div>
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Create Your Account
