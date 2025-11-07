@@ -1,6 +1,6 @@
-// src/components/errorpage.tsx
 import React from "react";
-import { motion } from "framer-motion";
+import { FiAlertTriangle, FiArrowLeft } from "react-icons/fi";
+import { useNavigate } from "react-router-dom";
 
 interface ErrorPageProps {
   code?: string;
@@ -8,63 +8,37 @@ interface ErrorPageProps {
 }
 
 const ErrorPage: React.FC<ErrorPageProps> = ({
-  code = "🚧",
-  message = "We're working hard to fix this. Please check back soon!",
+  code = "404",
+  message = "Oops! The page you're looking for doesn't exist.",
 }) => {
+  const navigate = useNavigate();
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 relative overflow-hidden">
-      {/* Soft glowing circles for depth */}
-      <div className="absolute w-[120%] h-[120%] bg-white/10 rounded-full blur-3xl -top-1/3 -left-1/4"></div>
-      <div className="absolute w-[120%] h-[120%] bg-white/10 rounded-full blur-3xl bottom-[-30%] right-[-20%]"></div>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 px-4">
+      <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-10 max-w-lg w-full text-center border border-indigo-200">
+        {/* Error Icon */}
+        <div className="flex justify-center mb-6">
+          <div className="p-4 bg-indigo-100 rounded-full inline-block animate-pulse">
+            <FiAlertTriangle className="text-indigo-600 text-4xl" />
+          </div>
+        </div>
 
-      <motion.div
-        initial={{ opacity: 0, scale: 0.9, y: 40 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-        className="relative bg-white/90 backdrop-blur-md border border-indigo-200 shadow-2xl rounded-3xl p-10 max-w-lg w-[90%] text-center"
-      >
-        {/* Optional illustration */}
-        <motion.img
-          src="/error-illustration.svg"
-          alt="Friendly Error Illustration"
-          className="w-56 mx-auto mb-6"
-          initial={{ opacity: 0, y: 30 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.3, duration: 0.6 }}
-          onError={(e) => {
-            // fallback if image missing
-            (e.target as HTMLImageElement).style.display = "none";
-          }}
-        />
+        {/* Error Code */}
+        <div className="text-6xl font-bold text-indigo-600 mb-4">{code}</div>
 
-        {/* Error Code / Emoji */}
-        <motion.div
-          initial={{ scale: 0 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 120, damping: 12 }}
-          className="text-6xl mb-3"
+        {/* Error Message */}
+        <h1 className="text-2xl font-bold text-gray-800 mb-2">Sorry!</h1>
+        <p className="text-gray-600 mb-8">{message}</p>
+
+        {/* Action Button */}
+        <button
+          onClick={() => navigate("/register")}
+          className="flex items-center justify-center mx-auto px-6 py-3 bg-purple-600 text-white font-semibold rounded-full hover:bg-purple-700 transition-colors"
         >
-          {code}
-        </motion.div>
-
-        {/* Title */}
-        <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Oops! Something went wrong
-        </h1>
-
-        {/* Message */}
-        <p className="text-gray-600 mb-8 text-sm leading-relaxed">{message}</p>
-
-        {/* Button */}
-        <motion.a
-          href="/register"
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.97 }}
-          className="inline-block w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-semibold rounded-full shadow-lg transition"
-        >
-          Back to Home
-        </motion.a>
-      </motion.div>
+          <FiArrowLeft className="mr-2" />
+          Back to Register
+        </button>
+      </div>
     </div>
   );
 };
