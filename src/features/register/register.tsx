@@ -83,7 +83,7 @@ const Register: React.FC = () => {
         {/* Logo */}
         <div className="flex justify-center mb-6">
           <img
-            src="/ustwo.png"
+            src="/vite.svg"
             alt="Logo"
             className="h-16 border-4 border-red-500 bg-white"
           />
