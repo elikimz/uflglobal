@@ -72,7 +72,7 @@ const Register: React.FC = () => {
       localStorage.removeItem("recaptcha_token");
       setFormData((prev) => ({ ...prev, recaptcha_token: "" }));
     }
-  };
+  };V
 
   const inputClass =
     "w-full px-4 py-3 pl-12 rounded-full bg-indigo-50 border border-indigo-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent";
@@ -82,11 +82,7 @@ const Register: React.FC = () => {
       <div className="w-full max-w-md bg-indigo-50 rounded-xl p-8 shadow-xl border border-indigo-200">
         {/* Logo */}
         <div className="flex justify-center mb-6">
-          <img
-            src="/vite.svg"
-            alt="Logo"
-            className="h-16 border-4 border-red-500 bg-white"
-          />
+          <img src="/ustwo.png" alt="Logo" className="h-16" />
         </div>
         <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">
           Create Your Account
