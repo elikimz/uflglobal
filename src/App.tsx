@@ -13,7 +13,7 @@ import Deposit from "./features/deposit/deposit";
 import AdminDashboard from "./components/admindashboard";
 import AdminManageDeposits from "./features/deposit/adminmanagedeposit";
 import Levels from "./features/levels/levels";
-// import AdminManageLevels from "./features/levels/adminmanagelevels";
+import AdminManageLevels from "./features/levels/adminmanagelevels";
 
 // Define routes
 const router = createBrowserRouter([
@@ -84,16 +84,16 @@ const router = createBrowserRouter([
       />
     ),
   },
-  // {
-  //   path: "/admin/levels",
-  //   element: <AdminManageLevels/>,
-  //   errorElement: (
-  //     <ErrorPage
-  //       code="🚧"
-  //       message="This section is being crafted to serve you better. Please check back soon!"
-  //     />
-  //   ),
-  // },
+  {
+    path: "/admin/levels",
+    element: <AdminManageLevels/>,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
 
   // Catch-all route (for 404)
   {
