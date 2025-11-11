@@ -8,6 +8,7 @@ import {
 import ErrorPage from "./components/errorpage";
 
 import AuthPage from "./features/register/register";
+import UserDashboard from "./components/userdashboard";
 
 // Define routes
 const router = createBrowserRouter([
@@ -25,7 +26,16 @@ const router = createBrowserRouter([
       />
     ),
   },
-  
+  {
+    path: "/user/dashboard",
+    element: <UserDashboard />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
 
   // Catch-all route (for 404)
   {
