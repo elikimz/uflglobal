@@ -320,7 +320,7 @@ const UserDashboard: React.FC = () => {
                 label: "Home",
               },
               {
-                path: "/tasks",
+                path: "/deposit",
                 icon: <ClipboardIcon className="h-6 w-6" />,
                 label: "Task",
               },

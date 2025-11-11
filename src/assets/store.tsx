@@ -13,6 +13,8 @@ import storage from "redux-persist/lib/storage";
 
 import { authAPI } from "../features/register/registerAPI";
 import { loginApi } from "../features/login/loginAPI";
+import { depositAPI } from "../features/deposit/depositAPI";
+import { levelsAPI } from "../features/levels/levelsAPI";
 const persistConfig = {
   key: "root",
   storage,
@@ -23,6 +25,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   [authAPI.reducerPath]: authAPI.reducer,
   [loginApi.reducerPath]:loginApi.reducer,
+  [depositAPI.reducerPath]:depositAPI.reducer,
+  [levelsAPI.reducerPath]:levelsAPI.reducer,
 
  
 });
@@ -41,6 +45,8 @@ export const store = configureStore({
     }).concat(
       authAPI.middleware,
       loginApi.middleware,
+      depositAPI.middleware,
+      levelsAPI.middleware
     
     ),
 });
