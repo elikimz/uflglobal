@@ -15,6 +15,7 @@ import { authAPI } from "../features/register/registerAPI";
 import { loginApi } from "../features/login/loginAPI";
 import { depositAPI } from "../features/deposit/depositAPI";
 import { levelsAPI } from "../features/levels/levelsAPI";
+import { userLevelsAPI } from "../features/usersLevels/userlevelsAPI";
 const persistConfig = {
   key: "root",
   storage,
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   [loginApi.reducerPath]:loginApi.reducer,
   [depositAPI.reducerPath]:depositAPI.reducer,
   [levelsAPI.reducerPath]:levelsAPI.reducer,
+  [userLevelsAPI.reducerPath]:userLevelsAPI.reducer,
 
  
 });
@@ -46,7 +48,8 @@ export const store = configureStore({
       authAPI.middleware,
       loginApi.middleware,
       depositAPI.middleware,
-      levelsAPI.middleware
+      levelsAPI.middleware,
+      userLevelsAPI.middleware,
     
     ),
 });

@@ -14,6 +14,8 @@ import AdminDashboard from "./components/admindashboard";
 import AdminManageDeposits from "./features/deposit/adminmanagedeposit";
 import Levels from "./features/levels/levels";
 import AdminManageLevels from "./features/levels/adminmanagelevels";
+import MyJobLevels from "./features/usersLevels/leveljob";
+
 
 // Define routes
 const router = createBrowserRouter([
@@ -63,6 +65,16 @@ const router = createBrowserRouter([
       />
     ),
   },
+  {
+    path: "/myjoblevels",
+    element: <MyJobLevels />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
 
   {
     path: "/admin/dashboard",
@@ -86,7 +98,7 @@ const router = createBrowserRouter([
   },
   {
     path: "/admin/levels",
-    element: <AdminManageLevels/>,
+    element: <AdminManageLevels />,
     errorElement: (
       <ErrorPage
         code="🚧"
