@@ -16,6 +16,8 @@ import { loginApi } from "../features/login/loginAPI";
 import { depositAPI } from "../features/deposit/depositAPI";
 import { levelsAPI } from "../features/levels/levelsAPI";
 import { userLevelsAPI } from "../features/usersLevels/userlevelsAPI";
+import { tasksAPI } from "../features/tasks/taskAPI";
+import { userTasksAPI } from "../features/userTask/userTaskAPI";
 const persistConfig = {
   key: "root",
   storage,
@@ -29,6 +31,8 @@ const rootReducer = combineReducers({
   [depositAPI.reducerPath]:depositAPI.reducer,
   [levelsAPI.reducerPath]:levelsAPI.reducer,
   [userLevelsAPI.reducerPath]:userLevelsAPI.reducer,
+  [tasksAPI.reducerPath]:tasksAPI.reducer,
+  [userTasksAPI.reducerPath]:userTasksAPI.reducer,
 
  
 });
@@ -50,6 +54,8 @@ export const store = configureStore({
       depositAPI.middleware,
       levelsAPI.middleware,
       userLevelsAPI.middleware,
+      tasksAPI.middleware,
+      userTasksAPI.middleware,
     
     ),
 });

@@ -15,6 +15,8 @@ import AdminManageDeposits from "./features/deposit/adminmanagedeposit";
 import Levels from "./features/levels/levels";
 import AdminManageLevels from "./features/levels/adminmanagelevels";
 import MyJobLevels from "./features/usersLevels/leveljob";
+import AdminTasks from "./features/tasks/adminTask";
+import UserTasks from "./features/userTask/usertask";
 
 
 // Define routes
@@ -47,6 +49,16 @@ const router = createBrowserRouter([
   {
     path: "deposit",
     element: <Deposit />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: "task",
+    element: <UserTasks />,
     errorElement: (
       <ErrorPage
         code="🚧"
@@ -99,6 +111,16 @@ const router = createBrowserRouter([
   {
     path: "/admin/levels",
     element: <AdminManageLevels />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: "/admin/tasks",
+    element: <AdminTasks />,
     errorElement: (
       <ErrorPage
         code="🚧"
