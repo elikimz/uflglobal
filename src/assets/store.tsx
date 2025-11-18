@@ -18,6 +18,7 @@ import { levelsAPI } from "../features/levels/levelsAPI";
 import { userLevelsAPI } from "../features/usersLevels/userlevelsAPI";
 import { tasksAPI } from "../features/tasks/taskAPI";
 import { userTasksAPI } from "../features/userTask/userTaskAPI";
+import {  referralsAPI } from "../features/referrals/referralsAPI";
 const persistConfig = {
   key: "root",
   storage,
@@ -33,6 +34,7 @@ const rootReducer = combineReducers({
   [userLevelsAPI.reducerPath]:userLevelsAPI.reducer,
   [tasksAPI.reducerPath]:tasksAPI.reducer,
   [userTasksAPI.reducerPath]:userTasksAPI.reducer,
+  [referralsAPI.reducerPath]:referralsAPI.reducer,
 
  
 });
@@ -56,6 +58,7 @@ export const store = configureStore({
       userLevelsAPI.middleware,
       tasksAPI.middleware,
       userTasksAPI.middleware,
+      referralsAPI.middleware,
     
     ),
 });

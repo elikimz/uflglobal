@@ -202,7 +202,7 @@ const UserDashboard: React.FC = () => {
               //   label: "Task",
               // },
               {
-                path: "/team-management",
+                path: "/referrals",
                 icon: <UsersIcon className="h-6 w-6" />,
                 label: "Team",
               },

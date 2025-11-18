@@ -17,6 +17,8 @@ import AdminManageLevels from "./features/levels/adminmanagelevels";
 import MyJobLevels from "./features/usersLevels/leveljob";
 import AdminTasks from "./features/tasks/adminTask";
 import UserTasks from "./features/userTask/usertask";
+import Referrals from "./features/referrals/referrals";
+import AdminManageReferrals from "./features/referrals/adminmanagereferal";
 
 
 // Define routes
@@ -87,6 +89,16 @@ const router = createBrowserRouter([
       />
     ),
   },
+  {
+    path: "/referrals",
+    element: <Referrals />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
 
   {
     path: "/admin/dashboard",
@@ -121,6 +133,16 @@ const router = createBrowserRouter([
   {
     path: "/admin/tasks",
     element: <AdminTasks />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: "/admin/referrals",
+    element: <AdminManageReferrals />,
     errorElement: (
       <ErrorPage
         code="🚧"
