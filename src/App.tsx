@@ -19,7 +19,14 @@ import AdminTasks from "./features/tasks/adminTask";
 import UserTasks from "./features/userTask/usertask";
 import Referrals from "./features/referrals/referrals";
 import AdminManageReferrals from "./features/referrals/adminmanagereferal";
-
+import AdminWealthFund from "./features/wealthfund/wealthfundAdmin";
+import UserWealthFund from "./features/userWealthfund/userWeathfund";
+import AdminManageNews from "./features/news/adminmanagenews";
+import UserNews from "./features/news/news";
+import Profile from "./features/profile/profile";
+import Security from "./pages/security";
+import Withdrawal from "./features/withdrawal/withdrawal";
+import AdminManageWithdrawal from "./features/withdrawal/adminManageWithdwal";
 
 // Define routes
 const router = createBrowserRouter([
@@ -49,8 +56,19 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "deposit",
+    path: "recharge",
     element: <Deposit />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+
+  {
+    path: "withdraw",
+    element: <Withdrawal />,
     errorElement: (
       <ErrorPage
         code="🚧"
@@ -101,6 +119,46 @@ const router = createBrowserRouter([
   },
 
   {
+    path: "/finance",
+    element: <UserWealthFund />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: "/company-news",
+    element: <UserNews />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: "/profile",
+    element: <Profile />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: "/security",
+    element: <Security />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
     path: "/admin/dashboard",
     element: <AdminDashboard />,
     errorElement: (
@@ -143,6 +201,37 @@ const router = createBrowserRouter([
   {
     path: "/admin/referrals",
     element: <AdminManageReferrals />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: "/admin/wealth-funds",
+    element: <AdminWealthFund />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: "/admin/company-news",
+    element: <AdminManageNews />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+
+  {
+    path: "/admin/withdrawals",
+    element: <AdminManageWithdrawal />,
     errorElement: (
       <ErrorPage
         code="🚧"

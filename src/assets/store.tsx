@@ -19,6 +19,11 @@ import { userLevelsAPI } from "../features/usersLevels/userlevelsAPI";
 import { tasksAPI } from "../features/tasks/taskAPI";
 import { userTasksAPI } from "../features/userTask/userTaskAPI";
 import {  referralsAPI } from "../features/referrals/referralsAPI";
+import { wealthFundsAPI } from "../features/wealthfund/wealthfundAdmiAPI";
+import { userWealthFundAPI } from "../features/userWealthfund/userWeathfundAPI";
+import { companyNewsAPI } from "../features/news/newsAPI";
+import { userProfileAPI } from "../features/profile/profileAPI";
+import { withdrawalAPI } from "../features/withdrawal/withdrawalAPI";
 const persistConfig = {
   key: "root",
   storage,
@@ -35,6 +40,12 @@ const rootReducer = combineReducers({
   [tasksAPI.reducerPath]:tasksAPI.reducer,
   [userTasksAPI.reducerPath]:userTasksAPI.reducer,
   [referralsAPI.reducerPath]:referralsAPI.reducer,
+  [wealthFundsAPI.reducerPath]:wealthFundsAPI.reducer,
+  [userWealthFundAPI.reducerPath]:userWealthFundAPI.reducer,
+  [companyNewsAPI.reducerPath]:companyNewsAPI.reducer,
+  [userProfileAPI.reducerPath]:userProfileAPI.reducer,
+  [withdrawalAPI.reducerPath]:withdrawalAPI.reducer,
+
 
  
 });
@@ -59,6 +70,11 @@ export const store = configureStore({
       tasksAPI.middleware,
       userTasksAPI.middleware,
       referralsAPI.middleware,
+      wealthFundsAPI.middleware,
+      userWealthFundAPI.middleware,
+      companyNewsAPI.middleware,
+      userProfileAPI.middleware,
+      withdrawalAPI.middleware,
     
     ),
 });

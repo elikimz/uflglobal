@@ -14,7 +14,8 @@ import {
   BriefcaseIcon,
   ArrowDownTrayIcon,
   ArrowUpTrayIcon,
-  UserPlusIcon,
+  // UserPlusIcon,
+  ClipboardIcon,
 } from "@heroicons/react/24/solid";
 import { motion, AnimatePresence } from "framer-motion";
 import omini1 from "../assets/omini1.png";
@@ -122,7 +123,11 @@ const UserDashboard: React.FC = () => {
                 label: "Team Expansion",
                 path: "/team-management",
               },
-              { icon: BanknotesIcon, label: "Financial", path: "/finance" },
+              {
+                icon: BanknotesIcon,
+                label: "Financial Management Funds",
+                path: "/finance",
+              },
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -142,7 +147,7 @@ const UserDashboard: React.FC = () => {
             {[
               { icon: ArrowUpTrayIcon, label: "Deposit", path: "/deposit" },
               { icon: ArrowDownTrayIcon, label: "Withdraw", path: "/withdraw" },
-              { icon: UserPlusIcon, label: "Referrals", path: "/referrals" },
+              // { icon: UserPlusIcon, label: "Referrals", path: "/referrals" },
             ].map((item, i) => (
               <motion.div
                 key={i}
@@ -157,32 +162,7 @@ const UserDashboard: React.FC = () => {
             ))}
           </div>
 
-          {/* Floating Left Arrow (Go to Task) */}
-          <div className="absolute left-1/2 transform -translate-x-1/2 mt-6 flex flex-col items-center">
-            <motion.button
-              whileHover={{ scale: 1.2 }}
-              whileTap={{ scale: 0.95 }}
-              onClick={() => handleNavigation("/task")}
-              className="w-12 h-12 rounded-full bg-indigo-400/80 flex items-center justify-center shadow-lg cursor-pointer border border-white/20"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="white"
-                className="w-6 h-6 rotate-180"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M17 8l-4-4-4 4m0 8l4 4 4-4"
-                />
-              </svg>
-            </motion.button>
-            <span className="text-xs mt-2 text-white">Go to Task</span>
-          </div>
-
+     
           {/* Bottom Navigation */}
           <motion.div
             initial={{ y: 20, opacity: 0 }}
@@ -196,11 +176,11 @@ const UserDashboard: React.FC = () => {
                 icon: <HomeIcon className="h-6 w-6" />,
                 label: "Home",
               },
-              // {
-              //   path: "/task",
-              //   icon: <ClipboardIcon className="h-6 w-6" />,
-              //   label: "Task",
-              // },
+              {
+                path: "/task",
+                icon: <ClipboardIcon className="h-6 w-6" />,
+                label: "Task",
+              },
               {
                 path: "/referrals",
                 icon: <UsersIcon className="h-6 w-6" />,
