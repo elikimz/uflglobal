@@ -1,8 +1,5 @@
 
 
-
-
-
 // import React, { useEffect } from "react";
 // import { useNavigate } from "react-router-dom";
 // import { motion } from "framer-motion";
@@ -14,6 +11,7 @@
 //   LockClosedIcon,
 // } from "@heroicons/react/24/solid";
 // import { useGetUserProfileQuery } from "../profile/profileAPI";
+// import ustwoLogo from "../register/ustwologo.png"
 
 // const Profile: React.FC = () => {
 //   const navigate = useNavigate();
@@ -58,42 +56,29 @@
 //       animate={{ opacity: 1 }}
 //       className="min-h-screen px-4 py-6 text-yellow-900 bg-yellow-50"
 //     >
-//       {/* === HEADER === */}
-//       <div className="flex justify-between items-center mb-8">
-//         <div>
-//           <h1 className="text-3xl font-bold flex items-center gap-2 text-yellow-800">
-//             <UserIcon className="h-8 w-8 text-yellow-700" /> My Account
-//           </h1>
-//           <p className="text-yellow-700 text-sm">
-//             Manage your profile & earnings
-//           </p>
-//         </div>
-//         {/* Logout */}
-//         <button
-//           onClick={handleLogout}
-//           className="bg-red-600 hover:bg-red-700 transition-colors p-2 rounded-md flex items-center gap-1 text-sm text-white"
-//         >
-//           <ArrowRightOnRectangleIcon className="h-5 w-5" /> Logout
-//         </button>
+//       {/* Company Logo at the top */}
+//       <div className="flex justify-center mb-8">
+//         <img
+//           src={ustwoLogo}
+//           alt="Company Logo"
+//           className="h-20 drop-shadow-lg"
+//         />
 //       </div>
 
-//       {/* === PROFILE INFORMATION === */}
-//       <section className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
+//       {/* Profile Information */}
+//       <section className="max-w-4xl mx-auto mb-10">
 //         <div className="bg-yellow-100 backdrop-blur-xl border border-yellow-200 p-6 rounded-2xl shadow">
-//           <h2 className="text-lg font-semibold mb-4 text-yellow-800">
-//             Profile Information
-//           </h2>
 //           <div className="space-y-3 text-yellow-700">
 //             <p>
-//               📱 Phone Number:{" "}
+//               Phone:{" "}
 //               <span className="font-semibold">{profile?.phone_number}</span>
 //             </p>
 //             <p>
-//               🆔 User ID:{" "}
-//               <span className="font-semibold">USR-{profile?.id}</span>
+//               ID:{" "}
+//               <span className="font-semibold">{profile?.id}</span>
 //             </p>
 //             <p className="flex items-center gap-2">
-//               ⭐ Current Level:{" "}
+//               Level:{" "}
 //               <span
 //                 className={`px-4 py-1 rounded-full font-semibold ${levelClass} shadow-lg`}
 //               >
@@ -102,7 +87,10 @@
 //             </p>
 //           </div>
 //         </div>
-//         {/* === WALLET OVERVIEW === */}
+//       </section>
+
+//       {/* Wallet Overview */}
+//       <section className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
 //         <div className="bg-yellow-100 backdrop-blur-xl border border-yellow-200 p-6 rounded-2xl shadow">
 //           <h2 className="text-lg font-semibold mb-4 text-yellow-800">
 //             Wallet Overview
@@ -134,7 +122,7 @@
 //         </div>
 //       </section>
 
-//       {/* === ACTION BUTTONS === */}
+//       {/* Action Buttons */}
 //       <section className="max-w-4xl mx-auto mb-10">
 //         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
 //           {/* Update Details Button */}
@@ -208,6 +196,16 @@
 //           </button>
 //         </div>
 //       </section>
+
+//       {/* Logout Button at Bottom Left */}
+//       <div className="fixed bottom-4 left-4">
+//         <button
+//           onClick={handleLogout}
+//           className="bg-red-600 hover:bg-red-700 transition-colors p-2 rounded-md flex items-center gap-1 text-sm text-white"
+//         >
+//           <ArrowRightOnRectangleIcon className="h-5 w-5" /> Logout
+//         </button>
+//       </div>
 //     </motion.div>
 //   );
 // };
@@ -228,7 +226,7 @@ import {
   LockClosedIcon,
 } from "@heroicons/react/24/solid";
 import { useGetUserProfileQuery } from "../profile/profileAPI";
-import ustwoLogo from "../register/ustwologo.png"
+import ustwoLogo from "../register/ustwologo.png";
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
@@ -273,38 +271,38 @@ const Profile: React.FC = () => {
       animate={{ opacity: 1 }}
       className="min-h-screen px-4 py-6 text-yellow-900 bg-yellow-50"
     >
-      {/* Company Logo at the top */}
-      <div className="flex justify-center mb-8">
-        <img
-          src={ustwoLogo}
-          alt="Company Logo"
-          className="h-20 drop-shadow-lg"
-        />
-      </div>
+      {/* Profile Header with Logo and Info */}
+      <div className="flex flex-col items-center mb-8">
+        {/* Logo and Info Container */}
+        <div className="flex items-center gap-6">
+          <img
+            src={ustwoLogo}
+            alt="Company Logo"
+            className="h-20 drop-shadow-lg"
+          />
 
-      {/* Profile Information */}
-      <section className="max-w-4xl mx-auto mb-10">
-        <div className="bg-yellow-100 backdrop-blur-xl border border-yellow-200 p-6 rounded-2xl shadow">
-          <div className="space-y-3 text-yellow-700">
-            <p>
-              Phone:{" "}
-              <span className="font-semibold">{profile?.phone_number}</span>
-            </p>
-            <p>
-              ID:{" "}
-              <span className="font-semibold">{profile?.id}</span>
-            </p>
-            <p className="flex items-center gap-2">
-              Level:{" "}
-              <span
-                className={`px-4 py-1 rounded-full font-semibold ${levelClass} shadow-lg`}
-              >
-                {currentLevel}
-              </span>
-            </p>
+          {/* Profile Info */}
+          <div className="bg-yellow-100 backdrop-blur-xl border border-yellow-200 p-4 rounded-2xl shadow">
+            <div className="space-y-2 text-yellow-700">
+              <p>
+                📱 Phone:{" "}
+                <span className="font-semibold">{profile?.phone_number}</span>
+              </p>
+              <p>
+                🆔 ID: <span className="font-semibold">USR-{profile?.id}</span>
+              </p>
+              <p className="flex items-center gap-2">
+                ⭐ Level:{" "}
+                <span
+                  className={`px-3 py-1 rounded-full font-semibold ${levelClass} shadow-lg text-xs`}
+                >
+                  {currentLevel}
+                </span>
+              </p>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
 
       {/* Wallet Overview */}
       <section className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">

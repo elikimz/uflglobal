@@ -29,6 +29,7 @@ import Withdrawal from "./features/withdrawal/withdrawal";
 import AdminManageWithdrawal from "./features/withdrawal/adminManageWithdwal";
 import Earnings from "./features/earnings/earnings";
 import PasswordSetting from "./pages/password";
+import Spinner from "./pages/spinner";
 
 // Define routes
 const router = createBrowserRouter([
@@ -175,6 +176,16 @@ const router = createBrowserRouter([
   {
     path: "/change-password",
     element: <PasswordSetting />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: "/spinner",
+    element: <Spinner/>,
     errorElement: (
       <ErrorPage
         code="🚧"
