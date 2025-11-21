@@ -292,7 +292,7 @@ const Profile: React.FC = () => {
             </p>
             <p>
               ID:{" "}
-              <span className="font-semibold">USR-{profile?.id}</span>
+              <span className="font-semibold">{profile?.id}</span>
             </p>
             <p className="flex items-center gap-2">
               Level:{" "}
