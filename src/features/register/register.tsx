@@ -1,7 +1,7 @@
 
 
 
-// import React, { useState, useRef } from "react";
+// import React, { useState, useRef, useEffect } from "react";
 // import { motion, AnimatePresence } from "framer-motion";
 // import {
 //   FiUser,
@@ -14,9 +14,8 @@
 // import ReCAPTCHA from "react-google-recaptcha";
 // import { useLoginUserMutation } from "../login/loginAPI";
 // import { useSignupMutation } from "../register/registerAPI";
-// import { useNavigate } from "react-router-dom";
+// import { useNavigate, useSearchParams } from "react-router-dom";
 
-// // Define types for the decoded token and message
 // interface DecodedToken {
 //   role?: string;
 //   sub?: string;
@@ -28,10 +27,8 @@
 //   text: string;
 // }
 
-
-
 // const AuthPage: React.FC = () => {
-//   const [isLogin, setIsLogin] = useState(true);
+//   const [isLogin, setIsLogin] = useState(false); // Changed to false to show registration first
 //   const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
 //   const [signup, { isLoading: signingUp }] = useSignupMutation();
 //   const [formData, setFormData] = useState({
@@ -43,6 +40,15 @@
 //   const [message, setMessage] = useState<Message | null>(null);
 //   const recaptchaRef = useRef<ReCAPTCHA>(null);
 //   const navigate = useNavigate();
+//   const [searchParams] = useSearchParams();
+
+//   // Extract invite code from URL
+//   useEffect(() => {
+//     const inviteCode = searchParams.get("invite_code");
+//     if (inviteCode) {
+//       setFormData((prev) => ({ ...prev, invite_code: inviteCode }));
+//     }
+//   }, [searchParams]);
 
 //   // Toggle between login and signup forms
 //   const toggleMode = () => {
@@ -83,17 +89,13 @@
 //         username: formData.username,
 //         password: formData.password,
 //       }).unwrap();
-
 //       // Store the access token
 //       localStorage.setItem("access_token", res.access_token);
-
 //       // Decode the token to get the user's role
 //       const decoded = decodeToken(res.access_token);
 //       const role = decoded?.role || "user";
-
 //       // Show success message
 //       setMessage({ type: "success", text: "Login successful!" });
-
 //       // Redirect based on role
 //       setTimeout(() => {
 //         navigate(role === "admin" ? "/admin/dashboard" : "/user/dashboard");
@@ -123,26 +125,21 @@
 //     try {
 //       // Register the user
 //       await signup({ ...formData, recaptcha_token: token }).unwrap();
-
 //       // Auto-login after successful registration
 //       const loginRes = await loginUser({
 //         username: formData.username,
 //         password: formData.password,
 //       }).unwrap();
-
 //       // Store the access token
 //       localStorage.setItem("access_token", loginRes.access_token);
-
 //       // Decode the token to get the user's role
 //       const decoded = decodeToken(loginRes.access_token);
 //       const role = decoded?.role || "user";
-
 //       // Show success message
 //       setMessage({
 //         type: "success",
 //         text: "Registration successful! Redirecting...",
 //       });
-
 //       // Redirect based on role
 //       setTimeout(() => {
 //         navigate(role === "admin" ? "/admin/dashboard" : "/user/dashboard");
@@ -179,12 +176,11 @@
 //           className="hidden md:flex w-1/2 items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600"
 //         >
 //           <img
-//             src="/ustwo.png"
+//             src="/ustwologo.png"
 //             alt="Company Logo"
 //             className="h-48 drop-shadow-lg"
 //           />
 //         </motion.div>
-
 //         {/* Right Form */}
 //         <div className="w-full md:w-1/2 p-10">
 //           <div className="flex justify-center mb-4 md:hidden">
@@ -193,7 +189,6 @@
 //           <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
 //             {isLogin ? "Welcome Back" : "Create Your Account"}
 //           </h2>
-
 //           {/* Message Box */}
 //           <AnimatePresence>
 //             {message && (
@@ -212,7 +207,6 @@
 //               </motion.div>
 //             )}
 //           </AnimatePresence>
-
 //           {/* Login/Signup Forms */}
 //           <AnimatePresence mode="wait">
 //             {isLogin ? (
@@ -302,6 +296,8 @@
 //                     placeholder="Invite Code (optional)"
 //                     className={inputClass}
 //                     onChange={handleChange}
+//                     value={formData.invite_code}
+//                     readOnly={!!formData.invite_code} // Make it read-only if it has a value from URL
 //                   />
 //                 </div>
 //                 <div className="flex justify-center">
@@ -320,7 +316,6 @@
 //               </motion.form>
 //             )}
 //           </AnimatePresence>
-
 //           {/* Toggle between login and signup */}
 //           <p className="text-center text-gray-600 mt-6">
 //             {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
@@ -341,6 +336,8 @@
 
 
 
+
+
 import React, { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -355,7 +352,7 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { useLoginUserMutation } from "../login/loginAPI";
 import { useSignupMutation } from "../register/registerAPI";
 import { useNavigate, useSearchParams } from "react-router-dom";
-
+import ustwoLogo from "../register/ustwologo.png"
 interface DecodedToken {
   role?: string;
   sub?: string;
@@ -368,7 +365,7 @@ interface Message {
 }
 
 const AuthPage: React.FC = () => {
-  const [isLogin, setIsLogin] = useState(false); // Changed to false to show registration first
+  const [isLogin, setIsLogin] = useState(false);
   const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
   const [signup, { isLoading: signingUp }] = useSignupMutation();
   const [formData, setFormData] = useState({
@@ -506,7 +503,7 @@ const AuthPage: React.FC = () => {
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 overflow-hidden relative">
       <div className="absolute w-[150%] h-[150%] bg-indigo-100/20 rounded-[50%] -top-1/4 -right-1/4 blur-3xl"></div>
       <div className="relative w-full max-w-5xl bg-white/90 rounded-3xl shadow-2xl flex overflow-hidden backdrop-blur-md border border-indigo-200">
-        {/* Left Image */}
+        {/* Left Image - Desktop */}
         <motion.div
           key={isLogin ? "loginImage" : "registerImage"}
           initial={{ x: isLogin ? "-100%" : "100%", opacity: 0 }}
@@ -516,19 +513,23 @@ const AuthPage: React.FC = () => {
           className="hidden md:flex w-1/2 items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600"
         >
           <img
-            src="/ustwologo.png"
+            src={ustwoLogo}
             alt="Company Logo"
             className="h-48 drop-shadow-lg"
           />
         </motion.div>
+
         {/* Right Form */}
         <div className="w-full md:w-1/2 p-10">
+          {/* Mobile Logo */}
           <div className="flex justify-center mb-4 md:hidden">
-            <img src="/ustwo.png" alt="Logo" className="h-14" />
+            <img src={ustwoLogo} alt="Logo" className="h-14" />
           </div>
+
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
             {isLogin ? "Welcome Back" : "Create Your Account"}
           </h2>
+
           {/* Message Box */}
           <AnimatePresence>
             {message && (
@@ -547,6 +548,7 @@ const AuthPage: React.FC = () => {
               </motion.div>
             )}
           </AnimatePresence>
+
           {/* Login/Signup Forms */}
           <AnimatePresence mode="wait">
             {isLogin ? (
@@ -637,7 +639,7 @@ const AuthPage: React.FC = () => {
                     className={inputClass}
                     onChange={handleChange}
                     value={formData.invite_code}
-                    readOnly={!!formData.invite_code} // Make it read-only if it has a value from URL
+                    readOnly={!!formData.invite_code}
                   />
                 </div>
                 <div className="flex justify-center">
@@ -656,6 +658,7 @@ const AuthPage: React.FC = () => {
               </motion.form>
             )}
           </AnimatePresence>
+
           {/* Toggle between login and signup */}
           <p className="text-center text-gray-600 mt-6">
             {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
