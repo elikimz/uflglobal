@@ -508,18 +508,14 @@
 
 
 
-
-
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, type To } from "react-router-dom";
 import {
   HomeIcon,
   UsersIcon,
   TrophyIcon,
   UserIcon,
-
   GiftIcon,
-
   ClipboardIcon,
   FlagIcon,
   MegaphoneIcon,
@@ -528,34 +524,77 @@ import {
   ChartBarIcon,
 } from "@heroicons/react/24/solid";
 import { motion, AnimatePresence } from "framer-motion";
-import ustwo1 from "../assets/ustwo1.png";
-import ustwo2 from "../assets/ustwo2.png";
-import ustwo3 from "../assets/ustwo3.png";
-import ustwo4 from "../assets/ustwo4.png";
-import spinnerImage from "../components/SpinnerImage.png";
-import badge from "../components/badge.png";
 import { useGetUserProfileQuery } from "../features/profile/profileAPI";
 
-const UserDashboard: React.FC = () => {
+// Import assets with proper paths
+const UserDashboard = () => {
   const navigate = useNavigate();
   const [, setCurrentBanner] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
   const { data: userProfile, isLoading } = useGetUserProfileQuery();
 
-  // Unique color for username
-
-  // Unique color for level
-
-  const banners = [ustwo1, ustwo2, ustwo3, ustwo4];
+  // Import images dynamically to avoid build issues
+    const [images, setImages] = useState<{
+      ustwo1: string | null;
+      ustwo2: string | null;
+      ustwo3: string | null;
+      ustwo4: string | null;
+      spinnerImage: string | null;
+      badge: string | null;
+    }>({
+      ustwo1: null,
+      ustwo2: null,
+      ustwo3: null,
+      ustwo4: null,
+      spinnerImage: null,
+      badge: null,
+    });
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentBanner((prev) => (prev + 1) % banners.length);
-    }, 70000);
-    return () => clearInterval(interval);
+    // Dynamically import images
+    const importImages = async () => {
+      try {
+        const [ustwo1, ustwo2, ustwo3, ustwo4, spinnerImage, badge] =
+          await Promise.all([
+            import("../assets/ustwo1.png"),
+            import("../assets/ustwo2.png"),
+            import("../assets/ustwo3.png"),
+            import("../assets/ustwo4.png"),
+            import("../components/SpinnerImage.png"),
+            import("../components/badge.png"),
+          ]);
+        setImages({
+          ustwo1: ustwo1.default,
+          ustwo2: ustwo2.default,
+          ustwo3: ustwo3.default,
+          ustwo4: ustwo4.default,
+          spinnerImage: spinnerImage.default,
+          badge: badge.default,
+        });
+      } catch (error) {
+        console.error("Error loading images:", error);
+      }
+    };
+    importImages();
+  }, []);
+
+  const banners = [
+    images.ustwo1,
+    images.ustwo2,
+    images.ustwo3,
+    images.ustwo4,
+  ].filter((img) => img !== null);
+
+  useEffect(() => {
+    if (banners.length > 0) {
+      const interval = setInterval(() => {
+        setCurrentBanner((prev) => (prev + 1) % banners.length);
+      }, 70000);
+      return () => clearInterval(interval);
+    }
   }, [banners.length]);
 
-  const handleNavigation = (path: string | null) => {
+  const handleNavigation = (path: To | null) => {
     if (!path) return;
     setIsExiting(true);
     setTimeout(() => navigate(path), 500);
@@ -565,6 +604,15 @@ const UserDashboard: React.FC = () => {
     setIsExiting(true);
     setTimeout(() => navigate("/spinner"), 500);
   };
+
+  // Show loading state while images are loading
+  if (isLoading || !images.badge || banners.length === 0) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-yellow-50">
+        <p className="text-yellow-800">Loading...</p>
+      </div>
+    );
+  }
 
   return (
     <AnimatePresence>
@@ -580,13 +628,14 @@ const UserDashboard: React.FC = () => {
           <div className="relative pt-4 pb-4 px-4">
             <div className="flex justify-between items-center">
               <div className="text-xl font-bold text-yellow-800">UFL</div>
+
               {/* Level badge with custom image */}
-              {!isLoading && userProfile && (
+              {userProfile && (
                 <div className="relative flex items-center">
                   {/* Badge image positioned at the corner */}
                   <div className="w-8 h-8 mr-1">
                     <img
-                      src={badge}
+                      src={images.badge}
                       alt="Level badge"
                       className="w-full h-full object-contain"
                     />
@@ -603,26 +652,14 @@ const UserDashboard: React.FC = () => {
                 </div>
               )}
             </div>
+
             {/* Welcome message */}
-            {!isLoading && userProfile ? (
-              <div className="mt-2">
-                <h2 className="text-lg font-medium text-yellow-800">
-                  Welcome to UFL
-                </h2>
-                <p className="text-sm text-yellow-700">
-                  Start your work journey
-                </p>
-              </div>
-            ) : (
-              <div className="mt-2">
-                <h2 className="text-lg font-medium text-yellow-800">
-                  Welcome to UFL
-                </h2>
-                <p className="text-sm text-yellow-700">
-                  Start your work journey
-                </p>
-              </div>
-            )}
+            <div className="mt-2">
+              <h2 className="text-lg font-medium text-yellow-800">
+                Welcome to UFL
+              </h2>
+              <p className="text-sm text-yellow-700">Start your work journey</p>
+            </div>
           </div>
 
           {/* MAIN ICON GRID - 3 columns with circular icons */}
@@ -680,18 +717,20 @@ const UserDashboard: React.FC = () => {
           </div>
 
           {/* Spinner Image - Clickable */}
-          <motion.div
-            className="relative mt-6 px-4"
-            whileHover={{ scale: 1.02 }}
-            whileTap={{ scale: 0.98 }}
-            onClick={handleSpinnerNavigation}
-          >
-            <img
-              src={spinnerImage}
-              alt="Click to enter the lottery tour"
-              className="w-full rounded-xl cursor-pointer shadow-lg"
-            />
-          </motion.div>
+          {images.spinnerImage && (
+            <motion.div
+              className="relative mt-6 px-4"
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              onClick={handleSpinnerNavigation}
+            >
+              <img
+                src={images.spinnerImage}
+                alt="Click to enter the lottery tour"
+                className="w-full rounded-xl cursor-pointer shadow-lg"
+              />
+            </motion.div>
+          )}
 
           {/* Bottom Navigation */}
           <motion.div
