@@ -289,7 +289,7 @@ const Profile: React.FC = () => {
                 <span className="font-semibold">{profile?.phone_number}</span>
               </p>
               <p>
-                ID: <span className="font-semibold">USR-{profile?.id}</span>
+                ID: <span className="font-semibold">{profile?.id}</span>
               </p>
               <p className="flex items-center gap-2">
                 Level:{" "}
