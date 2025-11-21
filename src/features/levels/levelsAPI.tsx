@@ -44,7 +44,7 @@ export interface UpdateLevelInput {
 // ======================
 
 export const levelsAPI = createApi({
-  reducerPath: "levelsAPI",
+  reducerPath: "levelsAPI/",
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_BASE_URL,
     prepareHeaders: (headers) => {
@@ -59,7 +59,7 @@ export const levelsAPI = createApi({
   endpoints: (builder) => ({
     // 🔹 Get all levels
     getLevels: builder.query<Level[], void>({
-      query: () => "levels",
+      query: () => "levels/",
       providesTags: ["Levels"],
     }),
 

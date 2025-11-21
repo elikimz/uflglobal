@@ -27,6 +27,8 @@ import Profile from "./features/profile/profile";
 import Security from "./pages/security";
 import Withdrawal from "./features/withdrawal/withdrawal";
 import AdminManageWithdrawal from "./features/withdrawal/adminManageWithdwal";
+import Earnings from "./features/earnings/earnings";
+import PasswordSetting from "./pages/password";
 
 // Define routes
 const router = createBrowserRouter([
@@ -158,6 +160,29 @@ const router = createBrowserRouter([
       />
     ),
   },
+
+  {
+    path: "/earnings/me",
+    element: <Earnings />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+
+  {
+    path: "/change-password",
+    element: <PasswordSetting />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+
   {
     path: "/admin/dashboard",
     element: <AdminDashboard />,

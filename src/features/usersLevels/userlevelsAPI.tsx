@@ -38,7 +38,7 @@ export interface UpgradeUserLevelInput {
 export const userLevelsAPI = createApi({
   reducerPath: "userLevelsAPI",
   baseQuery: fetchBaseQuery({
-    baseUrl: import.meta.env.VITE_API_BASE_URL,
+    baseUrl:import.meta.env.VITE_API_BASE_URL,
     prepareHeaders: (headers) => {
       const token = localStorage.getItem("access_token");
       if (token) headers.set("Authorization", `Bearer ${token}`);

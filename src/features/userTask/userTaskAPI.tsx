@@ -1,12 +1,13 @@
+
+
+
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 export const userTasksAPI = createApi({
   reducerPath: "userTasksAPI",
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_BASE_URL,
-
     prepareHeaders: (headers) => {
-      // If you have auth token
       const token = localStorage.getItem("access_token");
       if (token) {
         headers.set("Authorization", `Bearer ${token}`);
@@ -29,10 +30,22 @@ export const userTasksAPI = createApi({
         url: `/user-tasks/${user_task_id}/complete`,
         method: "POST",
       }),
-      invalidatesTags: ["UserTask"], // refresh tasks after completing
+      invalidatesTags: ["UserTask"],
+    }),
+
+    // NEW: GET /user-tasks/audit-and-completed
+    getAuditAndCompletedTasks: builder.query<
+      { audit_tasks: any[]; completed_tasks: any[] },
+      void
+    >({
+      query: () => `/user-tasks/audit-and-completed`,
+      providesTags: ["UserTask"],
     }),
   }),
 });
 
-export const { useGetUserTasksQuery, useCompleteUserTaskMutation } =
-  userTasksAPI;
+export const {
+  useGetUserTasksQuery,
+  useCompleteUserTaskMutation,
+  useGetAuditAndCompletedTasksQuery, // <-- new hook
+} = userTasksAPI;
