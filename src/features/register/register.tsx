@@ -516,7 +516,7 @@ const AuthPage: React.FC = () => {
           className="hidden md:flex w-1/2 items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600"
         >
           <img
-            src="/ustwo.png"
+            src="/ustwologo.png"
             alt="Company Logo"
             className="h-48 drop-shadow-lg"
           />
