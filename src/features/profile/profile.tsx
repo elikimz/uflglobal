@@ -285,14 +285,14 @@ const Profile: React.FC = () => {
           <div className="bg-yellow-100 backdrop-blur-xl border border-yellow-200 p-4 rounded-2xl shadow">
             <div className="space-y-2 text-yellow-700">
               <p>
-                📱 Phone:{" "}
+                Phone:{" "}
                 <span className="font-semibold">{profile?.phone_number}</span>
               </p>
               <p>
-                🆔 ID: <span className="font-semibold">USR-{profile?.id}</span>
+                ID: <span className="font-semibold">USR-{profile?.id}</span>
               </p>
               <p className="flex items-center gap-2">
-                ⭐ Level:{" "}
+                Level:{" "}
                 <span
                   className={`px-3 py-1 rounded-full font-semibold ${levelClass} shadow-lg text-xs`}
                 >
