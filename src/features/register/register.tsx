@@ -698,7 +698,8 @@ import ReCAPTCHA from "react-google-recaptcha";
 import { useLoginUserMutation } from "../login/loginAPI";
 import { useSignupMutation } from "../register/registerAPI";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import ustwoLogo from "../register/ustwologo.png";
+// import ustwoLogo from "../register/ustwologo.png";
+import ustwologo from "../../assets/ustwologo.png"
 
 interface DecodedToken {
   role?: string;
@@ -910,7 +911,7 @@ const AuthPage: React.FC = () => {
           className="hidden md:flex w-1/2 items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600"
         >
           <img
-            src={ustwoLogo}
+            src={ustwologo}
             alt="Company Logo"
             className="h-48 drop-shadow-lg"
           />
@@ -919,7 +920,7 @@ const AuthPage: React.FC = () => {
         <div className="w-full md:w-1/2 p-10">
           {/* Mobile Logo */}
           <div className="flex justify-center mb-4 md:hidden">
-            <img src={ustwoLogo} alt="Logo" className="h-14" />
+            <img src={ustwologo} alt="Logo" className="h-14" />
           </div>
           <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">
             {isLogin ? "Welcome Back" : "Create Your Account"}
@@ -974,7 +975,7 @@ const AuthPage: React.FC = () => {
                     onChange={handleChange}
                     required
                   />
-                  
+
                 </div>
                 <button
                   type="submit"
