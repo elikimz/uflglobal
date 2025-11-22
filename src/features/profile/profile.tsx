@@ -226,7 +226,7 @@ import {
   LockClosedIcon,
 } from "@heroicons/react/24/solid";
 import { useGetUserProfileQuery } from "../profile/profileAPI";
-import ustwoLogo from "../register/ustwologo.png";
+import ustwologo from "../../assets/ustwologo.png";
 
 const Profile: React.FC = () => {
   const navigate = useNavigate();
@@ -276,7 +276,7 @@ const Profile: React.FC = () => {
         {/* Logo and Info Container */}
         <div className="flex items-center gap-6">
           <img
-            src={ustwoLogo}
+            src={ustwologo}
             alt="Company Logo"
             className="h-20 drop-shadow-lg"
           />
