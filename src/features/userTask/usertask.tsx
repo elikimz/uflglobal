@@ -1,9 +1,7 @@
 
 
-
-// import React, { useState } from "react";
+// import React, { useState} from "react";
 // import { ArrowLeftIcon } from "@heroicons/react/24/solid";
-
 // import { useGetTasksQuery } from "../tasks/taskAPI";
 // import {
 //   useGetUserTasksQuery,
@@ -32,6 +30,7 @@
 //     "doing"
 //   );
 //   const [showTaskList, setShowTaskList] = useState(false);
+//   const [installing, setInstalling] = useState<{ [key: number]: boolean }>({});
 
 //   // API Data
 //   const { data: allTasks, isLoading: allLoading } = useGetTasksQuery();
@@ -42,16 +41,12 @@
 //   } = useGetUserTasksQuery();
 //   const { data: auditAndCompleted, refetch: refetchAudit } =
 //     useGetAuditAndCompletedTasksQuery();
-
 //   const { data: earningsData } = useGetUserEarningsQuery();
-
 //   const [completeTask] = useCompleteUserTaskMutation();
-//   const [downloading, setDownloading] = useState<{ [key: number]: number }>({});
-//   const [, setSuccessMessage] = useState<{ [key: number]: boolean }>({});
 
 //   // Dynamic Earnings
-//   const todaysEarnings = earningsData?.today || 0;
-//   const totalBalance = earningsData?.balance || 0;
+//   const todaysEarnings = earningsData?.todays_earnings || 0;
+//   const totalBalance = earningsData?.total_earnings || 0;
 
 //   // Data Processing
 //   const userTaskMap: Record<number, UserTask> =
@@ -61,38 +56,30 @@
 //     }, {} as Record<number, UserTask>) || ({} as Record<number, UserTask>);
 
 //   const assignedTasks = allTasks?.filter((t: Task) => userTaskMap[t.id]) || [];
-//   const completedCount = Object.values(userTaskMap).filter(
-//     (ut) => ut.is_completed
-//   ).length;
 
 //   // Handlers
-//   const handleDownload = (task: Task) => {
+//   const handleInstall = (task: Task) => {
 //     const user_task_id = userTaskMap[task.id]?.id;
-//     if (!user_task_id || downloading[user_task_id]) return;
-//     setDownloading((prev) => ({ ...prev, [user_task_id]: 0 }));
-//     let progress = 0;
-//     const interval = setInterval(() => {
-//       progress += Math.floor(Math.random() * 10) + 5;
-//       if (progress >= 100) progress = 100;
-//       setDownloading((prev) => ({ ...prev, [user_task_id]: progress }));
-//       if (progress >= 100) {
-//         clearInterval(interval);
-//         completeTask(user_task_id)
-//           .unwrap()
-//           .then(() => {
-//             setSuccessMessage((prev) => ({ ...prev, [user_task_id]: true }));
+//     if (!user_task_id || installing[user_task_id]) return;
+
+//     setInstalling((prev) => ({ ...prev, [user_task_id]: true }));
+
+//     // Simulate installation
+//     setTimeout(() => {
+//       completeTask(user_task_id)
+//         .unwrap()
+//         .then(() => {
+//           setTimeout(() => {
+//             // Silently refresh data after 4 seconds
 //             refetchUserTasks();
 //             refetchAudit();
-//             setDownloading((prev) => ({ ...prev, [user_task_id]: 0 }));
-//             setTimeout(() => {
-//               setSuccessMessage((prev) => ({ ...prev, [user_task_id]: false }));
-//             }, 8000);
-//           })
-//           .catch(() =>
-//             setDownloading((prev) => ({ ...prev, [user_task_id]: 0 }))
-//           );
-//       }
-//     }, 300);
+//             setInstalling((prev) => ({ ...prev, [user_task_id]: false }));
+//           }, 4000);
+//         })
+//         .catch(() => {
+//           setInstalling((prev) => ({ ...prev, [user_task_id]: false }));
+//         });
+//     }, 2000); // Simulate 2 seconds for installation
 //   };
 
 //   if (allLoading || userLoading)
@@ -136,20 +123,6 @@
 
 //           {/* Start Task Button */}
 //           <div className="bg-yellow-100 p-4 rounded-lg shadow mb-4">
-//             <div className="flex justify-between items-center mb-2">
-//               <span className="font-bold">Starting</span>
-//               <span>
-//                 {completedCount}/{assignedTasks.length}
-//               </span>
-//             </div>
-//             <div className="w-full bg-yellow-200 rounded-full h-2.5">
-//               <div
-//                 className="bg-yellow-600 h-2.5 rounded-full"
-//                 style={{
-//                   width: `${(completedCount / assignedTasks.length) * 100}%`,
-//                 }}
-//               ></div>
-//             </div>
 //             <button
 //               className="w-full bg-yellow-600 text-white py-2 rounded-lg mt-4"
 //               onClick={() => setShowTaskList(true)}
@@ -224,19 +197,21 @@
 //                         </p>
 //                       </div>
 //                       <button
-//                         onClick={() => handleDownload(task)}
-//                         className="bg-yellow-600 text-white px-4 py-2 rounded-lg"
+//                         onClick={() => handleInstall(task)}
+//                         disabled={installing[userTask?.id]}
+//                         className={`px-4 py-2 rounded-lg text-white ${
+//                           installing[userTask?.id]
+//                             ? "bg-yellow-400"
+//                             : "bg-yellow-600"
+//                         }`}
 //                       >
-//                         {downloading[userTask?.id]
-//                           ? `${downloading[userTask?.id]}%`
-//                           : "Start"}
+//                         {installing[userTask?.id] ? "Installing..." : "Install"}
 //                       </button>
 //                     </div>
 //                   );
 //                 })}
 //               </div>
 //             )}
-
 //             {activeTab === "audit" && (
 //               <div className="space-y-4">
 //                 {auditAndCompleted?.audit_tasks.map((a: any) => (
@@ -257,7 +232,6 @@
 //                 ))}
 //               </div>
 //             )}
-
 //             {activeTab === "completed" && (
 //               <div className="space-y-4">
 //                 {auditAndCompleted?.completed_tasks.map((c: any) => (
@@ -289,7 +263,8 @@
 
 
 
-import React, { useState} from "react";
+
+import React, { useState } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { useGetTasksQuery } from "../tasks/taskAPI";
 import {
@@ -318,7 +293,7 @@ const UserTasks: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"doing" | "audit" | "completed">(
     "doing"
   );
-  const [showTaskList, setShowTaskList] = useState(false);
+  const [showTaskList, setShowTaskList] = useState(true);
   const [installing, setInstalling] = useState<{ [key: number]: boolean }>({});
 
   // API Data
@@ -353,13 +328,11 @@ const UserTasks: React.FC = () => {
 
     setInstalling((prev) => ({ ...prev, [user_task_id]: true }));
 
-    // Simulate installation
     setTimeout(() => {
       completeTask(user_task_id)
         .unwrap()
         .then(() => {
           setTimeout(() => {
-            // Silently refresh data after 4 seconds
             refetchUserTasks();
             refetchAudit();
             setInstalling((prev) => ({ ...prev, [user_task_id]: false }));
@@ -368,7 +341,7 @@ const UserTasks: React.FC = () => {
         .catch(() => {
           setInstalling((prev) => ({ ...prev, [user_task_id]: false }));
         });
-    }, 2000); // Simulate 2 seconds for installation
+    }, 2000);
   };
 
   if (allLoading || userLoading)
@@ -434,8 +407,8 @@ const UserTasks: React.FC = () => {
       ) : (
         <>
           {/* Task List Header */}
-          <div className="flex justify-between items-center mb-4">
-            <div className="flex items-center gap-4">
+          <div className="mb-4">
+            <div className="flex items-center gap-4 mb-4">
               <button
                 className="p-2 rounded-full hover:bg-yellow-200 transition-colors"
                 onClick={() => setShowTaskList(false)}
@@ -444,7 +417,9 @@ const UserTasks: React.FC = () => {
               </button>
               <h2 className="text-xl font-bold text-yellow-800">Task list</h2>
             </div>
-            <div className="flex space-x-4">
+
+            {/* Tabs */}
+            <div className="flex space-x-4 border-b border-yellow-200 mb-4">
               {(["doing", "audit", "completed"] as const).map((tab) => (
                 <button
                   key={tab}
