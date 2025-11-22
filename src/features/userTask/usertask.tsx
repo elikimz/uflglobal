@@ -265,7 +265,6 @@
 
 
 
-
 import React, { useState } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { useGetTasksQuery } from "../tasks/taskAPI";
@@ -316,7 +315,7 @@ const UserTasks: React.FC = () => {
     "doing"
   );
   const [showTaskList, setShowTaskList] = useState(false);
-  const [installing, setInstalling] = useState<{ [key: number]: boolean }>({});
+  const [installing, setInstalling] = useState<{ [key: number]: number }>({});
 
   // API Data
   const { data: allTasks, isLoading: allLoading } = useGetTasksQuery();
@@ -348,22 +347,30 @@ const UserTasks: React.FC = () => {
     const user_task_id = userTaskMap[task.id]?.id;
     if (!user_task_id || installing[user_task_id]) return;
 
-    setInstalling((prev) => ({ ...prev, [user_task_id]: true }));
+    setInstalling((prev) => ({ ...prev, [user_task_id]: 0 }));
 
-    setTimeout(() => {
-      completeTask(user_task_id)
-        .unwrap()
-        .then(() => {
-          setTimeout(() => {
-            refetchUserTasks();
-            refetchAudit();
-            setInstalling((prev) => ({ ...prev, [user_task_id]: false }));
-          }, 4000);
-        })
-        .catch(() => {
-          setInstalling((prev) => ({ ...prev, [user_task_id]: false }));
-        });
-    }, 2000);
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += Math.floor(Math.random() * 10) + 5;
+      if (progress >= 100) progress = 100;
+      setInstalling((prev) => ({ ...prev, [user_task_id]: progress }));
+
+      if (progress >= 100) {
+        clearInterval(interval);
+        completeTask(user_task_id)
+          .unwrap()
+          .then(() => {
+            setTimeout(() => {
+              refetchUserTasks();
+              refetchAudit();
+              setInstalling((prev) => ({ ...prev, [user_task_id]: 0 }));
+            }, 4000);
+          })
+          .catch(() => {
+            setInstalling((prev) => ({ ...prev, [user_task_id]: 0 }));
+          });
+      }
+    }, 300);
   };
 
   if (allLoading || userLoading)
@@ -482,14 +489,16 @@ const UserTasks: React.FC = () => {
                       </div>
                       <button
                         onClick={() => handleInstall(task)}
-                        disabled={installing[userTask?.id]}
+                        disabled={!!installing[userTask?.id]}
                         className={`px-4 py-2 rounded-lg text-white ${
                           installing[userTask?.id]
                             ? "bg-yellow-400"
                             : "bg-yellow-600"
                         }`}
                       >
-                        {installing[userTask?.id] ? "Installing..." : "Install"}
+                        {installing[userTask?.id]
+                          ? `${installing[userTask?.id]}%`
+                          : "Install"}
                       </button>
                     </div>
                   );
