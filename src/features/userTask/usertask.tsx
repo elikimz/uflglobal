@@ -293,7 +293,7 @@ const UserTasks: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"doing" | "audit" | "completed">(
     "doing"
   );
-  const [showTaskList, setShowTaskList] = useState(true);
+  const [showTaskList, setShowTaskList] = useState(false); // Default to app grid
   const [installing, setInstalling] = useState<{ [key: number]: boolean }>({});
 
   // API Data
@@ -406,34 +406,32 @@ const UserTasks: React.FC = () => {
         </>
       ) : (
         <>
-          {/* Task List Header */}
-          <div className="mb-4">
-            <div className="flex items-center gap-4 mb-4">
-              <button
-                className="p-2 rounded-full hover:bg-yellow-200 transition-colors"
-                onClick={() => setShowTaskList(false)}
-              >
-                <ArrowLeftIcon className="h-6 w-6 text-yellow-600" />
-              </button>
-              <h2 className="text-xl font-bold text-yellow-800">Task list</h2>
-            </div>
+          {/* Task List Header with Back Arrow and Title */}
+          <div className="flex items-center gap-4 mb-6">
+            <button
+              className="p-2 rounded-full hover:bg-yellow-200 transition-colors"
+              onClick={() => setShowTaskList(false)}
+            >
+              <ArrowLeftIcon className="h-6 w-6 text-yellow-600" />
+            </button>
+            <h2 className="text-xl font-bold text-yellow-800">Task list</h2>
+          </div>
 
-            {/* Tabs */}
-            <div className="flex space-x-4 border-b border-yellow-200 mb-4">
-              {(["doing", "audit", "completed"] as const).map((tab) => (
-                <button
-                  key={tab}
-                  className={`px-4 py-2 text-yellow-700 ${
-                    activeTab === tab
-                      ? "border-b-2 border-yellow-600 font-bold"
-                      : ""
-                  }`}
-                  onClick={() => setActiveTab(tab)}
-                >
-                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
-                </button>
-              ))}
-            </div>
+          {/* Tabs */}
+          <div className="flex space-x-4 border-b border-yellow-200 mb-6">
+            {(["doing", "audit", "completed"] as const).map((tab) => (
+              <button
+                key={tab}
+                className={`px-4 py-2 text-yellow-700 ${
+                  activeTab === tab
+                    ? "border-b-2 border-yellow-600 font-bold"
+                    : ""
+                }`}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+              </button>
+            ))}
           </div>
 
           {/* Task List Content */}
