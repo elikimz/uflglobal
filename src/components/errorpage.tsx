@@ -13,6 +13,7 @@ const ErrorPage: React.FC<ErrorPageProps> = ({
 }) => {
   const navigate = useNavigate();
 
+  
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600 px-4">
       <div className="bg-white/90 backdrop-blur-md rounded-3xl shadow-2xl p-10 max-w-lg w-full text-center border border-indigo-200">
