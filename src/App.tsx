@@ -23,7 +23,7 @@ import AdminWealthFund from "./features/wealthfund/wealthfundAdmin";
 import UserWealthFund from "./features/userWealthfund/userWeathfund";
 import AdminManageNews from "./features/news/adminmanagenews";
 import UserNews from "./features/news/news";
-// import Profile from "./features/profile/profile";
+import Profile from "./features/profile/profile";
 import Security from "./pages/security";
 import Withdrawal from "./features/withdrawal/withdrawal";
 import AdminManageWithdrawal from "./features/withdrawal/adminManageWithdwal";
