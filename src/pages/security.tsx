@@ -1,6 +1,3 @@
-
-
-
 // import React, { useState } from "react";
 // import { motion } from "framer-motion";
 // import {
@@ -317,8 +314,6 @@
 
 // export default Security;
 
-
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -332,7 +327,6 @@ import {
   useSetPinMutation,
   useUpdatePinMutation,
 } from "../features/withdrawal/withdrawalAPI";
-
 
 const Security: React.FC = () => {
   // Queries & Mutations
@@ -518,7 +512,6 @@ const Security: React.FC = () => {
         )}
       </section>
 
-   
     </motion.div>
   );
 };

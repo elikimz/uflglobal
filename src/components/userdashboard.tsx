@@ -229,6 +229,8 @@
 
 
 
+
+
 import { useState } from "react";
 import { useNavigate, type To } from "react-router-dom";
 import {
@@ -246,7 +248,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { motion, AnimatePresence } from "framer-motion";
 import image from "../assets/image.png";
-import badge from "../assets/badge.png"
+import badge from "../assets/badge.png";
 import { useGetUserProfileQuery } from "../features/profile/profileAPI";
 
 const UserDashboard = () => {
