@@ -141,16 +141,16 @@ const router = createBrowserRouter([
       />
     ),
   },
-  // {
-  //   path: "/profile",
-  //   element: <Profile />,
-  //   errorElement: (
-  //     <ErrorPage
-  //       code="🚧"
-  //       message="This section is being crafted to serve you better. Please check back soon!"
-  //     />
-  //   ),
-  // },
+  {
+    path: "/profile",
+    element: <Profile />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
   {
     path: "/security",
     element: <Security />,
