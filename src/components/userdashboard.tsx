@@ -20,7 +20,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import image from "../assets/image.png"
 import badge from "../assets/badge.png";
-import { useGetUserProfileQuery } from "../features/profile/profileAPI";
+import { useGetUserProfileQuery } from "../features/profile/profileAPI.tsx";
 
 const UserDashboard = () => {
   const navigate = useNavigate();
