@@ -2,13 +2,15 @@
 
 
 // import React, { useState } from "react";
+// import { ArrowLeftIcon } from "@heroicons/react/24/solid";
+
 // import { useGetTasksQuery } from "../tasks/taskAPI";
 // import {
 //   useGetUserTasksQuery,
 //   useCompleteUserTaskMutation,
 //   useGetAuditAndCompletedTasksQuery,
+//   useGetUserEarningsQuery,
 // } from "./userTaskAPI";
-// import { CheckCircle } from "lucide-react";
 
 // interface Task {
 //   id: number;
@@ -26,53 +28,53 @@
 // }
 
 // const UserTasks: React.FC = () => {
-//   const [showAssigned, setShowAssigned] = useState(false);
+//   const [activeTab, setActiveTab] = useState<"doing" | "audit" | "completed">(
+//     "doing"
+//   );
+//   const [showTaskList, setShowTaskList] = useState(false);
 
-//   // All tasks
+//   // API Data
 //   const { data: allTasks, isLoading: allLoading } = useGetTasksQuery();
-
-//   // User tasks
 //   const {
 //     data: userTasks,
 //     isLoading: userLoading,
 //     refetch: refetchUserTasks,
 //   } = useGetUserTasksQuery();
-
-//   // Completed + Audit tasks
 //   const { data: auditAndCompleted, refetch: refetchAudit } =
 //     useGetAuditAndCompletedTasksQuery();
+
+//   const { data: earningsData } = useGetUserEarningsQuery();
 
 //   const [completeTask] = useCompleteUserTaskMutation();
 //   const [downloading, setDownloading] = useState<{ [key: number]: number }>({});
 //   const [, setSuccessMessage] = useState<{ [key: number]: boolean }>({});
 
-//   const userTaskMap =
-//     userTasks?.reduce((acc, ut) => {
+//   // Dynamic Earnings
+//   const todaysEarnings = earningsData?.today || 0;
+//   const totalBalance = earningsData?.balance || 0;
+
+//   // Data Processing
+//   const userTaskMap: Record<number, UserTask> =
+//     userTasks?.reduce((acc: Record<number, UserTask>, ut: UserTask) => {
 //       acc[ut.task.id] = ut;
 //       return acc;
-//     }, {} as Record<number, UserTask>) || {};
+//     }, {} as Record<number, UserTask>) || ({} as Record<number, UserTask>);
 
 //   const assignedTasks = allTasks?.filter((t: Task) => userTaskMap[t.id]) || [];
-//   const availableTasks =
-//     allTasks?.filter((t: Task) => !userTaskMap[t.id]) || [];
-
 //   const completedCount = Object.values(userTaskMap).filter(
 //     (ut) => ut.is_completed
 //   ).length;
 
+//   // Handlers
 //   const handleDownload = (task: Task) => {
 //     const user_task_id = userTaskMap[task.id]?.id;
 //     if (!user_task_id || downloading[user_task_id]) return;
-
 //     setDownloading((prev) => ({ ...prev, [user_task_id]: 0 }));
-
 //     let progress = 0;
 //     const interval = setInterval(() => {
 //       progress += Math.floor(Math.random() * 10) + 5;
 //       if (progress >= 100) progress = 100;
-
 //       setDownloading((prev) => ({ ...prev, [user_task_id]: progress }));
-
 //       if (progress >= 100) {
 //         clearInterval(interval);
 //         completeTask(user_task_id)
@@ -80,9 +82,8 @@
 //           .then(() => {
 //             setSuccessMessage((prev) => ({ ...prev, [user_task_id]: true }));
 //             refetchUserTasks();
-//             refetchAudit(); // refetch audit/completed to reflect new data
+//             refetchAudit();
 //             setDownloading((prev) => ({ ...prev, [user_task_id]: 0 }));
-
 //             setTimeout(() => {
 //               setSuccessMessage((prev) => ({ ...prev, [user_task_id]: false }));
 //             }, 8000);
@@ -97,155 +98,189 @@
 //   if (allLoading || userLoading)
 //     return (
 //       <div className="flex justify-center items-center h-64">
-//         <p className="text-[#3B82F6]">Loading...</p>
+//         <p className="text-yellow-800">Loading...</p>
 //       </div>
 //     );
 
 //   return (
-//     <div className="p-4 bg-gradient-to-b from-[#87CEEB] to-[#1E90FF] min-h-screen">
-//       <h2 className="text-2xl font-bold text-white text-center mb-4">
-//         Task Center
-//       </h2>
-
-//       <div className="flex justify-center mb-5">
-//         <button
-//           className="bg-white text-blue-600 font-bold px-6 py-2 rounded-lg shadow"
-//           onClick={() => setShowAssigned(!showAssigned)}
-//         >
-//           {showAssigned ? "View Available Apps" : "My Tasks"}
-//         </button>
-//       </div>
-
-//       {!showAssigned && (
-//         <div>
-//           <h3 className="text-xl font-bold text-white mb-3">Available Apps</h3>
-//           <div className="grid grid-cols-3 gap-4">
-//             {availableTasks.map((task: Task) => (
+//     <div className="min-h-screen bg-yellow-50 p-4 text-yellow-900">
+//       {!showTaskList ? (
+//         <>
+//           {/* App Grid */}
+//           <div className="grid grid-cols-4 gap-4 mb-4">
+//             {allTasks?.map((task) => (
 //               <div
 //                 key={task.id}
-//                 className="bg-white p-3 shadow rounded-xl flex justify-center"
+//                 className="bg-yellow-100 p-2 rounded-lg shadow flex flex-col items-center"
 //               >
 //                 <img
 //                   src={task.app_picture}
-//                   className="w-20 h-20 rounded-lg object-cover"
+//                   alt={task.app_name}
+//                   className="w-12 h-12"
 //                 />
 //               </div>
 //             ))}
 //           </div>
-//         </div>
-//       )}
 
-//       {showAssigned && (
-//         <div>
-//           <h3 className="text-xl font-bold text-white mb-3">
-//             My Assigned Apps
-//           </h3>
-
-//           <div className="bg-white p-4 rounded-lg shadow mb-4">
-//             <p className="font-bold mb-1">My Task Progress</p>
-//             <p className="text-sm text-gray-600">
-//               {completedCount} / {assignedTasks.length}
-//             </p>
-//             <div className="w-full bg-gray-200 rounded-full h-2.5 mt-2">
-//               <div
-//                 className="bg-blue-600 h-2.5 rounded-full"
-//                 style={{
-//                   width: `${
-//                     assignedTasks.length > 0
-//                       ? (completedCount / assignedTasks.length) * 100
-//                       : 0
-//                   }%`,
-//                 }}
-//               ></div>
+//           {/* Earnings Cards */}
+//           <div className="grid grid-cols-2 gap-4 mb-4">
+//             <div className="bg-yellow-100 p-4 rounded-lg shadow">
+//               <p className="text-sm text-yellow-700">Today's earnings</p>
+//               <p className="text-xl font-bold">KES {todaysEarnings}</p>
+//             </div>
+//             <div className="bg-yellow-100 p-4 rounded-lg shadow">
+//               <p className="text-sm text-yellow-700">Total balance</p>
+//               <p className="text-xl font-bold">KES {totalBalance}</p>
 //             </div>
 //           </div>
 
-//           {/* Assigned tasks */}
-//           <div className="grid grid-cols-1 gap-4">
-//             {assignedTasks.map((task: Task) => {
-//               const userTask = userTaskMap[task.id];
-//               const isCompleted = userTask?.is_completed;
+//           {/* Start Task Button */}
+//           <div className="bg-yellow-100 p-4 rounded-lg shadow mb-4">
+//             <div className="flex justify-between items-center mb-2">
+//               <span className="font-bold">Starting</span>
+//               <span>
+//                 {completedCount}/{assignedTasks.length}
+//               </span>
+//             </div>
+//             <div className="w-full bg-yellow-200 rounded-full h-2.5">
+//               <div
+//                 className="bg-yellow-600 h-2.5 rounded-full"
+//                 style={{
+//                   width: `${(completedCount / assignedTasks.length) * 100}%`,
+//                 }}
+//               ></div>
+//             </div>
+//             <button
+//               className="w-full bg-yellow-600 text-white py-2 rounded-lg mt-4"
+//               onClick={() => setShowTaskList(true)}
+//             >
+//               Start Task
+//             </button>
+//           </div>
 
-//               return (
-//                 <div
-//                   key={task.id}
-//                   className="bg-white p-4 rounded-lg shadow flex items-center gap-4"
+//           {/* Important Notice */}
+//           <div className="bg-yellow-100 p-4 rounded-lg shadow">
+//             <p className="font-bold mb-2 text-yellow-800">Important Notice</p>
+//             <p className="text-sm text-yellow-700">
+//               Working hours: 00:01-23:59
+//             </p>
+//             <p className="text-sm text-yellow-700">
+//               If you need assistance, please contact your hiring manager!
+//             </p>
+//           </div>
+//         </>
+//       ) : (
+//         <>
+//           {/* Task List Header */}
+//           <div className="flex justify-between items-center mb-4">
+//             <div className="flex items-center gap-4">
+//               <button
+//                 className="p-2 rounded-full hover:bg-yellow-200 transition-colors"
+//                 onClick={() => setShowTaskList(false)}
+//               >
+//                 <ArrowLeftIcon className="h-6 w-6 text-yellow-600" />
+//               </button>
+//               <h2 className="text-xl font-bold text-yellow-800">Task list</h2>
+//             </div>
+//             <div className="flex space-x-4">
+//               {(["doing", "audit", "completed"] as const).map((tab) => (
+//                 <button
+//                   key={tab}
+//                   className={`px-4 py-2 text-yellow-700 ${
+//                     activeTab === tab
+//                       ? "border-b-2 border-yellow-600 font-bold"
+//                       : ""
+//                   }`}
+//                   onClick={() => setActiveTab(tab)}
 //                 >
-//                   <img
-//                     src={task.app_picture}
-//                     className="w-16 h-16 rounded-lg object-cover"
-//                   />
-//                   <div className="flex-1">
-//                     <p className="font-bold">{task.app_name}</p>
-//                     <p className="text-sm text-gray-600">KES {task.reward}</p>
+//                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
+//                 </button>
+//               ))}
+//             </div>
+//           </div>
 
-//                     {isCompleted ? (
-//                       <p className="text-green-500 text-sm flex items-center gap-1 mt-1">
-//                         <CheckCircle size={14} /> Completed
-//                       </p>
-//                     ) : (
+//           {/* Task List Content */}
+//           <div>
+//             {activeTab === "doing" && (
+//               <div className="space-y-4">
+//                 {assignedTasks.map((task) => {
+//                   const userTask = userTaskMap[task.id];
+//                   return (
+//                     <div
+//                       key={task.id}
+//                       className="bg-yellow-100 p-4 rounded-lg shadow flex items-center gap-4"
+//                     >
+//                       <img
+//                         src={task.app_picture}
+//                         alt={task.app_name}
+//                         className="w-12 h-12"
+//                       />
+//                       <div className="flex-1">
+//                         <p className="font-bold text-yellow-800">
+//                           {task.app_name}
+//                         </p>
+//                         <p className="text-sm text-yellow-700">
+//                           KES {task.reward}
+//                         </p>
+//                       </div>
 //                       <button
 //                         onClick={() => handleDownload(task)}
-//                         className="bg-blue-500 text-white px-4 py-1 rounded text-sm mt-1"
+//                         className="bg-yellow-600 text-white px-4 py-2 rounded-lg"
 //                       >
 //                         {downloading[userTask?.id]
 //                           ? `${downloading[userTask?.id]}%`
 //                           : "Start"}
 //                       </button>
-//                     )}
-//                   </div>
-//                 </div>
-//               );
-//             })}
-//           </div>
+//                     </div>
+//                   );
+//                 })}
+//               </div>
+//             )}
 
-//           {/* Audit + Completed tasks */}
-//           {auditAndCompleted && (
-//             <div className="mt-6">
-//               <h3 className="text-xl font-bold text-white mb-3">
-//                 Audit & Completed Tasks
-//               </h3>
-//               <div className="grid grid-cols-1 gap-4">
-//                 {auditAndCompleted.audit_tasks.map((a: any) => (
+//             {activeTab === "audit" && (
+//               <div className="space-y-4">
+//                 {auditAndCompleted?.audit_tasks.map((a: any) => (
 //                   <div
 //                     key={`audit-${a.id}`}
-//                     className="bg-yellow-100 p-3 rounded shadow"
+//                     className="bg-yellow-100 p-4 rounded-lg shadow"
 //                   >
-//                     <p className="font-semibold">
+//                     <p className="font-bold text-yellow-800">
 //                       Audit Task: {a.user_task?.task?.app_name}
 //                     </p>
-//                     <p className="text-sm text-gray-700">
+//                     <p className="text-sm text-yellow-700">
 //                       KES {a.user_task?.task?.reward}
 //                     </p>
-//                     <p className="text-xs text-gray-500">
+//                     <p className="text-xs text-yellow-600">
 //                       Temporary audit record
 //                     </p>
 //                   </div>
 //                 ))}
+//               </div>
+//             )}
 
-//                 {auditAndCompleted.completed_tasks.map((c: any) => (
+//             {activeTab === "completed" && (
+//               <div className="space-y-4">
+//                 {auditAndCompleted?.completed_tasks.map((c: any) => (
 //                   <div
 //                     key={`completed-${c.id}`}
-//                     className="bg-green-100 p-3 rounded shadow"
+//                     className="bg-green-50 p-4 rounded-lg shadow"
 //                   >
-//                     <p className="font-semibold">
+//                     <p className="font-bold text-yellow-800">
 //                       Completed Task: {c.user_task?.task?.app_name}
 //                     </p>
-//                     <p className="text-sm text-gray-700">
+//                     <p className="text-sm text-yellow-700">
 //                       KES {c.user_task?.task?.reward}
 //                     </p>
-//                     <p className="text-xs text-gray-500">
+//                     <p className="text-xs text-yellow-600">
 //                       Earned: KES {c.reward}
 //                     </p>
 //                   </div>
 //                 ))}
 //               </div>
-//             </div>
-//           )}
-//         </div>
+//             )}
+//           </div>
+//         </>
 //       )}
-
-//       <div className="h-16"></div>
 //     </div>
 //   );
 // };
@@ -254,18 +289,15 @@
 
 
 
-
-
-
-
-import React, { useState } from "react";
+import React, { useState} from "react";
+import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { useGetTasksQuery } from "../tasks/taskAPI";
 import {
   useGetUserTasksQuery,
   useCompleteUserTaskMutation,
   useGetAuditAndCompletedTasksQuery,
+  useGetUserEarningsQuery,
 } from "./userTaskAPI";
-import { CheckCircle } from "lucide-react";
 
 interface Task {
   id: number;
@@ -283,26 +315,29 @@ interface UserTask {
 }
 
 const UserTasks: React.FC = () => {
-  const [showAssigned, setShowAssigned] = useState(false);
+  const [activeTab, setActiveTab] = useState<"doing" | "audit" | "completed">(
+    "doing"
+  );
+  const [showTaskList, setShowTaskList] = useState(false);
+  const [installing, setInstalling] = useState<{ [key: number]: boolean }>({});
 
-  // All tasks
+  // API Data
   const { data: allTasks, isLoading: allLoading } = useGetTasksQuery();
-
-  // User tasks
   const {
     data: userTasks,
     isLoading: userLoading,
     refetch: refetchUserTasks,
   } = useGetUserTasksQuery();
-
-  // Completed + Audit tasks
   const { data: auditAndCompleted, refetch: refetchAudit } =
     useGetAuditAndCompletedTasksQuery();
-
+  const { data: earningsData } = useGetUserEarningsQuery();
   const [completeTask] = useCompleteUserTaskMutation();
-  const [downloading, setDownloading] = useState<{ [key: number]: number }>({});
-  const [, setSuccessMessage] = useState<{ [key: number]: boolean }>({});
 
+  // Dynamic Earnings
+  const todaysEarnings = earningsData?.todays_earnings || 0;
+  const totalBalance = earningsData?.total_earnings || 0;
+
+  // Data Processing
   const userTaskMap: Record<number, UserTask> =
     userTasks?.reduce((acc: Record<number, UserTask>, ut: UserTask) => {
       acc[ut.task.id] = ut;
@@ -310,40 +345,30 @@ const UserTasks: React.FC = () => {
     }, {} as Record<number, UserTask>) || ({} as Record<number, UserTask>);
 
   const assignedTasks = allTasks?.filter((t: Task) => userTaskMap[t.id]) || [];
-  const availableTasks =
-    allTasks?.filter((t: Task) => !userTaskMap[t.id]) || [];
 
-  const completedCount = Object.values(userTaskMap).filter(
-    (ut) => ut.is_completed
-  ).length;
-
-  const handleDownload = (task: Task) => {
+  // Handlers
+  const handleInstall = (task: Task) => {
     const user_task_id = userTaskMap[task.id]?.id;
-    if (!user_task_id || downloading[user_task_id]) return;
-    setDownloading((prev) => ({ ...prev, [user_task_id]: 0 }));
-    let progress = 0;
-    const interval = setInterval(() => {
-      progress += Math.floor(Math.random() * 10) + 5;
-      if (progress >= 100) progress = 100;
-      setDownloading((prev) => ({ ...prev, [user_task_id]: progress }));
-      if (progress >= 100) {
-        clearInterval(interval);
-        completeTask(user_task_id)
-          .unwrap()
-          .then(() => {
-            setSuccessMessage((prev) => ({ ...prev, [user_task_id]: true }));
+    if (!user_task_id || installing[user_task_id]) return;
+
+    setInstalling((prev) => ({ ...prev, [user_task_id]: true }));
+
+    // Simulate installation
+    setTimeout(() => {
+      completeTask(user_task_id)
+        .unwrap()
+        .then(() => {
+          setTimeout(() => {
+            // Silently refresh data after 4 seconds
             refetchUserTasks();
             refetchAudit();
-            setDownloading((prev) => ({ ...prev, [user_task_id]: 0 }));
-            setTimeout(() => {
-              setSuccessMessage((prev) => ({ ...prev, [user_task_id]: false }));
-            }, 8000);
-          })
-          .catch(() =>
-            setDownloading((prev) => ({ ...prev, [user_task_id]: 0 }))
-          );
-      }
-    }, 300);
+            setInstalling((prev) => ({ ...prev, [user_task_id]: false }));
+          }, 4000);
+        })
+        .catch(() => {
+          setInstalling((prev) => ({ ...prev, [user_task_id]: false }));
+        });
+    }, 2000); // Simulate 2 seconds for installation
   };
 
   if (allLoading || userLoading)
@@ -354,142 +379,171 @@ const UserTasks: React.FC = () => {
     );
 
   return (
-    <div className="p-4 bg-yellow-50 min-h-screen">
-      <h2 className="text-2xl font-bold text-yellow-900 text-center mb-4">
-        Task Center
-      </h2>
-      <div className="flex justify-center mb-5">
-        <button
-          className="bg-yellow-100 text-yellow-800 font-bold px-6 py-2 rounded-lg shadow"
-          onClick={() => setShowAssigned(!showAssigned)}
-        >
-          {showAssigned ? "View Available Apps" : "My Tasks"}
-        </button>
-      </div>
-      {!showAssigned && (
-        <div>
-          <h3 className="text-xl font-bold text-yellow-900 mb-3">
-            Available Apps
-          </h3>
-          <div className="grid grid-cols-3 gap-4">
-            {availableTasks.map((task: Task) => (
+    <div className="min-h-screen bg-yellow-50 p-4 text-yellow-900">
+      {!showTaskList ? (
+        <>
+          {/* App Grid */}
+          <div className="grid grid-cols-4 gap-4 mb-4">
+            {allTasks?.map((task) => (
               <div
                 key={task.id}
-                className="bg-yellow-100 p-3 shadow rounded-xl flex justify-center"
+                className="bg-yellow-100 p-2 rounded-lg shadow flex flex-col items-center"
               >
                 <img
                   src={task.app_picture}
-                  className="w-20 h-20 rounded-lg object-cover"
+                  alt={task.app_name}
+                  className="w-12 h-12"
                 />
               </div>
             ))}
           </div>
-        </div>
-      )}
-      {showAssigned && (
-        <div>
-          <h3 className="text-xl font-bold text-yellow-900 mb-3">
-            My Assigned Apps
-          </h3>
-          <div className="bg-yellow-100 p-4 rounded-lg shadow mb-4">
-            <p className="font-bold mb-1 text-yellow-900">My Task Progress</p>
-            <p className="text-sm text-yellow-800">
-              {completedCount} / {assignedTasks.length}
-            </p>
-            <div className="w-full bg-yellow-200 rounded-full h-2.5 mt-2">
-              <div
-                className="bg-yellow-600 h-2.5 rounded-full"
-                style={{
-                  width: `${
-                    assignedTasks.length > 0
-                      ? (completedCount / assignedTasks.length) * 100
-                      : 0
-                  }%`,
-                }}
-              ></div>
+
+          {/* Earnings Cards */}
+          <div className="grid grid-cols-2 gap-4 mb-4">
+            <div className="bg-yellow-100 p-4 rounded-lg shadow">
+              <p className="text-sm text-yellow-700">Today's earnings</p>
+              <p className="text-xl font-bold">KES {todaysEarnings}</p>
+            </div>
+            <div className="bg-yellow-100 p-4 rounded-lg shadow">
+              <p className="text-sm text-yellow-700">Total balance</p>
+              <p className="text-xl font-bold">KES {totalBalance}</p>
             </div>
           </div>
-          {/* Assigned tasks */}
-          <div className="grid grid-cols-1 gap-4">
-            {assignedTasks.map((task: Task) => {
-              const userTask = userTaskMap[task.id];
-              const isCompleted = userTask?.is_completed;
-              return (
-                <div
-                  key={task.id}
-                  className="bg-yellow-100 p-4 rounded-lg shadow flex items-center gap-4"
-                >
-                  <img
-                    src={task.app_picture}
-                    className="w-16 h-16 rounded-lg object-cover"
-                  />
-                  <div className="flex-1">
-                    <p className="font-bold text-yellow-900">{task.app_name}</p>
-                    <p className="text-sm text-yellow-800">KES {task.reward}</p>
-                    {isCompleted ? (
-                      <p className="text-green-600 text-sm flex items-center gap-1 mt-1">
-                        <CheckCircle size={14} /> Completed
-                      </p>
-                    ) : (
-                      <button
-                        onClick={() => handleDownload(task)}
-                        className="bg-yellow-600 text-white px-4 py-1 rounded text-sm mt-1"
-                      >
-                        {downloading[userTask?.id]
-                          ? `${downloading[userTask?.id]}%`
-                          : "Start"}
-                      </button>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+
+          {/* Start Task Button */}
+          <div className="bg-yellow-100 p-4 rounded-lg shadow mb-4">
+            <button
+              className="w-full bg-yellow-600 text-white py-2 rounded-lg mt-4"
+              onClick={() => setShowTaskList(true)}
+            >
+              Start Task
+            </button>
           </div>
-          {/* Audit + Completed tasks */}
-          {auditAndCompleted && (
-            <div className="mt-6">
-              <h3 className="text-xl font-bold text-yellow-900 mb-3">
-                Audit & Completed Tasks
-              </h3>
-              <div className="grid grid-cols-1 gap-4">
-                {auditAndCompleted.audit_tasks.map((a: any) => (
+
+          {/* Important Notice */}
+          <div className="bg-yellow-100 p-4 rounded-lg shadow">
+            <p className="font-bold mb-2 text-yellow-800">Important Notice</p>
+            <p className="text-sm text-yellow-700">
+              Working hours: 00:01-23:59
+            </p>
+            <p className="text-sm text-yellow-700">
+              If you need assistance, please contact your hiring manager!
+            </p>
+          </div>
+        </>
+      ) : (
+        <>
+          {/* Task List Header */}
+          <div className="flex justify-between items-center mb-4">
+            <div className="flex items-center gap-4">
+              <button
+                className="p-2 rounded-full hover:bg-yellow-200 transition-colors"
+                onClick={() => setShowTaskList(false)}
+              >
+                <ArrowLeftIcon className="h-6 w-6 text-yellow-600" />
+              </button>
+              <h2 className="text-xl font-bold text-yellow-800">Task list</h2>
+            </div>
+            <div className="flex space-x-4">
+              {(["doing", "audit", "completed"] as const).map((tab) => (
+                <button
+                  key={tab}
+                  className={`px-4 py-2 text-yellow-700 ${
+                    activeTab === tab
+                      ? "border-b-2 border-yellow-600 font-bold"
+                      : ""
+                  }`}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Task List Content */}
+          <div>
+            {activeTab === "doing" && (
+              <div className="space-y-4">
+                {assignedTasks.map((task) => {
+                  const userTask = userTaskMap[task.id];
+                  return (
+                    <div
+                      key={task.id}
+                      className="bg-yellow-100 p-4 rounded-lg shadow flex items-center gap-4"
+                    >
+                      <img
+                        src={task.app_picture}
+                        alt={task.app_name}
+                        className="w-12 h-12"
+                      />
+                      <div className="flex-1">
+                        <p className="font-bold text-yellow-800">
+                          {task.app_name}
+                        </p>
+                        <p className="text-sm text-yellow-700">
+                          KES {task.reward}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => handleInstall(task)}
+                        disabled={installing[userTask?.id]}
+                        className={`px-4 py-2 rounded-lg text-white ${
+                          installing[userTask?.id]
+                            ? "bg-yellow-400"
+                            : "bg-yellow-600"
+                        }`}
+                      >
+                        {installing[userTask?.id] ? "Installing..." : "Install"}
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+            {activeTab === "audit" && (
+              <div className="space-y-4">
+                {auditAndCompleted?.audit_tasks.map((a: any) => (
                   <div
                     key={`audit-${a.id}`}
-                    className="bg-yellow-50 p-3 rounded shadow border border-yellow-200"
+                    className="bg-yellow-100 p-4 rounded-lg shadow"
                   >
-                    <p className="font-semibold text-yellow-900">
+                    <p className="font-bold text-yellow-800">
                       Audit Task: {a.user_task?.task?.app_name}
                     </p>
-                    <p className="text-sm text-yellow-800">
+                    <p className="text-sm text-yellow-700">
                       KES {a.user_task?.task?.reward}
                     </p>
-                    <p className="text-xs text-yellow-700">
+                    <p className="text-xs text-yellow-600">
                       Temporary audit record
                     </p>
                   </div>
                 ))}
-                {auditAndCompleted.completed_tasks.map((c: any) => (
+              </div>
+            )}
+            {activeTab === "completed" && (
+              <div className="space-y-4">
+                {auditAndCompleted?.completed_tasks.map((c: any) => (
                   <div
                     key={`completed-${c.id}`}
-                    className="bg-green-50 p-3 rounded shadow border border-green-200"
+                    className="bg-green-50 p-4 rounded-lg shadow"
                   >
-                    <p className="font-semibold text-yellow-900">
+                    <p className="font-bold text-yellow-800">
                       Completed Task: {c.user_task?.task?.app_name}
                     </p>
-                    <p className="text-sm text-yellow-800">
+                    <p className="text-sm text-yellow-700">
                       KES {c.user_task?.task?.reward}
                     </p>
-                    <p className="text-xs text-yellow-700">
+                    <p className="text-xs text-yellow-600">
                       Earned: KES {c.reward}
                     </p>
                   </div>
                 ))}
               </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        </>
       )}
-      <div className="h-16"></div>
     </div>
   );
 };
