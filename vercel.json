@@ -7,10 +7,17 @@
     }
   ],
   "routes": [
-    { "src": "/service-worker.js", "dest": "/service-worker.js" },
+
     { "src": "/assets/(.*)", "dest": "/assets/$1" },
+    { "src": "/service-worker.js", "dest": "/service-worker.js" },
     { "src": "/manifest.json", "dest": "/manifest.json" },
     { "src": "/icons/(.*)", "dest": "/icons/$1" },
-    { "src": "/(.*)", "dest": "/index.html" }
+
+
+    {
+      "src": "/(.*)",
+      "dest": "/index.html",
+      "headers": { "cache-control": "no-cache" }
+    }
   ]
 }
