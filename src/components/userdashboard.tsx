@@ -393,7 +393,7 @@ const UserDashboard = () => {
             <div className="grid grid-cols-5">
               {[
                 {
-                  path: null,
+                  path: "/",
                   icon: (
                     <HomeIcon className="h-6 w-6 mx-auto text-yellow-600" />
                   ),
