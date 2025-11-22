@@ -366,7 +366,7 @@ const Profile: React.FC = () => {
           onClick={() => navigate("/security")}
           className="bg-yellow-100 p-4 rounded-lg shadow flex justify-between items-center"
         >
-          <span className="text-yellow-800">Personal Settings</span>
+          <span className="text-yellow-800">Withdrawal pin </span>
           <UserIcon className="h-5 w-5 text-yellow-600" />
         </div>
 
@@ -375,7 +375,7 @@ const Profile: React.FC = () => {
           onClick={() => navigate("/change-password")}
           className="bg-yellow-100 p-4 rounded-lg shadow flex justify-between items-center"
         >
-          <span className="text-yellow-800">Password Settings</span>
+          <span className="text-yellow-800">Personal Settings</span>
           <UserIcon className="h-5 w-5 text-yellow-600" />
         </div>
 
