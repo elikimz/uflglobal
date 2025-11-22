@@ -92,6 +92,7 @@ export const userWealthFundAPI = createApi({
   }),
 });
 
+
 export const {
   useGetMyWealthFundsQuery,
   useInvestInWealthFundMutation,
