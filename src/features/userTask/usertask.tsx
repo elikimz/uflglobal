@@ -1,6 +1,7 @@
 
 
-// import React, { useState} from "react";
+
+// import React, { useState } from "react";
 // import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 // import { useGetTasksQuery } from "../tasks/taskAPI";
 // import {
@@ -29,7 +30,7 @@
 //   const [activeTab, setActiveTab] = useState<"doing" | "audit" | "completed">(
 //     "doing"
 //   );
-//   const [showTaskList, setShowTaskList] = useState(false);
+//   const [showTaskList, setShowTaskList] = useState(false); // Default to app grid
 //   const [installing, setInstalling] = useState<{ [key: number]: boolean }>({});
 
 //   // API Data
@@ -64,13 +65,11 @@
 
 //     setInstalling((prev) => ({ ...prev, [user_task_id]: true }));
 
-//     // Simulate installation
 //     setTimeout(() => {
 //       completeTask(user_task_id)
 //         .unwrap()
 //         .then(() => {
 //           setTimeout(() => {
-//             // Silently refresh data after 4 seconds
 //             refetchUserTasks();
 //             refetchAudit();
 //             setInstalling((prev) => ({ ...prev, [user_task_id]: false }));
@@ -79,7 +78,7 @@
 //         .catch(() => {
 //           setInstalling((prev) => ({ ...prev, [user_task_id]: false }));
 //         });
-//     }, 2000); // Simulate 2 seconds for installation
+//     }, 2000);
 //   };
 
 //   if (allLoading || userLoading)
@@ -144,32 +143,32 @@
 //         </>
 //       ) : (
 //         <>
-//           {/* Task List Header */}
-//           <div className="flex justify-between items-center mb-4">
-//             <div className="flex items-center gap-4">
+//           {/* Task List Header with Back Arrow and Title */}
+//           <div className="flex items-center gap-4 mb-6">
+//             <button
+//               className="p-2 rounded-full hover:bg-yellow-200 transition-colors"
+//               onClick={() => setShowTaskList(false)}
+//             >
+//               <ArrowLeftIcon className="h-6 w-6 text-yellow-600" />
+//             </button>
+//             <h2 className="text-xl font-bold text-yellow-800">Task list</h2>
+//           </div>
+
+//           {/* Tabs */}
+//           <div className="flex space-x-4 border-b border-yellow-200 mb-6">
+//             {(["doing", "audit", "completed"] as const).map((tab) => (
 //               <button
-//                 className="p-2 rounded-full hover:bg-yellow-200 transition-colors"
-//                 onClick={() => setShowTaskList(false)}
+//                 key={tab}
+//                 className={`px-4 py-2 text-yellow-700 ${
+//                   activeTab === tab
+//                     ? "border-b-2 border-yellow-600 font-bold"
+//                     : ""
+//                 }`}
+//                 onClick={() => setActiveTab(tab)}
 //               >
-//                 <ArrowLeftIcon className="h-6 w-6 text-yellow-600" />
+//                 {tab.charAt(0).toUpperCase() + tab.slice(1)}
 //               </button>
-//               <h2 className="text-xl font-bold text-yellow-800">Task list</h2>
-//             </div>
-//             <div className="flex space-x-4">
-//               {(["doing", "audit", "completed"] as const).map((tab) => (
-//                 <button
-//                   key={tab}
-//                   className={`px-4 py-2 text-yellow-700 ${
-//                     activeTab === tab
-//                       ? "border-b-2 border-yellow-600 font-bold"
-//                       : ""
-//                   }`}
-//                   onClick={() => setActiveTab(tab)}
-//                 >
-//                   {tab.charAt(0).toUpperCase() + tab.slice(1)}
-//                 </button>
-//               ))}
-//             </div>
+//             ))}
 //           </div>
 
 //           {/* Task List Content */}
@@ -264,6 +263,9 @@
 
 
 
+
+
+
 import React, { useState } from "react";
 import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 import { useGetTasksQuery } from "../tasks/taskAPI";
@@ -289,11 +291,31 @@ interface UserTask {
   task: Task;
 }
 
+interface AuditTask {
+  id: number;
+  user_task_id: number;
+  user_id: number;
+  completed_at: string;
+  task_name: string;
+  task_picture: string;
+}
+
+interface CompletedTask {
+  id: number;
+  user_task_id: number;
+  user_id: number;
+  reward: number;
+  completed_at: string;
+  task_name: string;
+  task_picture: string;
+}
+
+
 const UserTasks: React.FC = () => {
   const [activeTab, setActiveTab] = useState<"doing" | "audit" | "completed">(
     "doing"
   );
-  const [showTaskList, setShowTaskList] = useState(false); // Default to app grid
+  const [showTaskList, setShowTaskList] = useState(false);
   const [installing, setInstalling] = useState<{ [key: number]: boolean }>({});
 
   // API Data
@@ -476,40 +498,46 @@ const UserTasks: React.FC = () => {
             )}
             {activeTab === "audit" && (
               <div className="space-y-4">
-                {auditAndCompleted?.audit_tasks.map((a: any) => (
+                {auditAndCompleted?.audit_tasks.map((a: AuditTask) => (
                   <div
                     key={`audit-${a.id}`}
-                    className="bg-yellow-100 p-4 rounded-lg shadow"
+                    className="bg-yellow-100 p-4 rounded-lg shadow flex items-center gap-4"
                   >
-                    <p className="font-bold text-yellow-800">
-                      Audit Task: {a.user_task?.task?.app_name}
-                    </p>
-                    <p className="text-sm text-yellow-700">
-                      KES {a.user_task?.task?.reward}
-                    </p>
-                    <p className="text-xs text-yellow-600">
-                      Temporary audit record
-                    </p>
+                    <img
+                      src={a.task_picture}
+                      alt={a.task_name}
+                      className="w-12 h-12 rounded-lg"
+                    />
+                    <div className="flex-1">
+                      <p className="font-bold text-yellow-800">
+                        Audit Task: {a.task_name}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
             )}
             {activeTab === "completed" && (
               <div className="space-y-4">
-                {auditAndCompleted?.completed_tasks.map((c: any) => (
+                {auditAndCompleted?.completed_tasks.map((c: CompletedTask) => (
                   <div
                     key={`completed-${c.id}`}
-                    className="bg-green-50 p-4 rounded-lg shadow"
+                    className="bg-green-50 p-4 rounded-lg shadow flex items-center gap-4"
                   >
-                    <p className="font-bold text-yellow-800">
-                      Completed Task: {c.user_task?.task?.app_name}
-                    </p>
-                    <p className="text-sm text-yellow-700">
-                      KES {c.user_task?.task?.reward}
-                    </p>
-                    <p className="text-xs text-yellow-600">
-                      Earned: KES {c.reward}
-                    </p>
+                    <img
+                      src={c.task_picture}
+                      alt={c.task_name}
+                      className="w-12 h-12 rounded-lg"
+                    />
+                    <div className="flex-1">
+                      <p className="font-bold text-yellow-800">
+                        Completed Task: {c.task_name}
+                      </p>
+                      <p className="text-sm text-yellow-700">KES {c.reward}</p>
+                      <p className="text-xs text-yellow-600">
+                        Earned: KES {c.reward}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>
