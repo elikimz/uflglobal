@@ -974,6 +974,7 @@ const AuthPage: React.FC = () => {
                     onChange={handleChange}
                     required
                   />
+                  
                 </div>
                 <button
                   type="submit"
