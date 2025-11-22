@@ -30,6 +30,7 @@ import AdminManageWithdrawal from "./features/withdrawal/adminManageWithdwal";
 import Earnings from "./features/earnings/earnings";
 import PasswordSetting from "./pages/password";
 import Spinner from "./pages/spinner";
+import PaymentDetails from "./pages/paymentdetails";
 
 // Define routes
 const router = createBrowserRouter([
@@ -185,7 +186,17 @@ const router = createBrowserRouter([
   },
   {
     path: "/spinner",
-    element: <Spinner/>,
+    element: <Spinner />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: "/withdrawal-details",
+    element: <PaymentDetails />,
     errorElement: (
       <ErrorPage
         code="🚧"
