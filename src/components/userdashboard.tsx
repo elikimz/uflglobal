@@ -270,7 +270,7 @@ import {
   ChartBarIcon,
 } from "@heroicons/react/24/solid";
 import { motion, AnimatePresence } from "framer-motion";
-import spinnerimage from "../components/SpinnerImage.png";
+import spinnerimage from "../components/Spinnerimage.png";
 import badge from "../components/badge.png";
 import { useGetUserProfileQuery } from "../features/profile/profileAPI";
 
