@@ -18,8 +18,8 @@ import {
   ChartBarIcon,
 } from "@heroicons/react/24/solid";
 import { motion, AnimatePresence } from "framer-motion";
-import image from "../components/image.png";
-import badge from "../components/badge.png";
+import image from "../assets/image.png"
+import badge from "../assets/badge.png";
 import { useGetUserProfileQuery } from "../features/profile/profileAPI";
 
 const UserDashboard = () => {
