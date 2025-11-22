@@ -270,7 +270,7 @@ import {
   ChartBarIcon,
 } from "@heroicons/react/24/solid";
 import { motion, AnimatePresence } from "framer-motion";
-import spinnerimage from "../components/Spinnerimage.png";
+import image from "../components/image.png";
 import badge from "../components/badge.png";
 import { useGetUserProfileQuery } from "../features/profile/profileAPI";
 
@@ -409,7 +409,7 @@ const UserDashboard = () => {
             onClick={handleSpinnerNavigation}
           >
             <img
-              src={spinnerimage}
+              src={image}
               alt="Click to enter the lottery tour"
               className="w-full rounded-xl cursor-pointer shadow-lg"
             />
