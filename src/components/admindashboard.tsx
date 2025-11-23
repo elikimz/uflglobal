@@ -202,7 +202,7 @@ const AdminDashboard: React.FC = () => {
     { id: "referrals", title: "Manage Referrals", icon: <UserPlusIcon className="h-6 w-6" />, description: "Track and manage user referrals and bonuses.", route: "/admin/referrals" },
     { id: "wealthfunds", title: "Manage Wealth Funds", icon: <CurrencyDollarIcon className="h-6 w-6" />, description: "Create, update, and delete wealth funds.", route: "/admin/wealth-funds" },
     { id: "companynews", title: "Manage Company News", icon: <NewspaperIcon className="h-6 w-6" />, description: "Create, update, and delete company news.", route: "/admin/company-news" }, // <-- new section
-    { id: "reports", title: "Reports & Analytics", icon: <ChartBarIcon className="h-6 w-6" />, description: "Generate reports and view analytics.", route: "/admin/reports" },
+    { id: "contacts", title: "Contacts ", icon: <ChartBarIcon className="h-6 w-6" />, description: " view contacts.", route: "/admin/contacts" },
     { id: "settings", title: "System Settings", icon: <Cog6ToothIcon className="h-6 w-6" />, description: "Configure system-wide settings and preferences.", route: "/admin/settings" },
   ];
 

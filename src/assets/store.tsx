@@ -25,6 +25,7 @@ import { companyNewsAPI } from "../features/news/newsAPI";
 import { userProfileAPI } from "../features/profile/profileAPI";
 import { withdrawalAPI } from "../features/withdrawal/withdrawalAPI";
 import { earningsAPI } from "../features/earnings/earningsAPI";
+import { contactsAPI } from "../features/contacts/contactsAPI";
 const persistConfig = {
   key: "root",
   storage,
@@ -47,6 +48,7 @@ const rootReducer = combineReducers({
   [userProfileAPI.reducerPath]:userProfileAPI.reducer,
   [withdrawalAPI.reducerPath]:withdrawalAPI.reducer,
   [earningsAPI.reducerPath]:earningsAPI.reducer,
+  [contactsAPI.reducerPath]:contactsAPI.reducer,
 
  
 });
@@ -77,6 +79,7 @@ export const store = configureStore({
       userProfileAPI.middleware,
       withdrawalAPI.middleware,
       earningsAPI.middleware,
+      contactsAPI.middleware,
     
     ),
 });

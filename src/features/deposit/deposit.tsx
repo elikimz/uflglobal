@@ -56,7 +56,6 @@
 //   const handleSubmit = async (e: React.FormEvent) => {
 //     e.preventDefault();
 //     setMessage(null);
-
 //     if (
 //       !form.amount ||
 //       !form.payer_name ||
@@ -69,7 +68,6 @@
 //       });
 //       return;
 //     }
-
 //     if (Number(form.amount) < 2400) {
 //       setMessage({
 //         type: "error",
@@ -77,7 +75,6 @@
 //       });
 //       return;
 //     }
-
 //     try {
 //       await createDeposit({
 //         amount: Number(form.amount),
@@ -105,19 +102,40 @@
 //     }
 //   };
 
+//   // Define color schemes
+//   const mpesaColors = {
+//     background: "bg-gradient-to-b from-green-900 via-green-800 to-green-950",
+//     accent: "bg-green-500",
+//     text: "text-green-300",
+//     border: "border-green-500/20",
+//     input: "focus:ring-green-400",
+//   };
+
+//   const airtelColors = {
+//     background: "bg-gradient-to-b from-red-900 via-red-800 to-red-950",
+//     accent: "bg-red-500",
+//     text: "text-red-300",
+//     border: "border-red-500/20",
+//     input: "focus:ring-red-400",
+//   };
+
+//   const colors = paymentMethod === "mpesa" ? mpesaColors : airtelColors;
+
 //   return (
 //     <motion.div
 //       initial={{ opacity: 0 }}
 //       animate={{ opacity: 1 }}
-//       className="relative min-h-screen w-full text-white px-4 py-6 bg-gradient-to-b from-gray-900 via-indigo-900 to-gray-950 overflow-x-hidden"
+//       className={`relative min-h-screen w-full text-white px-4 py-6 ${colors.background} overflow-x-hidden`}
 //     >
 //       {/* === Header === */}
 //       <div className="text-center mb-6">
-//         <h1 className="text-2xl font-bold mb-1 flex justify-center items-center gap-2">
-//           <BanknotesIcon className="h-6 w-6 text-indigo-300" />
+//         <h1
+//           className={`text-2xl font-bold mb-1 flex justify-center items-center gap-2 ${colors.text}`}
+//         >
+//           <BanknotesIcon className="h-6 w-6" />
 //           My Deposits
 //         </h1>
-//         <p className="text-indigo-200 text-sm">
+//         <p className={`text-sm ${colors.text.replace("text-", "text-")}300`}>
 //           View and create your deposits here
 //         </p>
 //       </div>
@@ -128,10 +146,12 @@
 //         initial={{ y: 20, opacity: 0 }}
 //         animate={{ y: 0, opacity: 1 }}
 //         transition={{ duration: 0.4 }}
-//         className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-5 mb-8 shadow-xl max-w-md mx-auto"
+//         className={`bg-white/10 backdrop-blur-xl rounded-2xl ${colors.border} p-5 mb-8 shadow-xl max-w-md mx-auto`}
 //       >
-//         <h2 className="text-lg font-semibold mb-3 flex items-center gap-2">
-//           <PlusCircleIcon className="h-5 w-5 text-indigo-300" />
+//         <h2
+//           className={`text-lg font-semibold mb-3 flex items-center gap-2 ${colors.text}`}
+//         >
+//           <PlusCircleIcon className="h-5 w-5" />
 //           Create New Deposit
 //         </h2>
 
@@ -141,7 +161,7 @@
 //             type="button"
 //             onClick={() => setPaymentMethod("mpesa")}
 //             className={`flex items-center gap-2 px-3 py-2 rounded-xl transition ${
-//               paymentMethod === "mpesa" ? "bg-indigo-500" : "bg-white/15"
+//               paymentMethod === "mpesa" ? colors.accent : "bg-white/15"
 //             }`}
 //           >
 //             <MpesaIcon /> M-Pesa
@@ -150,7 +170,7 @@
 //             type="button"
 //             onClick={() => setPaymentMethod("airtel")}
 //             className={`flex items-center gap-2 px-3 py-2 rounded-xl transition ${
-//               paymentMethod === "airtel" ? "bg-indigo-500" : "bg-white/15"
+//               paymentMethod === "airtel" ? colors.accent : "bg-white/15"
 //             }`}
 //           >
 //             <AirtelMoneyIcon /> Airtel Money
@@ -158,7 +178,12 @@
 //         </div>
 
 //         {/* Payment Instructions */}
-//         <div className="mb-4 p-3 bg-white/15 rounded-xl text-sm text-indigo-100">
+//         <div
+//           className={`mb-4 p-3 bg-white/15 rounded-xl text-sm ${colors.text.replace(
+//             "text-",
+//             "text-"
+//           )}300`}
+//         >
 //           {paymentMethod === "mpesa" ? (
 //             <div>
 //               <p className="font-medium">M-Pesa Instructions:</p>
@@ -224,7 +249,12 @@
 //             placeholder="Amount (KES, min 2400)"
 //             value={form.amount}
 //             onChange={handleChange}
-//             className="w-full bg-white/15 border border-white/20 rounded-xl p-2.5 text-white placeholder-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+//             className={`w-full bg-white/15 ${
+//               colors.border
+//             } rounded-xl p-2.5 text-white placeholder-${colors.text.replace(
+//               "text-",
+//               ""
+//             )}300 focus:outline-none ${colors.input}`}
 //             required
 //             min="2400"
 //           />
@@ -234,7 +264,12 @@
 //             placeholder="Your Name"
 //             value={form.payer_name}
 //             onChange={handleChange}
-//             className="w-full bg-white/15 border border-white/20 rounded-xl p-2.5 text-white placeholder-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+//             className={`w-full bg-white/15 ${
+//               colors.border
+//             } rounded-xl p-2.5 text-white placeholder-${colors.text.replace(
+//               "text-",
+//               ""
+//             )}300 focus:outline-none ${colors.input}`}
 //             required
 //           />
 //           <input
@@ -243,7 +278,12 @@
 //             placeholder="Phone Number"
 //             value={form.payer_number}
 //             onChange={handleChange}
-//             className="w-full bg-white/15 border border-white/20 rounded-xl p-2.5 text-white placeholder-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+//             className={`w-full bg-white/15 ${
+//               colors.border
+//             } rounded-xl p-2.5 text-white placeholder-${colors.text.replace(
+//               "text-",
+//               ""
+//             )}300 focus:outline-none ${colors.input}`}
 //             required
 //           />
 //           <input
@@ -252,13 +292,21 @@
 //             placeholder="Paste Payment Confirmation Message"
 //             value={form.payment_message}
 //             onChange={handleChange}
-//             className="w-full bg-white/15 border border-white/20 rounded-xl p-2.5 text-white placeholder-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+//             className={`w-full bg-white/15 ${
+//               colors.border
+//             } rounded-xl p-2.5 text-white placeholder-${colors.text.replace(
+//               "text-",
+//               ""
+//             )}300 focus:outline-none ${colors.input}`}
 //             required
 //           />
 //           <button
 //             type="submit"
 //             disabled={creating}
-//             className="w-full bg-indigo-500 hover:bg-indigo-600 transition rounded-xl py-2.5 font-semibold shadow-md disabled:opacity-50"
+//             className={`w-full ${colors.accent} hover:${colors.accent.replace(
+//               "bg-",
+//               "hover:bg-"
+//             )}600 transition rounded-xl py-2.5 font-semibold shadow-md disabled:opacity-50`}
 //           >
 //             {creating ? "Submitting..." : "Submit Deposit"}
 //           </button>
@@ -270,26 +318,44 @@
 //         initial={{ y: 20, opacity: 0 }}
 //         animate={{ y: 0, opacity: 1 }}
 //         transition={{ delay: 0.2 }}
-//         className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-5 shadow-xl max-w-md mx-auto mb-10"
+//         className={`bg-white/10 backdrop-blur-xl rounded-2xl ${colors.border} p-5 shadow-xl max-w-md mx-auto mb-10`}
 //       >
 //         <div className="flex items-center justify-between mb-3">
 //           <h2 className="text-lg font-semibold">My Deposit History</h2>
 //           <button
 //             onClick={() => refetch()}
-//             className="text-sm flex items-center gap-1 text-indigo-300 hover:text-indigo-400 transition"
+//             className={`text-sm flex items-center gap-1 ${colors.text.replace(
+//               "text-",
+//               "text-"
+//             )}300 hover:${colors.text.replace(
+//               "text-",
+//               "hover:text-"
+//             )}400 transition`}
 //           >
 //             <ArrowPathIcon className="h-4 w-4" />
 //             Refresh
 //           </button>
 //         </div>
 //         {isLoading ? (
-//           <p className="text-indigo-200 text-center">Loading deposits...</p>
+//           <p
+//             className={`${colors.text.replace(
+//               "text-",
+//               "text-"
+//             )}300 text-center`}
+//           >
+//             Loading deposits...
+//           </p>
 //         ) : deposits && deposits.length > 0 ? (
 //           <div className="space-y-3 max-h-[400px] overflow-y-auto pr-2">
 //             {deposits.map((deposit) => (
 //               <div
 //                 key={deposit.id}
-//                 className="bg-white/15 border border-white/20 rounded-xl p-3 text-sm text-indigo-100 shadow-sm hover:bg-white/20 transition"
+//                 className={`bg-white/15 ${
+//                   colors.border
+//                 } rounded-xl p-3 text-sm ${colors.text.replace(
+//                   "text-",
+//                   "text-"
+//                 )}100 shadow-sm hover:bg-white/20 transition`}
 //               >
 //                 <div className="flex justify-between">
 //                   <span className="font-medium text-white">
@@ -310,14 +376,24 @@
 //                 <div className="text-xs mt-1">
 //                   {deposit.payer_name} ({deposit.payer_number})
 //                 </div>
-//                 <div className="text-[11px] text-indigo-300 mt-1">
+//                 <div
+//                   className={`text-[11px] ${colors.text.replace(
+//                     "text-",
+//                     "text-"
+//                   )}300 mt-1`}
+//                 >
 //                   {new Date(deposit.created_at).toLocaleString()}
 //                 </div>
 //               </div>
 //             ))}
 //           </div>
 //         ) : (
-//           <p className="text-indigo-200 text-center">
+//           <p
+//             className={`${colors.text.replace(
+//               "text-",
+//               "text-"
+//             )}300 text-center`}
+//           >
 //             You have no deposits yet.
 //           </p>
 //         )}
@@ -333,6 +409,8 @@
 
 
 
+
+
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -341,11 +419,13 @@ import {
   ArrowPathIcon,
   ExclamationCircleIcon,
   CheckCircleIcon,
+  ClipboardIcon,
 } from "@heroicons/react/24/solid";
 import {
   useGetDepositsQuery,
   useCreateDepositMutation,
 } from "../deposit/depositAPI";
+import { useGetContactsQuery } from "../contacts/contactsAPI";
 
 // Icons for M-Pesa and Airtel Money
 const MpesaIcon = () => (
@@ -367,6 +447,15 @@ const AirtelMoneyIcon = () => (
 const Deposit: React.FC = () => {
   const { data: deposits, isLoading, refetch } = useGetDepositsQuery();
   const [createDeposit, { isLoading: creating }] = useCreateDepositMutation();
+  const { data: contacts } = useGetContactsQuery();
+
+  // Take the first contact (typed as any/nullable so TS won't error if shape is unknown)
+  const contact: any = contacts?.[0] ?? null;
+  const mpesaNumber = contact?.safaricom_number ?? "Loading...";
+  const mpesaName = contact?.safaricom_name ?? "Loading...";
+  const airtelNumber = contact?.airtel_number ?? "Loading...";
+  const airtelName = contact?.airtel_name ?? "Loading...";
+
   const [form, setForm] = useState({
     amount: "",
     payer_name: "",
@@ -388,6 +477,7 @@ const Deposit: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
+
     if (
       !form.amount ||
       !form.payer_name ||
@@ -400,6 +490,7 @@ const Deposit: React.FC = () => {
       });
       return;
     }
+
     if (Number(form.amount) < 2400) {
       setMessage({
         type: "error",
@@ -407,6 +498,7 @@ const Deposit: React.FC = () => {
       });
       return;
     }
+
     try {
       await createDeposit({
         amount: Number(form.amount),
@@ -425,8 +517,7 @@ const Deposit: React.FC = () => {
         payment_message: "",
       });
       refetch();
-    } catch (err) {
-      console.error("Error creating deposit:", err);
+    } catch {
       setMessage({
         type: "error",
         text: "Failed to create deposit. Please try again.",
@@ -434,7 +525,12 @@ const Deposit: React.FC = () => {
     }
   };
 
-  // Define color schemes
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text);
+    alert("Copied to clipboard: " + text);
+  };
+
+  // Color schemes
   const mpesaColors = {
     background: "bg-gradient-to-b from-green-900 via-green-800 to-green-950",
     accent: "bg-green-500",
@@ -459,20 +555,19 @@ const Deposit: React.FC = () => {
       animate={{ opacity: 1 }}
       className={`relative min-h-screen w-full text-white px-4 py-6 ${colors.background} overflow-x-hidden`}
     >
-      {/* === Header === */}
+      {/* Header */}
       <div className="text-center mb-6">
         <h1
           className={`text-2xl font-bold mb-1 flex justify-center items-center gap-2 ${colors.text}`}
         >
-          <BanknotesIcon className="h-6 w-6" />
-          My Deposits
+          <BanknotesIcon className="h-6 w-6" /> My Deposits
         </h1>
         <p className={`text-sm ${colors.text.replace("text-", "text-")}300`}>
           View and create your deposits here
         </p>
       </div>
 
-      {/* === Deposit Form === */}
+      {/* Deposit Form */}
       <motion.form
         onSubmit={handleSubmit}
         initial={{ y: 20, opacity: 0 }}
@@ -483,8 +578,7 @@ const Deposit: React.FC = () => {
         <h2
           className={`text-lg font-semibold mb-3 flex items-center gap-2 ${colors.text}`}
         >
-          <PlusCircleIcon className="h-5 w-5" />
-          Create New Deposit
+          <PlusCircleIcon className="h-5 w-5" /> Create New Deposit
         </h2>
 
         {/* Payment Method Toggle */}
@@ -525,14 +619,30 @@ const Deposit: React.FC = () => {
                   Select <strong>Send Money</strong>.
                 </li>
                 <li>
-                  Enter Phone Number: <strong>0791337188</strong>.
+                  Phone Number:{" "}
+                  <span className="text-lg font-bold">{mpesaNumber}</span>
                 </li>
                 <li>
-                  Enter Amount: <strong>KES {form.amount || "X"}</strong>.
+                  Name: <span className="text-lg font-bold">{mpesaName}</span>
+                </li>
+                <li>
+                  Amount: <strong>KES {form.amount || "X"}</strong>
                 </li>
                 <li>Enter your M-Pesa PIN.</li>
                 <li>Copy the confirmation message and paste it below.</li>
               </ol>
+              <div className="mt-2 flex items-center gap-2">
+                <span className="text-xl font-bold">
+                  {mpesaNumber} {mpesaName}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(`${mpesaNumber} ${mpesaName}`)}
+                  className="p-1 bg-white/20 rounded-lg hover:bg-white/30 transition"
+                >
+                  <ClipboardIcon className="h-5 w-5" />
+                </button>
+              </div>
             </div>
           ) : (
             <div>
@@ -543,14 +653,30 @@ const Deposit: React.FC = () => {
                   Select <strong>Send Money</strong>.
                 </li>
                 <li>
-                  Enter Phone Number: <strong>0791337188</strong>.
+                  Phone Number:{" "}
+                  <span className="text-lg font-bold">{airtelNumber}</span>
                 </li>
                 <li>
-                  Enter Amount: <strong>KES {form.amount || "X"}</strong>.
+                  Name: <span className="text-lg font-bold">{airtelName}</span>
+                </li>
+                <li>
+                  Amount: <strong>KES {form.amount || "X"}</strong>
                 </li>
                 <li>Enter your Airtel Money PIN.</li>
                 <li>Copy the confirmation message and paste it below.</li>
               </ol>
+              <div className="mt-2 flex items-center gap-2">
+                <span className="text-xl font-bold">
+                  {airtelNumber} {airtelName}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => copyToClipboard(mpesaNumber)} // <-- only number
+                  className="p-1 bg-white/20 rounded-lg hover:bg-white/30 transition"
+                >
+                  <ClipboardIcon className="h-5 w-5" />
+                </button>
+              </div>
             </div>
           )}
         </div>
@@ -645,7 +771,7 @@ const Deposit: React.FC = () => {
         </div>
       </motion.form>
 
-      {/* === Deposit List === */}
+      {/* Deposit List */}
       <motion.div
         initial={{ y: 20, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -664,10 +790,10 @@ const Deposit: React.FC = () => {
               "hover:text-"
             )}400 transition`}
           >
-            <ArrowPathIcon className="h-4 w-4" />
-            Refresh
+            <ArrowPathIcon className="h-4 w-4" /> Refresh
           </button>
         </div>
+
         {isLoading ? (
           <p
             className={`${colors.text.replace(

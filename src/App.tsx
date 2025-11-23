@@ -32,6 +32,7 @@ import PasswordSetting from "./pages/password";
 import Spinner from "./pages/spinner";
 import PaymentDetails from "./pages/paymentdetails";
 import AdminManageUsers from "./features/profile/adminmanageuser";
+import AdminManageContact from "./features/contacts/adminmanagecontacts";
 
 // Define routes
 const router = createBrowserRouter([
@@ -290,6 +291,16 @@ const router = createBrowserRouter([
   {
     path: "/admin/users",
     element: <AdminManageUsers />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: "/admin/contacts",
+    element: <AdminManageContact />,
     errorElement: (
       <ErrorPage
         code="🚧"
