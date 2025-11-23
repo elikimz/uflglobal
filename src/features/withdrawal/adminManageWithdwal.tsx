@@ -3,7 +3,6 @@
 
 
 
-
 // import React, { useState, useEffect } from "react";
 // import { motion } from "framer-motion";
 // import {
@@ -12,11 +11,9 @@
 //   XCircleIcon,
 //   ClockIcon,
 // } from "@heroicons/react/24/solid";
-// import { BanIcon } from "lucide-react";
 // import {
 //   useGetAllWithdrawalsQuery,
 //   useUpdateWithdrawalStatusMutation,
-//   useToggleUserWithdrawalsMutation,
 // } from "../withdrawal/withdrawalAPI";
 
 // const AdminManageWithdrawal: React.FC = () => {
@@ -27,7 +24,6 @@
 //   } = useGetAllWithdrawalsQuery();
 
 //   const [updateStatus] = useUpdateWithdrawalStatusMutation();
-//   const [toggleWithdrawals] = useToggleUserWithdrawalsMutation();
 
 //   const [feedback, setFeedback] = useState<{
 //     type: "success" | "error";
@@ -39,7 +35,6 @@
 
 //   // Sync local state with fetched withdrawals
 //   useEffect(() => {
-//     console.log("Fetched withdrawals:", withdrawals);
 //     setLocalWithdrawals(withdrawals);
 //   }, [withdrawals]);
 
@@ -63,29 +58,6 @@
 //       setFeedback({
 //         type: "error",
 //         message: error?.data?.detail || "Failed to update status",
-//       });
-//     }
-//   };
-
-//   const handleBlockToggle = async (user_id: number, block: boolean) => {
-//     try {
-//       const res = await toggleWithdrawals({ user_id, block }).unwrap();
-//       setFeedback({
-//         type: "success",
-//         message:
-//           res?.message ||
-//           `User ${block ? "blocked" : "unblocked"} successfully`,
-//       });
-
-//       setLocalWithdrawals((prev) =>
-//         prev.map((w) =>
-//           w.user?.id === user_id ? { ...w, can_withdraw: !w.can_withdraw } : w
-//         )
-//       );
-//     } catch (error: any) {
-//       setFeedback({
-//         type: "error",
-//         message: error?.data?.detail || "Failed to update user status",
 //       });
 //     }
 //   };
@@ -222,9 +194,6 @@
 //                   Approved
 //                 </th>
 //                 <th className="px-6 py-3 text-left text-xs font-medium text-yellow-100 uppercase tracking-wider">
-//                   Can Withdraw
-//                 </th>
-//                 <th className="px-6 py-3 text-left text-xs font-medium text-yellow-100 uppercase tracking-wider">
 //                   Actions
 //                 </th>
 //               </tr>
@@ -232,7 +201,6 @@
 //             <tbody>
 //               {filteredWithdrawals.map((w: any) => {
 //                 const { color, icon, text } = getStatusStyle(w.status);
-//                 const userId = w.user?.id;
 //                 const levelName =
 //                   w.level_name || w.user?.level?.level_name || "N/A";
 
@@ -281,17 +249,6 @@
 //                         ? new Date(w.approved_at).toLocaleDateString()
 //                         : "N/A"}
 //                     </td>
-//                     <td className="px-6 py-4 whitespace-nowrap text-sm flex items-center gap-2">
-//                       {w.can_withdraw ? (
-//                         <span className="bg-green-700/50 px-2 py-1 rounded-full text-green-100 text-xs flex items-center gap-1">
-//                           <CheckCircleIcon className="h-4 w-4" /> Yes
-//                         </span>
-//                       ) : (
-//                         <span className="bg-red-700/50 px-2 py-1 rounded-full text-red-100 text-xs flex items-center gap-1">
-//                           <BanIcon className="h-4 w-4" /> No
-//                         </span>
-//                       )}
-//                     </td>
 //                     <td className="px-6 py-4 whitespace-nowrap text-sm flex gap-2">
 //                       {w.status === "pending" && (
 //                         <>
@@ -309,20 +266,6 @@
 //                           </button>
 //                         </>
 //                       )}
-//                       {userId && (
-//                         <button
-//                           onClick={() =>
-//                             handleBlockToggle(userId, !w.can_withdraw)
-//                           }
-//                           className={`${
-//                             w.can_withdraw
-//                               ? "bg-red-600 hover:bg-red-700"
-//                               : "bg-green-600 hover:bg-green-700"
-//                           } px-3 py-1 rounded-lg text-white font-semibold text-xs`}
-//                         >
-//                           {w.can_withdraw ? "Block" : "unblock"}
-//                         </button>
-//                       )}
 //                     </td>
 //                   </tr>
 //                 );
@@ -339,7 +282,6 @@
 
 
 
-
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
@@ -347,6 +289,7 @@ import {
   CheckCircleIcon,
   XCircleIcon,
   ClockIcon,
+  DocumentDuplicateIcon,
 } from "@heroicons/react/24/solid";
 import {
   useGetAllWithdrawalsQuery,
@@ -359,20 +302,21 @@ const AdminManageWithdrawal: React.FC = () => {
     isLoading,
     refetch,
   } = useGetAllWithdrawalsQuery();
-
   const [updateStatus] = useUpdateWithdrawalStatusMutation();
-
   const [feedback, setFeedback] = useState<{
     type: "success" | "error";
     message: string;
   } | null>(null);
-
   const [localWithdrawals, setLocalWithdrawals] = useState<any[]>([]);
   const [filterLevel, setFilterLevel] = useState<string>("All");
 
-  // Sync local state with fetched withdrawals
+  // Sync and sort local state with fetched withdrawals
   useEffect(() => {
-    setLocalWithdrawals(withdrawals);
+    const sorted = [...withdrawals].sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+    );
+    setLocalWithdrawals(sorted);
   }, [withdrawals]);
 
   // Extract unique user levels for filter dropdown
@@ -432,6 +376,14 @@ const AdminManageWithdrawal: React.FC = () => {
           text: "Unknown",
         };
     }
+  };
+
+  const copyToClipboard = (text: string) => {
+    navigator.clipboard.writeText(text.toString());
+    setFeedback({
+      type: "success",
+      message: "Account number copied to clipboard!",
+    });
   };
 
   // Apply filter before rendering
@@ -540,7 +492,6 @@ const AdminManageWithdrawal: React.FC = () => {
                 const { color, icon, text } = getStatusStyle(w.status);
                 const levelName =
                   w.level_name || w.user?.level?.level_name || "N/A";
-
                 return (
                   <tr
                     key={w.id}
@@ -572,8 +523,14 @@ const AdminManageWithdrawal: React.FC = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-100">
                       {w.account_name}
                     </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-100">
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-100 flex items-center gap-1">
                       {w.account_number}
+                      <button
+                        onClick={() => copyToClipboard(w.account_number)}
+                        className="text-yellow-300 hover:text-yellow-400"
+                      >
+                        <DocumentDuplicateIcon className="h-4 w-4" />
+                      </button>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-100">
                       {w.transaction_fee}
