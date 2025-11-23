@@ -180,16 +180,18 @@
 
 
 
+
+
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import {
   useGetUserLevelsQuery,
   useUpgradeUserLevelMutation,
-  
+ 
 } from "../usersLevels/userlevelsAPI";
 import {
- 
+
   useGetLevelsQuery,
 } from "../levels/levelsAPI";
 import { ArrowPathIcon, RocketLaunchIcon } from "@heroicons/react/24/solid";
@@ -238,6 +240,18 @@ const MyJobLevels: React.FC = () => {
       }
     }
   };
+
+  // Sort levels: "temporary worker" first, then LV1, LV2, etc.
+  const sortedLevels = levels
+    ? [...levels].sort((a, b) => {
+        if (a.name.toLowerCase() === "temporary worker") return -1;
+        if (b.name.toLowerCase() === "temporary worker") return 1;
+        // Extract the numeric part from the level name (e.g., "LV1" -> 1)
+        const aNum = parseInt(a.name.replace(/[^\d]/g, ""), 10);
+        const bNum = parseInt(b.name.replace(/[^\d]/g, ""), 10);
+        return aNum - bNum;
+      })
+    : [];
 
   return (
     <motion.div
@@ -319,8 +333,8 @@ const MyJobLevels: React.FC = () => {
                           </option>
                           {isLevelsLoading ? (
                             <option disabled>Loading levels...</option>
-                          ) : levels && levels.length > 0 ? (
-                            levels.map((level) => (
+                          ) : sortedLevels.length > 0 ? (
+                            sortedLevels.map((level) => (
                               <option key={level.id} value={level.id}>
                                 {level.name}
                               </option>
