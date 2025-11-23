@@ -242,7 +242,7 @@ export const withdrawalAPI = createApi({
       return headers;
     },
   }),
-  tagTypes: ["Withdrawals"],
+  tagTypes: ["Withdrawals", "AllUsers"],
   endpoints: (builder) => ({
     // 🔹 Pin status
     getPinStatus: builder.query<{ has_pin: boolean }, void>({
@@ -331,7 +331,7 @@ export const withdrawalAPI = createApi({
         body: { user_id, block }, // <-- send both in JSON body
         headers: { "Content-Type": "application/json" },
       }),
-      invalidatesTags: ["Withdrawals"],
+      invalidatesTags: ["Withdrawals", "AllUsers"],
     }),
   }),
 });
