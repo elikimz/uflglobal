@@ -1,9 +1,10 @@
 
 
 
-// import React, { useState } from "react";
-// import { useGetUserTeamQuery } from "../referrals/referralsAPI";
+
+// import React, { useState, useMemo } from "react";
 // import { ClipboardCopy } from "lucide-react";
+// import { useGetUserTeamQuery } from "./referralsAPI";
 
 // interface ReferredUser {
 //   id: number;
@@ -29,21 +30,50 @@
 
 // const Referrals: React.FC = () => {
 //   const { data, isLoading, isError } = useGetUserTeamQuery();
+//   // eslint-disable-next-line react-hooks/exhaustive-deps
 //   const referrals = (data ?? []) as unknown as Referral[];
 //   const [copied, setCopied] = useState(false);
+
+//   // Sort referrals with active first, then by created_at (newest first)
+//   const sortedReferrals = useMemo(() => {
+//     return [...referrals].sort((a, b) => {
+//       // Active users come first
+//       if (a.is_active && !b.is_active) return -1;
+//       if (!a.is_active && b.is_active) return 1;
+
+//       // Then sort by date (newest first)
+//       return (
+//         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+//       );
+//     });
+//   }, [referrals]);
+
+//   // Count active and inactive users
+//   const activeCount = useMemo(() => {
+//     return referrals.filter((r) => r.is_active).length;
+//   }, [referrals]);
+
+//   const inactiveCount = useMemo(() => {
+//     return referrals.filter((r) => !r.is_active).length;
+//   }, [referrals]);
 
 //   if (isLoading) {
 //     return (
 //       <div className="flex justify-center items-center h-64">
-//         <p className="text-yellow-800">Loading team...</p>
+//         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
 //       </div>
 //     );
 //   }
 
 //   if (isError || !referrals || referrals.length === 0) {
 //     return (
-//       <div className="p-6 bg-yellow-50 min-h-screen flex justify-center items-center">
-//         <p className="text-yellow-800/70 text-center">No team members found.</p>
+//       <div className="p-6 bg-yellow-50 min-h-screen flex flex-col justify-center items-center">
+//         <p className="text-yellow-800/70 text-center mb-4">
+//           No team members found.
+//         </p>
+//         <p className="text-yellow-800/50 text-sm text-center max-w-md">
+//           Invite friends to join your team and start earning rewards together.
+//         </p>
 //       </div>
 //     );
 //   }
@@ -83,15 +113,56 @@
 //         </div>
 //       </div>
 
-//       {/* Team Members */}
-//       <h2 className="text-2xl md:text-3xl font-bold text-yellow-900 mb-4 md:mb-6">
-//         My Team
-//       </h2>
+//       {/* Team Summary */}
+//       <div className="mb-6 bg-white rounded-xl shadow-sm p-4 md:p-5 border border-yellow-100">
+//         <h2 className="text-xl md:text-2xl font-bold text-yellow-900 mb-4">
+//           Team Summary
+//         </h2>
+//         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+//           <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
+//             <p className="text-sm text-yellow-800 mb-1">Total Members</p>
+//             <p className="text-2xl font-bold text-yellow-900">
+//               {referrals.length}
+//             </p>
+//           </div>
+//           <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+//             <p className="text-sm text-green-800 mb-1">Active Members</p>
+//             <p className="text-2xl font-bold text-green-900">{activeCount}</p>
+//           </div>
+//           <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+//             <p className="text-sm text-red-800 mb-1">Inactive Members</p>
+//             <p className="text-2xl font-bold text-red-900">{inactiveCount}</p>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Team Members Header */}
+//       <div className="mb-4 flex items-center justify-between">
+//         <h2 className="text-2xl md:text-3xl font-bold text-yellow-900">
+//           My Team ({referrals.length})
+//         </h2>
+//         <div className="flex items-center gap-2 text-sm text-yellow-800">
+//           <span className="flex items-center gap-1">
+//             <span className="h-2 w-2 rounded-full bg-green-500"></span>
+//             Active: {activeCount}
+//           </span>
+//           <span className="flex items-center gap-1">
+//             <span className="h-2 w-2 rounded-full bg-red-500"></span>
+//             Inactive: {inactiveCount}
+//           </span>
+//         </div>
+//       </div>
+
+//       {/* Team Members Grid */}
 //       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-//         {referrals.map((referral) => (
+//         {sortedReferrals.map((referral) => (
 //           <div
 //             key={referral.id}
-//             className="bg-yellow-100 rounded-xl border border-yellow-200 p-4 md:p-5 shadow hover:shadow-lg transition-all duration-200 flex flex-col justify-between"
+//             className={`bg-yellow-100 rounded-xl border border-yellow-200 p-4 md:p-5 shadow hover:shadow-lg transition-all duration-200 flex flex-col justify-between ${
+//               referral.is_active
+//                 ? "ring-1 ring-green-200"
+//                 : "ring-1 ring-red-200/50"
+//             }`}
 //           >
 //             {/* Header */}
 //             <div className="flex items-center space-x-3 md:space-x-4 mb-3">
@@ -134,7 +205,7 @@
 //               <p>
 //                 Bonus:{" "}
 //                 <span className="text-green-600 font-semibold">
-//                   {referral.bonus_amount ?? 0}
+//                   KES {referral.bonus_amount?.toLocaleString() ?? "0"}
 //                 </span>
 //               </p>
 //               <p className="text-xs text-yellow-800/50">
@@ -149,6 +220,7 @@
 // };
 
 // export default Referrals;
+
 
 
 
@@ -184,28 +256,24 @@ const Referrals: React.FC = () => {
   const referrals = (data ?? []) as unknown as Referral[];
   const [copied, setCopied] = useState(false);
 
-  // Sort referrals with active first, then by created_at (newest first)
   const sortedReferrals = useMemo(() => {
     return [...referrals].sort((a, b) => {
-      // Active users come first
       if (a.is_active && !b.is_active) return -1;
       if (!a.is_active && b.is_active) return 1;
-
-      // Then sort by date (newest first)
       return (
         new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
       );
     });
   }, [referrals]);
 
-  // Count active and inactive users
-  const activeCount = useMemo(() => {
-    return referrals.filter((r) => r.is_active).length;
-  }, [referrals]);
-
-  const inactiveCount = useMemo(() => {
-    return referrals.filter((r) => !r.is_active).length;
-  }, [referrals]);
+  const activeCount = useMemo(
+    () => referrals.filter((r) => r.is_active).length,
+    [referrals]
+  );
+  const inactiveCount = useMemo(
+    () => referrals.filter((r) => !r.is_active).length,
+    [referrals]
+  );
 
   if (isLoading) {
     return (
@@ -215,7 +283,7 @@ const Referrals: React.FC = () => {
     );
   }
 
-  if (isError || !referrals || referrals.length === 0) {
+  if (isError || referrals.length === 0) {
     return (
       <div className="p-6 bg-yellow-50 min-h-screen flex flex-col justify-center items-center">
         <p className="text-yellow-800/70 text-center mb-4">
@@ -263,26 +331,21 @@ const Referrals: React.FC = () => {
         </div>
       </div>
 
-      {/* Team Summary */}
-      <div className="mb-6 bg-white rounded-xl shadow-sm p-4 md:p-5 border border-yellow-100">
-        <h2 className="text-xl md:text-2xl font-bold text-yellow-900 mb-4">
-          Team Summary
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          <div className="bg-yellow-50 p-4 rounded-lg border border-yellow-200">
-            <p className="text-sm text-yellow-800 mb-1">Total Members</p>
-            <p className="text-2xl font-bold text-yellow-900">
-              {referrals.length}
-            </p>
-          </div>
-          <div className="bg-green-50 p-4 rounded-lg border border-green-200">
-            <p className="text-sm text-green-800 mb-1">Active Members</p>
-            <p className="text-2xl font-bold text-green-900">{activeCount}</p>
-          </div>
-          <div className="bg-red-50 p-4 rounded-lg border border-red-200">
-            <p className="text-sm text-red-800 mb-1">Inactive Members</p>
-            <p className="text-2xl font-bold text-red-900">{inactiveCount}</p>
-          </div>
+      {/* Team Summary - Small Boxes */}
+      <div className="mb-6 flex flex-wrap gap-3">
+        <div className="flex-1 min-w-[120px] bg-yellow-50 p-2 rounded-lg border border-yellow-200 flex flex-col items-center justify-center">
+          <p className="text-xs text-yellow-800 mb-1">Total Members</p>
+          <p className="text-lg font-bold text-yellow-900">
+            {referrals.length}
+          </p>
+        </div>
+        <div className="flex-1 min-w-[120px] bg-green-50 p-2 rounded-lg border border-green-200 flex flex-col items-center justify-center">
+          <p className="text-xs text-green-800 mb-1">Active Members</p>
+          <p className="text-lg font-bold text-green-900">{activeCount}</p>
+        </div>
+        <div className="flex-1 min-w-[120px] bg-red-50 p-2 rounded-lg border border-red-200 flex flex-col items-center justify-center">
+          <p className="text-xs text-red-800 mb-1">Inactive Members</p>
+          <p className="text-lg font-bold text-red-900">{inactiveCount}</p>
         </div>
       </div>
 
@@ -293,12 +356,12 @@ const Referrals: React.FC = () => {
         </h2>
         <div className="flex items-center gap-2 text-sm text-yellow-800">
           <span className="flex items-center gap-1">
-            <span className="h-2 w-2 rounded-full bg-green-500"></span>
-            Active: {activeCount}
+            <span className="h-2 w-2 rounded-full bg-green-500"></span>Active:{" "}
+            {activeCount}
           </span>
           <span className="flex items-center gap-1">
-            <span className="h-2 w-2 rounded-full bg-red-500"></span>
-            Inactive: {inactiveCount}
+            <span className="h-2 w-2 rounded-full bg-red-500"></span>Inactive:{" "}
+            {inactiveCount}
           </span>
         </div>
       </div>
@@ -370,3 +433,5 @@ const Referrals: React.FC = () => {
 };
 
 export default Referrals;
+
+
