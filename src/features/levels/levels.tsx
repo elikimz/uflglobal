@@ -188,7 +188,7 @@ const Levels: React.FC = () => {
       await createUserLevel({ level_id: levelId }).unwrap();
       showNotification("Enrollment successful! Redirecting to your jobs...");
       setTimeout(() => {
-        navigate("/jobslevels");
+        navigate("/myjoblevels");
       }, 2000);
     } catch (error: any) {
       console.error("Enrollment failed:", error);
