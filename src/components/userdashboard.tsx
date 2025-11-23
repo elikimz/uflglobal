@@ -129,7 +129,7 @@ const UserDashboard = () => {
               {
                 icon: <UserPlusIcon className="h-6 w-6 text-yellow-800" />,
                 label: "Team Expansion",
-                path: "/team-management",
+                path: "/referrals",
               },
               {
                 icon: <ChartBarIcon className="h-6 w-6 text-yellow-800" />,
