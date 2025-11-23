@@ -370,7 +370,7 @@ const UserDashboard = () => {
                   </div>
                 ),
                 label: "Advertising Positions",
-                path: "/finance",
+                path: "/sgg",
               },
               {
                 icon: (
