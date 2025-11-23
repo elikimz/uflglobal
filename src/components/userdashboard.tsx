@@ -761,20 +761,7 @@ const UserDashboard = () => {
                       />
                     </motion.div>
                   )}
-                  {/* {link.group_link && (
-                    <motion.div
-                      whileHover={{ scale: 1.1 }}
-                      whileTap={{ scale: 0.9 }}
-                      onClick={() => window.open(link.group_link, "_blank")}
-                      className="w-14 h-14 bg-blue-500 rounded-full flex items-center justify-center cursor-pointer shadow-lg"
-                    >
-                      <img
-                        src="https://upload.wikimedia.org/wikipedia/commons/3/39/Slack_New_Logo.svg"
-                        alt="Group"
-                        className="h-8 w-8"
-                      />
-                    </motion.div>
-                  )} */}
+
                   {link.hiring_manager_link && (
                     <motion.div
                       whileHover={{ scale: 1.1 }}
@@ -782,12 +769,12 @@ const UserDashboard = () => {
                       onClick={() =>
                         window.open(link.hiring_manager_link, "_blank")
                       }
-                      className="w-14 h-14 bg-purple-500 rounded-full flex items-center justify-center cursor-pointer shadow-lg"
+                      className="w-14 h-14 rounded-full cursor-pointer shadow-lg overflow-hidden"
                     >
                       <img
-                        src="https://i.postimg.cc/YCGMFFq7/Whats-App-Image-2025-11-23-at-8-22-50-PM.jpg"
+                        src="https://i.postimg.cc/V6Yj5m92/hiring.png"
                         alt="Hiring Manager"
-                        className="h-8 w-8"
+                        className="w-full h-full object-cover rounded-full"
                       />
                     </motion.div>
                   )}
