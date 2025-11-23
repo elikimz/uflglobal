@@ -410,7 +410,6 @@
 
 
 
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -435,7 +434,6 @@ const MpesaIcon = () => (
     className="h-6 w-6"
   />
 );
-
 const AirtelMoneyIcon = () => (
   <img
     src="https://images.seeklogo.com/logo-png/52/1/airtel-money-tanzania-logo-png_seeklogo-527192.png"
@@ -448,14 +446,12 @@ const Deposit: React.FC = () => {
   const { data: deposits, isLoading, refetch } = useGetDepositsQuery();
   const [createDeposit, { isLoading: creating }] = useCreateDepositMutation();
   const { data: contacts } = useGetContactsQuery();
-
   // Take the first contact (typed as any/nullable so TS won't error if shape is unknown)
   const contact: any = contacts?.[0] ?? null;
   const mpesaNumber = contact?.safaricom_number ?? "Loading...";
   const mpesaName = contact?.safaricom_name ?? "Loading...";
   const airtelNumber = contact?.airtel_number ?? "Loading...";
   const airtelName = contact?.airtel_name ?? "Loading...";
-
   const [form, setForm] = useState({
     amount: "",
     payer_name: "",
@@ -477,7 +473,6 @@ const Deposit: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setMessage(null);
-
     if (
       !form.amount ||
       !form.payer_name ||
@@ -490,7 +485,6 @@ const Deposit: React.FC = () => {
       });
       return;
     }
-
     if (Number(form.amount) < 2400) {
       setMessage({
         type: "error",
@@ -498,7 +492,6 @@ const Deposit: React.FC = () => {
       });
       return;
     }
-
     try {
       await createDeposit({
         amount: Number(form.amount),
@@ -527,7 +520,7 @@ const Deposit: React.FC = () => {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    alert("Copied to clipboard: " + text);
+    // Remove the alert to stop the Windows alert
   };
 
   // Color schemes
@@ -538,7 +531,6 @@ const Deposit: React.FC = () => {
     border: "border-green-500/20",
     input: "focus:ring-green-400",
   };
-
   const airtelColors = {
     background: "bg-gradient-to-b from-red-900 via-red-800 to-red-950",
     accent: "bg-red-500",
@@ -546,7 +538,6 @@ const Deposit: React.FC = () => {
     border: "border-red-500/20",
     input: "focus:ring-red-400",
   };
-
   const colors = paymentMethod === "mpesa" ? mpesaColors : airtelColors;
 
   return (
@@ -566,7 +557,6 @@ const Deposit: React.FC = () => {
           View and create your deposits here
         </p>
       </div>
-
       {/* Deposit Form */}
       <motion.form
         onSubmit={handleSubmit}
@@ -580,7 +570,6 @@ const Deposit: React.FC = () => {
         >
           <PlusCircleIcon className="h-5 w-5" /> Create New Deposit
         </h2>
-
         {/* Payment Method Toggle */}
         <div className="flex gap-4 mb-4">
           <button
@@ -602,7 +591,6 @@ const Deposit: React.FC = () => {
             <AirtelMoneyIcon /> Airtel Money
           </button>
         </div>
-
         {/* Payment Instructions */}
         <div
           className={`mb-4 p-3 bg-white/15 rounded-xl text-sm ${colors.text.replace(
@@ -637,7 +625,7 @@ const Deposit: React.FC = () => {
                 </span>
                 <button
                   type="button"
-                  onClick={() => copyToClipboard(`${mpesaNumber} ${mpesaName}`)}
+                  onClick={() => copyToClipboard(mpesaNumber)} // <-- only number
                   className="p-1 bg-white/20 rounded-lg hover:bg-white/30 transition"
                 >
                   <ClipboardIcon className="h-5 w-5" />
@@ -671,7 +659,7 @@ const Deposit: React.FC = () => {
                 </span>
                 <button
                   type="button"
-                  onClick={() => copyToClipboard(mpesaNumber)} // <-- only number
+                  onClick={() => copyToClipboard(airtelNumber)} // <-- only number
                   className="p-1 bg-white/20 rounded-lg hover:bg-white/30 transition"
                 >
                   <ClipboardIcon className="h-5 w-5" />
@@ -680,7 +668,6 @@ const Deposit: React.FC = () => {
             </div>
           )}
         </div>
-
         {/* Inline Message */}
         {message && (
           <div
@@ -698,7 +685,6 @@ const Deposit: React.FC = () => {
             <span>{message.text}</span>
           </div>
         )}
-
         {/* Form Fields */}
         <div className="space-y-3">
           <input
@@ -770,7 +756,6 @@ const Deposit: React.FC = () => {
           </button>
         </div>
       </motion.form>
-
       {/* Deposit List */}
       <motion.div
         initial={{ y: 20, opacity: 0 }}
@@ -793,7 +778,6 @@ const Deposit: React.FC = () => {
             <ArrowPathIcon className="h-4 w-4" /> Refresh
           </button>
         </div>
-
         {isLoading ? (
           <p
             className={`${colors.text.replace(
