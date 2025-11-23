@@ -15,11 +15,11 @@
 //   const [createUserLevel] = useCreateUserLevelMutation();
 //   const [notification, setNotification] = useState<string | null>(null);
 
-//   // ✅ Debug: log response from backend
+//   // Debug: log response from backend
 //   useEffect(() => {
-//     console.log("🟢 useGetLevelsQuery() response:", levels);
-//     console.log("🔵 isLoading:", isLoading);
-//     console.log("🔴 error:", error);
+//     console.log("useGetLevelsQuery() response:", levels);
+//     console.log("isLoading:", isLoading);
+//     console.log("error:", error);
 //   }, [levels, isLoading, error]);
 
 //   const showNotification = (msg: string) => {
@@ -32,11 +32,10 @@
 //       await createUserLevel({ level_id: levelId }).unwrap();
 //       showNotification("Enrollment successful! Redirecting to your jobs...");
 //       setTimeout(() => {
-//         navigate("/jobslevels");
+//         navigate("/myjoblevels");
 //       }, 2000);
 //     } catch (error: any) {
 //       console.error("Enrollment failed:", error);
-
 //       if (error?.data?.detail) {
 //         if (Array.isArray(error.data.detail)) {
 //           const messages = error.data.detail
@@ -58,42 +57,39 @@
 //     <motion.div
 //       initial={{ opacity: 0 }}
 //       animate={{ opacity: 1 }}
-//       className="min-h-screen w-full px-4 py-6 bg-gradient-to-b from-gray-900 via-indigo-900 to-gray-950 text-white overflow-x-auto"
+//       className="min-h-screen w-full px-4 py-6 bg-yellow-50 text-yellow-900 overflow-x-auto"
 //     >
-//       {/* === Notification === */}
+//       {/* Notification */}
 //       {notification && (
-//         <div className="max-w-6xl mx-auto mb-4 p-3 bg-indigo-600 rounded-xl text-white text-center">
+//         <div className="max-w-6xl mx-auto mb-4 p-3 bg-yellow-600 rounded-xl text-white text-center">
 //           {notification}
 //         </div>
 //       )}
-
-//       {/* === Header === */}
+//       {/* Header */}
 //       <div className="text-center mb-6">
-//         <h1 className="text-2xl font-bold mb-1 flex justify-center items-center gap-2 text-indigo-300">
+//         <h1 className="text-2xl font-bold mb-1 flex justify-center items-center gap-2 text-yellow-800">
 //           <TrophyIcon className="h-6 w-6" />
 //           Levels & Income
 //         </h1>
-//         <p className="text-indigo-200 text-sm">
+//         <p className="text-yellow-700 text-sm">
 //           Explore all levels and enroll in the ones you want
 //         </p>
 //       </div>
-
-//       {/* === Refresh Button === */}
+//       {/* Refresh Button */}
 //       <div className="flex justify-end max-w-6xl mx-auto mb-4">
 //         <button
 //           onClick={() => refetch()}
-//           className="flex items-center gap-2 text-indigo-300 hover:text-indigo-400 transition"
+//           className="flex items-center gap-2 text-yellow-700 hover:text-yellow-800 transition"
 //         >
 //           <ArrowPathIcon className="h-4 w-4" />
 //           Refresh
 //         </button>
 //       </div>
-
-//       {/* === Levels Table === */}
+//       {/* Levels Table */}
 //       <div className="max-w-6xl mx-auto overflow-x-auto">
 //         <table className="w-full text-left border-collapse">
 //           <thead>
-//             <tr className="bg-orange-600 text-white">
+//             <tr className="bg-yellow-600 text-white">
 //               <th className="px-4 py-2">Job Grade</th>
 //               <th className="px-4 py-2">Work Deposit</th>
 //               <th className="px-4 py-2">Number of Tasks</th>
@@ -107,7 +103,7 @@
 //           <tbody>
 //             {isLoading ? (
 //               <tr>
-//                 <td colSpan={8} className="text-center py-4 text-indigo-200">
+//                 <td colSpan={8} className="text-center py-4 text-yellow-700">
 //                   Loading levels...
 //                 </td>
 //               </tr>
@@ -115,9 +111,9 @@
 //               levels.map((level) => (
 //                 <tr
 //                   key={level.id}
-//                   className="even:bg-white/10 odd:bg-white/5 hover:bg-white/20 transition"
+//                   className="even:bg-yellow-50 odd:bg-yellow-100 hover:bg-yellow-200 transition"
 //                 >
-//                   <td className="px-4 py-2 text-indigo-300 font-medium">
+//                   <td className="px-4 py-2 text-yellow-800 font-medium">
 //                     {level.name}
 //                   </td>
 //                   <td className="px-4 py-2">KES {level.work_deposit}</td>
@@ -131,7 +127,7 @@
 //                   <td className="px-4 py-2">
 //                     <button
 //                       onClick={() => handleEnroll(level.id)}
-//                       className="bg-indigo-600 hover:bg-indigo-700 px-3 py-1 rounded-xl text-white text-sm transition"
+//                       className="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded-xl text-white text-sm transition"
 //                     >
 //                       Enroll
 //                     </button>
@@ -140,7 +136,7 @@
 //               ))
 //             ) : (
 //               <tr>
-//                 <td colSpan={8} className="text-center py-4 text-indigo-200">
+//                 <td colSpan={8} className="text-center py-4 text-yellow-700">
 //                   No levels available.
 //                 </td>
 //               </tr>
@@ -153,9 +149,6 @@
 // };
 
 // export default Levels;
-
-
-
 
 
 import React, { useState, useEffect } from "react";
@@ -208,6 +201,18 @@ const Levels: React.FC = () => {
       }
     }
   };
+
+  // Sort levels: "temporary worker" first, then LV1, LV2, etc.
+  const sortedLevels = levels
+    ? [...levels].sort((a, b) => {
+        if (a.name.toLowerCase() === "temporary worker") return -1;
+        if (b.name.toLowerCase() === "temporary worker") return 1;
+        // Extract the numeric part from the level name (e.g., "LV1" -> 1)
+        const aNum = parseInt(a.name.replace(/[^\d]/g, ""), 10) || 0;
+        const bNum = parseInt(b.name.replace(/[^\d]/g, ""), 10) || 0;
+        return aNum - bNum;
+      })
+    : [];
 
   return (
     <motion.div
@@ -263,8 +268,8 @@ const Levels: React.FC = () => {
                   Loading levels...
                 </td>
               </tr>
-            ) : levels && levels.length > 0 ? (
-              levels.map((level) => (
+            ) : sortedLevels.length > 0 ? (
+              sortedLevels.map((level) => (
                 <tr
                   key={level.id}
                   className="even:bg-yellow-50 odd:bg-yellow-100 hover:bg-yellow-200 transition"
