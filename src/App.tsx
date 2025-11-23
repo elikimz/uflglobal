@@ -34,6 +34,7 @@ import PaymentDetails from "./pages/paymentdetails";
 import AdminManageUsers from "./features/profile/adminmanageuser";
 import AdminManageContact from "./features/contacts/adminmanagecontacts";
 import AdminManageLink from "./features/whatapplinks/adminmanage";
+import AdvertisingPosition from "./pages/advitising";
 
 // Define routes
 const router = createBrowserRouter([
@@ -200,6 +201,16 @@ const router = createBrowserRouter([
   {
     path: "/withdrawal-details",
     element: <PaymentDetails />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: "/sgg",
+    element: <AdvertisingPosition />,
     errorElement: (
       <ErrorPage
         code="🚧"
