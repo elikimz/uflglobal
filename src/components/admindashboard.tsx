@@ -258,13 +258,13 @@ const AdminDashboard: React.FC = () => {
       description: " view contacts.",
       route: "/admin/contacts",
     },
-    {
-      id: "settings",
-      title: "System Settings",
-      icon: <Cog6ToothIcon className="h-6 w-6" />,
-      description: "Configure system-wide settings and preferences.",
-      route: "/admin/settings",
-    },
+    // {
+    //   id: "settings",
+    //   title: "System Settings",
+    //   icon: <Cog6ToothIcon className="h-6 w-6" />,
+    //   description: "Configure system-wide settings and preferences.",
+    //   route: "/admin/settings",
+    // },
     {
       id: "whatsapplinks",
       title: "Manage WhatsApp Links",
