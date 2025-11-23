@@ -87,7 +87,7 @@ const UserDashboard = () => {
                   </div>
                   <div className="ml-2 flex items-center gap-1 bg-yellow-400/30 rounded-full px-3 py-1 border-2 border-yellow-500">
                     <span className="text-yellow-800 font-bold">
-                      {userProfile.user_levels?.[0]?.name || "1"}
+                      {userProfile.user_levels?.[0]?.name || "N/A"}
                     </span>
                   </div>
                 </div>
