@@ -170,7 +170,6 @@
 
 
 
-
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -181,12 +180,12 @@ import {
   UsersIcon,
   TrophyIcon,
   UserPlusIcon,
-  // ChartBarIcon,
-  // Cog6ToothIcon,
+  ChartBarIcon,
+  Cog6ToothIcon,
   ExclamationCircleIcon,
   CheckCircleIcon,
   CurrencyDollarIcon,
-
+  NewspaperIcon,
   ChatBubbleLeftEllipsisIcon,
 } from "@heroicons/react/24/solid";
 
@@ -200,76 +199,75 @@ const AdminDashboard: React.FC = () => {
   const sections = [
     {
       id: "withdrawals",
-      title: "Withdrawals",
-      icon: <ArrowDownTrayIcon className="h-6 w-6 text-white" />,
+      title: "Manage Withdrawals",
+      icon: <ArrowDownTrayIcon className="h-6 w-6" />,
+      description: "Approve or reject user withdrawal requests.",
       route: "/admin/withdrawals",
     },
     {
       id: "deposits",
-      title: "Deposits",
-      icon: <ArrowUpTrayIcon className="h-6 w-6 text-white" />,
+      title: "Manage Deposits",
+      icon: <ArrowUpTrayIcon className="h-6 w-6" />,
+      description: "Review and confirm user deposits.",
       route: "/admin/deposits",
     },
     {
       id: "tasks",
-      title: "Tasks",
-      icon: <ClipboardDocumentListIcon className="h-6 w-6 text-white" />,
+      title: "Manage Tasks",
+      icon: <ClipboardDocumentListIcon className="h-6 w-6" />,
+      description: "Create, edit, or delete tasks for users.",
       route: "/admin/tasks",
     },
     {
       id: "levels",
-      title: "Levels",
-      icon: <TrophyIcon className="h-6 w-6 text-white" />,
+      title: "Manage Levels",
+      icon: <TrophyIcon className="h-6 w-6" />,
+      description: "Set up and configure user levels and rewards.",
       route: "/admin/levels",
     },
     {
       id: "users",
-      title: "Users",
-      icon: <UsersIcon className="h-6 w-6 text-white" />,
+      title: "Manage Users",
+      icon: <UsersIcon className="h-6 w-6" />,
+      description: "View, edit, or suspend user accounts.",
       route: "/admin/users",
     },
     {
       id: "referrals",
-      title: "Referrals",
-      icon: <UserPlusIcon className="h-6 w-6 text-white" />,
+      title: "Manage Referrals",
+      icon: <UserPlusIcon className="h-6 w-6" />,
+      description: "Track and manage user referrals and bonuses.",
       route: "/admin/referrals",
     },
     {
       id: "wealthfunds",
-      title: "Wealth Fund",
-      icon: <CurrencyDollarIcon className="h-6 w-6 text-white" />,
+      title: "Manage Wealth Funds",
+      icon: <CurrencyDollarIcon className="h-6 w-6" />,
+      description: "Create, update, and delete wealth funds.",
       route: "/admin/wealth-funds",
     },
-    // {
-    //   id: "settings",
-    //   title: "Settings",
-    //   icon: <Cog6ToothIcon className="h-6 w-6 text-white" />,
-    //   route: "/admin/settings",
-    // },
-    // {
-    //   id: "support",
-    //   title: "Support",
-    //   icon: <ChartBarIcon className="h-6 w-6 text-white" />,
-    //   route: "/admin/support",
-    // },
+    {
+      id: "companynews",
+      title: "Manage Company News",
+      icon: <NewspaperIcon className="h-6 w-6" />,
+      description: "Create, update, and delete company news.",
+      route: "/admin/company-news",
+    },
+    {
+      id: "contacts",
+      title: "Contacts",
+      icon: <ChartBarIcon className="h-6 w-6" />,
+      description: "View contacts.",
+      route: "/admin/contacts",
+    },
     {
       id: "whatsapplinks",
-      title: "Manage Packages Level",
-      icon: <ChatBubbleLeftEllipsisIcon className="h-6 w-6 text-white" />,
+      title: "Manage WhatsApp Links",
+      icon: <ChatBubbleLeftEllipsisIcon className="h-6 w-6" />,
+      description:
+        "Create, update, and delete WhatsApp, group, and hiring manager links.",
       route: "/admin/whatsapp-links",
     },
-    // {
-    //   id: "passwordreset",
-    //   title: "Password Reset",
-    //   icon: <Cog6ToothIcon className="h-6 w-6 text-white" />,
-    //   route: "/admin/password-reset",
-    // },
-    // {
-    //   id: "withdrawalpinreset",
-    //   title: "Withdrawal Pin Reset",
-    //   icon: <Cog6ToothIcon className="h-6 w-6 text-white" />,
-    //   route: "/admin/withdrawal-pin-reset",
-    // },
   ];
 
   const handleSectionClick = (route: string) => {
@@ -284,14 +282,17 @@ const AdminDashboard: React.FC = () => {
     >
       {/* Header */}
       <div className="text-center mb-8">
-        <h1 className="text-3xl font-bold mb-2">Admin Dashboard</h1>
+        <h1 className="text-3xl font-bold mb-2 flex justify-center items-center gap-2">
+          <Cog6ToothIcon className="h-8 w-8 text-indigo-300" />
+          Admin Dashboard
+        </h1>
         <p className="text-indigo-200 text-sm">
           Manage Users, Transactions, Investments, and More
         </p>
       </div>
 
       {/* Sections Grid */}
-      <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
+      <div className="grid grid-cols-2 gap-4 max-w-4xl mx-auto">
         {sections.map((section) => (
           <motion.button
             key={section.id}
@@ -302,8 +303,10 @@ const AdminDashboard: React.FC = () => {
             onClick={() => handleSectionClick(section.route)}
             className="bg-indigo-600 rounded-xl p-4 flex flex-col items-center justify-center shadow-lg"
           >
-            <div className="mb-2">{section.icon}</div>
-            <h3 className="text-white text-sm font-medium">{section.title}</h3>
+            <div className="mb-2 text-white">{section.icon}</div>
+            <h3 className="text-white text-sm font-medium text-center">
+              {section.title}
+            </h3>
           </motion.button>
         ))}
       </div>
