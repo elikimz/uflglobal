@@ -33,6 +33,7 @@ import Spinner from "./pages/spinner";
 import PaymentDetails from "./pages/paymentdetails";
 import AdminManageUsers from "./features/profile/adminmanageuser";
 import AdminManageContact from "./features/contacts/adminmanagecontacts";
+import AdminManageLink from "./features/whatapplinks/adminmanage";
 
 // Define routes
 const router = createBrowserRouter([
@@ -301,6 +302,16 @@ const router = createBrowserRouter([
   {
     path: "/admin/contacts",
     element: <AdminManageContact />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: "/admin/whatsapp-links",
+    element: <AdminManageLink />,
     errorElement: (
       <ErrorPage
         code="🚧"

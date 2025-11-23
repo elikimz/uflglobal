@@ -26,6 +26,7 @@ import { userProfileAPI } from "../features/profile/profileAPI";
 import { withdrawalAPI } from "../features/withdrawal/withdrawalAPI";
 import { earningsAPI } from "../features/earnings/earningsAPI";
 import { contactsAPI } from "../features/contacts/contactsAPI";
+import { linksAPI } from "../features/whatapplinks/whatappAPI";
 const persistConfig = {
   key: "root",
   storage,
@@ -49,6 +50,7 @@ const rootReducer = combineReducers({
   [withdrawalAPI.reducerPath]:withdrawalAPI.reducer,
   [earningsAPI.reducerPath]:earningsAPI.reducer,
   [contactsAPI.reducerPath]:contactsAPI.reducer,
+  [linksAPI.reducerPath]:linksAPI.reducer,
 
  
 });
@@ -80,6 +82,7 @@ export const store = configureStore({
       withdrawalAPI.middleware,
       earningsAPI.middleware,
       contactsAPI.middleware,
+      linksAPI.middleware,
     
     ),
 });

@@ -183,7 +183,8 @@ import {
   ExclamationCircleIcon,
   CheckCircleIcon,
   CurrencyDollarIcon,
-  NewspaperIcon, // <-- for Company News
+  NewspaperIcon,
+  ChatBubbleLeftEllipsisIcon, // <-- for Company News
 } from "@heroicons/react/24/solid";
 
 const AdminDashboard: React.FC = () => {
@@ -194,16 +195,84 @@ const AdminDashboard: React.FC = () => {
   } | null>(null);
 
   const sections = [
-    { id: "withdrawals", title: "Manage Withdrawals", icon: <ArrowDownTrayIcon className="h-6 w-6" />, description: "Approve or reject user withdrawal requests.", route: "/admin/withdrawals" },
-    { id: "deposits", title: "Manage Deposits", icon: <ArrowUpTrayIcon className="h-6 w-6" />, description: "Review and confirm user deposits.", route: "/admin/deposits" },
-    { id: "tasks", title: "Manage Tasks", icon: <ClipboardDocumentListIcon className="h-6 w-6" />, description: "Create, edit, or delete tasks for users.", route: "/admin/tasks" },
-    { id: "levels", title: "Manage Levels", icon: <TrophyIcon className="h-6 w-6" />, description: "Set up and configure user levels and rewards.", route: "/admin/levels" },
-    { id: "users", title: "Manage Users", icon: <UsersIcon className="h-6 w-6" />, description: "View, edit, or suspend user accounts.", route: "/admin/users" },
-    { id: "referrals", title: "Manage Referrals", icon: <UserPlusIcon className="h-6 w-6" />, description: "Track and manage user referrals and bonuses.", route: "/admin/referrals" },
-    { id: "wealthfunds", title: "Manage Wealth Funds", icon: <CurrencyDollarIcon className="h-6 w-6" />, description: "Create, update, and delete wealth funds.", route: "/admin/wealth-funds" },
-    { id: "companynews", title: "Manage Company News", icon: <NewspaperIcon className="h-6 w-6" />, description: "Create, update, and delete company news.", route: "/admin/company-news" }, // <-- new section
-    { id: "contacts", title: "Contacts ", icon: <ChartBarIcon className="h-6 w-6" />, description: " view contacts.", route: "/admin/contacts" },
-    { id: "settings", title: "System Settings", icon: <Cog6ToothIcon className="h-6 w-6" />, description: "Configure system-wide settings and preferences.", route: "/admin/settings" },
+    {
+      id: "withdrawals",
+      title: "Manage Withdrawals",
+      icon: <ArrowDownTrayIcon className="h-6 w-6" />,
+      description: "Approve or reject user withdrawal requests.",
+      route: "/admin/withdrawals",
+    },
+    {
+      id: "deposits",
+      title: "Manage Deposits",
+      icon: <ArrowUpTrayIcon className="h-6 w-6" />,
+      description: "Review and confirm user deposits.",
+      route: "/admin/deposits",
+    },
+    {
+      id: "tasks",
+      title: "Manage Tasks",
+      icon: <ClipboardDocumentListIcon className="h-6 w-6" />,
+      description: "Create, edit, or delete tasks for users.",
+      route: "/admin/tasks",
+    },
+    {
+      id: "levels",
+      title: "Manage Levels",
+      icon: <TrophyIcon className="h-6 w-6" />,
+      description: "Set up and configure user levels and rewards.",
+      route: "/admin/levels",
+    },
+    {
+      id: "users",
+      title: "Manage Users",
+      icon: <UsersIcon className="h-6 w-6" />,
+      description: "View, edit, or suspend user accounts.",
+      route: "/admin/users",
+    },
+    {
+      id: "referrals",
+      title: "Manage Referrals",
+      icon: <UserPlusIcon className="h-6 w-6" />,
+      description: "Track and manage user referrals and bonuses.",
+      route: "/admin/referrals",
+    },
+    {
+      id: "wealthfunds",
+      title: "Manage Wealth Funds",
+      icon: <CurrencyDollarIcon className="h-6 w-6" />,
+      description: "Create, update, and delete wealth funds.",
+      route: "/admin/wealth-funds",
+    },
+    {
+      id: "companynews",
+      title: "Manage Company News",
+      icon: <NewspaperIcon className="h-6 w-6" />,
+      description: "Create, update, and delete company news.",
+      route: "/admin/company-news",
+    }, // <-- new section
+    {
+      id: "contacts",
+      title: "Contacts ",
+      icon: <ChartBarIcon className="h-6 w-6" />,
+      description: " view contacts.",
+      route: "/admin/contacts",
+    },
+    {
+      id: "settings",
+      title: "System Settings",
+      icon: <Cog6ToothIcon className="h-6 w-6" />,
+      description: "Configure system-wide settings and preferences.",
+      route: "/admin/settings",
+    },
+    {
+      id: "whatsapplinks",
+      title: "Manage WhatsApp Links",
+      icon: <ChatBubbleLeftEllipsisIcon className="h-6 w-6" />,
+      description:
+        "Create, update, and delete WhatsApp, group, and hiring manager links.",
+      route: "/admin/whatsapp-links",
+    },
   ];
 
   const handleSectionClick = (route: string) => {
