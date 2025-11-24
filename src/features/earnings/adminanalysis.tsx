@@ -79,7 +79,7 @@ const AdminAnalysis: React.FC = () => {
   const { total_approved_deposits, total_approved_withdrawals, net_total } =
     data;
 
-  // Format currency values
+  // // Format currency values
   // const formatCurrency = (value: number) => {
   //   return new Intl.NumberFormat("en-US", {
   //     style: "currency",
