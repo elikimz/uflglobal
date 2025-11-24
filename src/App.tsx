@@ -36,6 +36,7 @@ import AdminManageContact from "./features/contacts/adminmanagecontacts";
 import AdminManageLink from "./features/whatapplinks/adminmanage";
 import AdvertisingPosition from "./pages/advitising";
 import AdminSettings from "./features/login/adminsettings";
+import AdminAnalysis from "./features/earnings/adminanalysis";
 
 // Define routes
 const router = createBrowserRouter([
@@ -341,7 +342,16 @@ const router = createBrowserRouter([
       />
     ),
   },
-
+  {
+    path: "/admin/analysis",
+    element: <AdminAnalysis />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
   // Catch-all route (for 404)
   {
     path: "*",

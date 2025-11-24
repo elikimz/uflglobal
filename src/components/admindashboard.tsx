@@ -275,6 +275,14 @@ const AdminDashboard: React.FC = () => {
         "Create, update, and delete WhatsApp, group, and hiring manager links.",
       route: "/admin/whatsapp-links",
     },
+     {
+      id: "analysis",
+      title: "Analysis",
+      icon: <ChartBarIcon className="h-6 w-6" />,
+      description: "View settings.",
+      route: "/admin/analysis",
+    },
+    
   ];
 
   const handleSectionClick = (route: string) => {
