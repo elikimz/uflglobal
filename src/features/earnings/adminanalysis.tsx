@@ -80,14 +80,14 @@ const AdminAnalysis: React.FC = () => {
     data;
 
   // Format currency values
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
-    }).format(value);
-  };
+  // const formatCurrency = (value: number) => {
+  //   return new Intl.NumberFormat("en-US", {
+  //     style: "currency",
+  //     currency: "USD",
+  //     minimumFractionDigits: 2,
+  //     maximumFractionDigits: 2,
+  //   }).format(value);
+  // };
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 sm:p-6">
@@ -166,7 +166,7 @@ const AdminAnalysis: React.FC = () => {
                   <span className="text-gray-600">Total Approved Deposits</span>
                 </div>
                 <span className="font-medium text-green-600">
-                  {formatCurrency(total_approved_deposits)}
+                  {(total_approved_deposits)}
                 </span>
               </div>
 
@@ -178,7 +178,7 @@ const AdminAnalysis: React.FC = () => {
                   </span>
                 </div>
                 <span className="font-medium text-red-600">
-                  {formatCurrency(total_approved_withdrawals)}
+                  {(total_approved_withdrawals)}
                 </span>
               </div>
 
@@ -190,7 +190,7 @@ const AdminAnalysis: React.FC = () => {
                 <span
                   className={net_total >= 0 ? "text-blue-600" : "text-red-600"}
                 >
-                  {formatCurrency(net_total)}
+                  {(net_total)}
                 </span>
               </div>
             </div>
