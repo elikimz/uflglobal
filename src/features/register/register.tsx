@@ -128,7 +128,7 @@ const AuthPage: React.FC = () => {
       }, 1200);
     } catch (err: any) {
       console.error("Login error:", err); // Log login errors
-      let errorMsg = "Login failed. Please check your credentials.";
+      let errorMsg = "Your account has been suspended. Please contact support.";
       if (err?.data?.detail) {
         if (typeof err.data.detail === "string") {
           errorMsg = err.data.detail;
