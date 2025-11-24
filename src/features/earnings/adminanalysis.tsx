@@ -123,7 +123,7 @@ const AdminAnalysis: React.FC = () => {
                 </h3>
               </div>
               <p className="text-2xl font-bold text-green-700">
-                {formatCurrency(total_approved_deposits)}
+                {(total_approved_deposits)}
               </p>
             </div>
 
@@ -136,7 +136,7 @@ const AdminAnalysis: React.FC = () => {
                 </h3>
               </div>
               <p className="text-2xl font-bold text-red-700">
-                {formatCurrency(total_approved_withdrawals)}
+                {(total_approved_withdrawals)}
               </p>
             </div>
 
@@ -147,7 +147,7 @@ const AdminAnalysis: React.FC = () => {
                 <h3 className="text-sm font-medium text-gray-600">Net Total</h3>
               </div>
               <p className="text-2xl font-bold text-blue-700">
-                {formatCurrency(net_total)}
+                {(net_total)}
               </p>
             </div>
           </div>
