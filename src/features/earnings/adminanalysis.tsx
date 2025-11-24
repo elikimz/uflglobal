@@ -16,12 +16,16 @@ const AdminAnalysis: React.FC = () => {
   const SkeletonLoader = () => (
     <div className="animate-pulse space-y-4">
       <div className="h-6 bg-gray-200 rounded w-3/4 mb-6"></div>
-      {[...Array(3)].map((_, i) => (
-        <div key={i} className="flex justify-between items-center">
-          <div className="h-4 bg-gray-200 rounded w-1/2"></div>
-          <div className="h-4 bg-gray-200 rounded w-1/4"></div>
-        </div>
-      ))}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="aspect-square bg-gray-200 rounded-lg"></div>
+        ))}
+      </div>
+      <div className="space-y-3">
+        {[...Array(3)].map((_, i) => (
+          <div key={i} className="h-4 bg-gray-200 rounded w-full"></div>
+        ))}
+      </div>
     </div>
   );
 
@@ -79,11 +83,10 @@ const AdminAnalysis: React.FC = () => {
   const { total_approved_deposits, total_approved_withdrawals, net_total } =
     data;
 
-  // Format currency values
+  // Format currency values without dollar sign
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
+      style: "decimal",
       minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     }).format(value);
@@ -112,43 +115,49 @@ const AdminAnalysis: React.FC = () => {
 
         {/* Content */}
         <div className="p-6">
-          {/* Summary Cards - Responsive Grid */}
+          {/* Summary Cards - Square cards in responsive grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
-            {/* Deposits Card */}
-            <div className="bg-green-50 p-4 rounded-lg border border-green-200">
+            {/* Deposits Card - Square */}
+            <div className="bg-green-50 p-4 rounded-lg border border-green-200 aspect-square flex flex-col">
               <div className="flex items-center mb-2">
                 <ArrowTrendingUpIcon className="h-5 w-5 text-green-600 mr-2" />
                 <h3 className="text-sm font-medium text-gray-600">
                   Approved Deposits
                 </h3>
               </div>
-              <p className="text-2xl font-bold text-green-700">
-                {formatCurrency(total_approved_deposits)}
-              </p>
+              <div className="flex-1 flex items-center justify-center">
+                <p className="text-2xl font-bold text-green-700">
+                  {formatCurrency(total_approved_deposits)}
+                </p>
+              </div>
             </div>
 
-            {/* Withdrawals Card */}
-            <div className="bg-red-50 p-4 rounded-lg border border-red-200">
+            {/* Withdrawals Card - Square */}
+            <div className="bg-red-50 p-4 rounded-lg border border-red-200 aspect-square flex flex-col">
               <div className="flex items-center mb-2">
                 <ArrowTrendingDownIcon className="h-5 w-5 text-red-600 mr-2" />
                 <h3 className="text-sm font-medium text-gray-600">
                   Approved Withdrawals
                 </h3>
               </div>
-              <p className="text-2xl font-bold text-red-700">
-                {formatCurrency(total_approved_withdrawals)}
-              </p>
+              <div className="flex-1 flex items-center justify-center">
+                <p className="text-2xl font-bold text-red-700">
+                  {formatCurrency(total_approved_withdrawals)}
+                </p>
+              </div>
             </div>
 
-            {/* Net Total Card */}
-            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+            {/* Net Total Card - Square */}
+            <div className="bg-blue-50 p-4 rounded-lg border border-blue-200 aspect-square flex flex-col">
               <div className="flex items-center mb-2">
                 <ChartBarIcon className="h-5 w-5 text-blue-600 mr-2" />
                 <h3 className="text-sm font-medium text-gray-600">Net Total</h3>
               </div>
-              <p className="text-2xl font-bold text-blue-700">
-                {formatCurrency(net_total)}
-              </p>
+              <div className="flex-1 flex items-center justify-center">
+                <p className="text-2xl font-bold text-blue-700">
+                  {formatCurrency(net_total)}
+                </p>
+              </div>
             </div>
           </div>
 
