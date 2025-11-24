@@ -35,6 +35,7 @@ import AdminManageUsers from "./features/profile/adminmanageuser";
 import AdminManageContact from "./features/contacts/adminmanagecontacts";
 import AdminManageLink from "./features/whatapplinks/adminmanage";
 import AdvertisingPosition from "./pages/advitising";
+import AdminSettings from "./features/login/adminsettings";
 
 // Define routes
 const router = createBrowserRouter([
@@ -323,6 +324,16 @@ const router = createBrowserRouter([
   {
     path: "/admin/whatsapp-links",
     element: <AdminManageLink />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: "/admin/setting",
+    element: <AdminSettings />,
     errorElement: (
       <ErrorPage
         code="🚧"

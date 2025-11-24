@@ -261,6 +261,13 @@ const AdminDashboard: React.FC = () => {
       route: "/admin/contacts",
     },
     {
+      id: "contacts",
+      title: "Setting",
+      icon: <ChartBarIcon className="h-6 w-6" />,
+      description: "View settings.",
+      route: "/admin/setting",
+    },
+    {
       id: "whatsapplinks",
       title: "Manage WhatsApp Links",
       icon: <ChatBubbleLeftEllipsisIcon className="h-6 w-6" />,
