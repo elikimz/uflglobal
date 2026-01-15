@@ -1,6 +1,9 @@
 
 
 
+
+
+
 // import React, { useState, useRef, useEffect } from 'react';
 // import { motion, AnimatePresence } from 'framer-motion';
 // import {
@@ -140,13 +143,10 @@
 //       }, 1200);
 //     } catch (err: any) {
 //       console.error('Login error:', err);
-//       let errorMsg = 'Your account has been suspended. Please contact support.';
-//       if (err?.data?.detail) {
-//         if (typeof err.data.detail === 'string') {
-//           errorMsg = err.data.detail;
-//         } else if (Array.isArray(err.data.detail) && err.data.detail[0]?.msg) {
-//           errorMsg = err.data.detail[0].msg;
-//         }
+//       let errorMsg = 'An error occurred. Please try again.';
+//       // Check if the error response has a 'detail' field
+//       if (err.data && err.data.detail) {
+//         errorMsg = err.data.detail;
 //       }
 //       setMessage({ type: 'error', text: errorMsg });
 //     }
@@ -178,6 +178,7 @@
 //         password: formData.password,
 //         invite_code: formData.invite_code,
 //         recaptcha_token: token,
+//         data: '',
 //       }).unwrap();
 //       console.log('Signup response:', signupRes);
 
@@ -220,13 +221,10 @@
 //       }, 1200);
 //     } catch (err: any) {
 //       console.error('Signup error:', err);
-//       let errorMsg = 'Signup failed. Please try again.';
-//       if (err?.data?.detail) {
-//         if (typeof err.data.detail === 'string') {
-//           errorMsg = err.data.detail;
-//         } else if (Array.isArray(err.data.detail) && err.data.detail[0]?.msg) {
-//           errorMsg = err.data.detail[0].msg;
-//         }
+//       let errorMsg = 'An error occurred. Please try again.';
+//       // Check if the error response has a 'detail' field
+//       if (err.data && err.data.detail) {
+//         errorMsg = err.data.detail;
 //       }
 //       setMessage({ type: 'error', text: errorMsg });
 //       recaptchaRef.current?.reset();
@@ -299,7 +297,7 @@
 //                   <FiUser className="absolute left-4 top-3.5 text-indigo-500" />
 //                   <input
 //                     name="username"
-//                     placeholder=" Phone"
+//                     placeholder="Phone"
 //                     className={inputClass}
 //                     onChange={handleChange}
 //                     required
@@ -446,9 +444,6 @@
 
 
 
-
-
-
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -590,8 +585,19 @@ const AuthPage: React.FC = () => {
       console.error('Login error:', err);
       let errorMsg = 'An error occurred. Please try again.';
       // Check if the error response has a 'detail' field
-      if (err.data && err.data.detail) {
-        errorMsg = err.data.detail;
+      if (err.data) {
+        // Handle HTTPException responses
+        if (err.data.detail) {
+          errorMsg = err.data.detail;
+        }
+        // Handle plain object responses (e.g., { status: 401, message: "..." })
+        else if (typeof err.data === 'object' && err.data.message) {
+          errorMsg = err.data.message;
+        }
+        // Handle plain string responses (e.g., "Account not found...")
+        else if (typeof err.data === 'string') {
+          errorMsg = err.data;
+        }
       }
       setMessage({ type: 'error', text: errorMsg });
     }
@@ -668,8 +674,19 @@ const AuthPage: React.FC = () => {
       console.error('Signup error:', err);
       let errorMsg = 'An error occurred. Please try again.';
       // Check if the error response has a 'detail' field
-      if (err.data && err.data.detail) {
-        errorMsg = err.data.detail;
+      if (err.data) {
+        // Handle HTTPException responses
+        if (err.data.detail) {
+          errorMsg = err.data.detail;
+        }
+        // Handle plain object responses (e.g., { status: 400, message: "..." })
+        else if (typeof err.data === 'object' && err.data.message) {
+          errorMsg = err.data.message;
+        }
+        // Handle plain string responses (e.g., "Phone number already in use")
+        else if (typeof err.data === 'string') {
+          errorMsg = err.data;
+        }
       }
       setMessage({ type: 'error', text: errorMsg });
       recaptchaRef.current?.reset();
