@@ -82,6 +82,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 export interface EarningsResponse {
   user_id: number;
   todays_earnings: number;
+  yesterdays_earnings: number;
   this_weeks_earnings: number;
   this_months_earnings: number;
   task_rebate_earnings: number;

@@ -214,9 +214,11 @@
 
 
 
+
 import React, { useState, useMemo } from 'react';
 import { ClipboardCopy } from 'lucide-react';
 import { useGetUserTeamQuery } from './referralsAPI';
+import { useGetUserProfileQuery } from '../profile/profileAPI'; // Import the user profile hook
 
 interface ReferredUser {
   id: number;
@@ -241,12 +243,26 @@ const levelColors: Record<string, string> = {
 };
 
 const Referrals: React.FC = () => {
-  const { data, isLoading, isError } = useGetUserTeamQuery();
-  const referrals = useMemo<Referral[]>(
-    () => (Array.isArray(data) ? (data as unknown as Referral[]) : []),
-    [data],
-  );
+  const {
+    data: teamData,
+    isLoading: isTeamLoading,
+  } = useGetUserTeamQuery();
+  const { data: userProfile, isLoading: isProfileLoading } =
+    useGetUserProfileQuery();
   const [copied, setCopied] = useState(false);
+
+  // Combine loading states
+  const isLoading = isTeamLoading || isProfileLoading;
+
+  // Get referrals from team data
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const referrals = (teamData ?? []) as unknown as Referral[];
+
+  // Get the user's invite code from their profile
+  const userInviteCode = userProfile?.invite_code || '';
+
+  // Use the user's invite code for the invite URL
+  const inviteUrl = `${window.location.origin}/register?invite_code=${userInviteCode}`;
 
   const sortedReferrals = useMemo(() => {
     return [...referrals].sort((a, b) => {
@@ -262,14 +278,10 @@ const Referrals: React.FC = () => {
     () => referrals.filter((r) => r.is_active).length,
     [referrals],
   );
-
   const inactiveCount = useMemo(
     () => referrals.filter((r) => !r.is_active).length,
     [referrals],
   );
-
-  const inviteCode = referrals[0]?.referred.invite_code ?? '';
-  const inviteUrl = `${window.location.origin}/register?invite_code=${inviteCode}`;
 
   const handleCopy = () => {
     navigator.clipboard.writeText(inviteUrl);
@@ -279,14 +291,15 @@ const Referrals: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center h-64 bg-yellow-50">
+      <div className="flex justify-center items-center h-64">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="p-4 md:p-6 bg-yellow-50 min-h-screen">
+    <div className="p-4 md:p-6 bg-yellow-50 min-h-scene">
+      {/* Invite Section - Always visible */}
       <div className="mb-6 p-4 md:p-5 bg-yellow-100 rounded-xl border border-yellow-200 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
         <div className="flex-1">
           <h2 className="text-xl md:text-2xl font-bold text-yellow-900">
@@ -310,7 +323,8 @@ const Referrals: React.FC = () => {
         </div>
       </div>
 
-      {isError && referrals.length === 0 && (
+      {/* Only show "No team members found" message when there are no team members */}
+      {referrals.length === 0 ? (
         <div className="p-6 bg-yellow-50 flex flex-col justify-center items-center">
           <p className="text-yellow-800/70 text-center mb-4">
             No team members found.
@@ -319,10 +333,9 @@ const Referrals: React.FC = () => {
             Invite friends to join your team and start earning rewards together.
           </p>
         </div>
-      )}
-
-      {referrals.length > 0 && (
+      ) : (
         <>
+          {/* Team Summary - Small Boxes */}
           <div className="mb-6 flex flex-wrap gap-3">
             <div className="flex-1 min-w-[120px] bg-yellow-50 p-2 rounded-lg border border-yellow-200 flex flex-col items-center justify-center">
               <p className="text-xs text-yellow-800 mb-1">Total Members</p>
@@ -340,6 +353,7 @@ const Referrals: React.FC = () => {
             </div>
           </div>
 
+          {/* Team Members Header */}
           <div className="mb-4 flex items-center justify-between">
             <h2 className="text-2xl md:text-3xl font-bold text-yellow-900">
               My Team ({referrals.length})
@@ -356,6 +370,7 @@ const Referrals: React.FC = () => {
             </div>
           </div>
 
+          {/* Team Members Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
             {sortedReferrals.map((referral) => (
               <div
@@ -366,6 +381,7 @@ const Referrals: React.FC = () => {
                     : 'ring-1 ring-red-200/50'
                 }`}
               >
+                {/* Header */}
                 <div className="flex items-center space-x-3 md:space-x-4 mb-3">
                   <div className="h-12 w-12 md:h-14 md:w-14 flex items-center justify-center rounded-full bg-yellow-500/20 text-yellow-900 font-bold text-lg md:text-xl">
                     {referral.referred.username.charAt(0).toUpperCase()}
@@ -380,6 +396,7 @@ const Referrals: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Level & Status */}
                 <div className="flex items-center justify-between mb-2">
                   <span
                     className={`px-2 py-1 rounded-full text-xs md:text-sm font-semibold ${
@@ -400,6 +417,7 @@ const Referrals: React.FC = () => {
                   </div>
                 </div>
 
+                {/* Bonus & Join Date */}
                 <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center text-sm text-yellow-800 mt-2 gap-2">
                   <p>
                     Bonus:{' '}

@@ -37,15 +37,17 @@ import AdminManageLink from "./features/whatapplinks/adminmanage";
 import AdvertisingPosition from "./pages/advitising";
 import AdminSettings from "./features/login/adminsettings";
 import AdminAnalysis from "./features/earnings/adminanalysis";
+import CompanyActivities from "./pages/companyactivity";
+import UFLDetails from "./pages/membersbenefit";
 
 // Define routes
 const router = createBrowserRouter([
   {
-    path: "/",
+    path: '/',
     element: <Navigate to="/register" replace />,
   },
   {
-    path: "/register",
+    path: '/register',
     element: <AuthPage />,
     errorElement: (
       <ErrorPage
@@ -56,7 +58,7 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/user/dashboard",
+    path: '/user/dashboard',
     element: <UserDashboard />,
     errorElement: (
       <ErrorPage
@@ -66,7 +68,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "recharge",
+    path: 'recharge',
     element: <Deposit />,
     errorElement: (
       <ErrorPage
@@ -77,7 +79,7 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "withdraw",
+    path: 'withdraw',
     element: <Withdrawal />,
     errorElement: (
       <ErrorPage
@@ -87,7 +89,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "task",
+    path: 'task',
     element: <UserTasks />,
     errorElement: (
       <ErrorPage
@@ -98,7 +100,7 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "levels",
+    path: 'levels',
     element: <Levels />,
     errorElement: (
       <ErrorPage
@@ -108,7 +110,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/myjoblevels",
+    path: '/myjoblevels',
     element: <MyJobLevels />,
     errorElement: (
       <ErrorPage
@@ -118,7 +120,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/referrals",
+    path: '/referrals',
     element: <Referrals />,
     errorElement: (
       <ErrorPage
@@ -129,7 +131,7 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/finance",
+    path: '/finance',
     element: <UserWealthFund />,
     errorElement: (
       <ErrorPage
@@ -139,7 +141,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/company-news",
+    path: '/company-news',
     element: <UserNews />,
     errorElement: (
       <ErrorPage
@@ -149,7 +151,27 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/profile",
+    path: '/company-activity',
+    element: <CompanyActivities />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: '/member-benefits',
+    element: <UFLDetails />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: '/profile',
     element: <Profile />,
     errorElement: (
       <ErrorPage
@@ -159,7 +181,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/security",
+    path: '/security',
     element: <Security />,
     errorElement: (
       <ErrorPage
@@ -170,7 +192,7 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/earnings/me",
+    path: '/earnings/me',
     element: <Earnings />,
     errorElement: (
       <ErrorPage
@@ -181,7 +203,7 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/change-password",
+    path: '/change-password',
     element: <PasswordSetting />,
     errorElement: (
       <ErrorPage
@@ -191,7 +213,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/spinner",
+    path: '/spinner',
     element: <Spinner />,
     errorElement: (
       <ErrorPage
@@ -201,7 +223,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/withdrawal-details",
+    path: '/withdrawal-details',
     element: <PaymentDetails />,
     errorElement: (
       <ErrorPage
@@ -211,7 +233,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/sgg",
+    path: '/sgg',
     element: <AdvertisingPosition />,
     errorElement: (
       <ErrorPage
@@ -222,7 +244,7 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/admin/dashboard",
+    path: '/admin/dashboard',
     element: <AdminDashboard />,
     errorElement: (
       <ErrorPage
@@ -232,7 +254,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/deposits",
+    path: '/admin/deposits',
     element: <AdminManageDeposits />,
     errorElement: (
       <ErrorPage
@@ -242,7 +264,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/levels",
+    path: '/admin/levels',
     element: <AdminManageLevels />,
     errorElement: (
       <ErrorPage
@@ -252,7 +274,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/tasks",
+    path: '/admin/tasks',
     element: <AdminTasks />,
     errorElement: (
       <ErrorPage
@@ -262,7 +284,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/referrals",
+    path: '/admin/referrals',
     element: <AdminManageReferrals />,
     errorElement: (
       <ErrorPage
@@ -272,7 +294,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/wealth-funds",
+    path: '/admin/wealth-funds',
     element: <AdminWealthFund />,
     errorElement: (
       <ErrorPage
@@ -282,7 +304,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/company-news",
+    path: '/admin/company-news',
     element: <AdminManageNews />,
     errorElement: (
       <ErrorPage
@@ -293,7 +315,7 @@ const router = createBrowserRouter([
   },
 
   {
-    path: "/admin/withdrawals",
+    path: '/admin/withdrawals',
     element: <AdminManageWithdrawal />,
     errorElement: (
       <ErrorPage
@@ -303,7 +325,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/users",
+    path: '/admin/users',
     element: <AdminManageUsers />,
     errorElement: (
       <ErrorPage
@@ -313,7 +335,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/contacts",
+    path: '/admin/contacts',
     element: <AdminManageContact />,
     errorElement: (
       <ErrorPage
@@ -323,7 +345,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/whatsapp-links",
+    path: '/admin/whatsapp-links',
     element: <AdminManageLink />,
     errorElement: (
       <ErrorPage
@@ -333,7 +355,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/setting",
+    path: '/admin/setting',
     element: <AdminSettings />,
     errorElement: (
       <ErrorPage
@@ -343,7 +365,7 @@ const router = createBrowserRouter([
     ),
   },
   {
-    path: "/admin/analysis",
+    path: '/admin/analysis',
     element: <AdminAnalysis />,
     errorElement: (
       <ErrorPage
@@ -354,7 +376,7 @@ const router = createBrowserRouter([
   },
   // Catch-all route (for 404)
   {
-    path: "*",
+    path: '*',
     element: (
       <ErrorPage
         code="🚧"

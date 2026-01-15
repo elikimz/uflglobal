@@ -25,7 +25,7 @@ export const linksAPI = createApi({
   endpoints: (builder) => ({
     // 🔹 Get all links
     getLinks: builder.query<Link[], void>({
-      query: () => "links",
+      query: () => "links/",
       providesTags: ["Links"],
     }),
 
