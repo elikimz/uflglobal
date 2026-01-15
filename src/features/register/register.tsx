@@ -444,6 +444,8 @@
 
 
 
+
+
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -473,7 +475,7 @@ interface Message {
   text: string;
 }
 
-const AuthPage: React.FC = () => {
+const AuthPage: React.C = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
   const [signup, { isLoading: signingUp }] = useSignupMutation();
@@ -620,6 +622,7 @@ const AuthPage: React.FC = () => {
       setMessage({ type: 'error', text: 'Please complete the reCAPTCHA.' });
       return;
     }
+
     try {
       console.log('Attempting signup with:', formData);
       // Register the user
@@ -673,13 +676,14 @@ const AuthPage: React.FC = () => {
     } catch (err: any) {
       console.error('Signup error:', err);
       let errorMsg = 'An error occurred. Please try again.';
+
       // Check if the error response has a 'detail' field
       if (err.data) {
         // Handle HTTPException responses
         if (err.data.detail) {
           errorMsg = err.data.detail;
         }
-        // Handle plain object responses (e.g., { status: 400, message: "..." })
+        // Handle plain object responses (e.g., { status: 400, message: "Phone number or username already registered." })
         else if (typeof err.data === 'object' && err.data.message) {
           errorMsg = err.data.message;
         }
@@ -688,6 +692,7 @@ const AuthPage: React.FC = () => {
           errorMsg = err.data;
         }
       }
+
       setMessage({ type: 'error', text: errorMsg });
       recaptchaRef.current?.reset();
     }
