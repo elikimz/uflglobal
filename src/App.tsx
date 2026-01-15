@@ -39,6 +39,7 @@ import AdminSettings from "./features/login/adminsettings";
 import AdminAnalysis from "./features/earnings/adminanalysis";
 import CompanyActivities from "./pages/companyactivity";
 import UFLDetails from "./pages/membersbenefit";
+import LoginPage from "./features/login/login";
 
 // Define routes
 const router = createBrowserRouter([
@@ -49,6 +50,16 @@ const router = createBrowserRouter([
   {
     path: '/register',
     element: <AuthPage />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+  {
+    path: '/login',
+    element: <LoginPage />,
     errorElement: (
       <ErrorPage
         code="🚧"
