@@ -1,3 +1,7 @@
+
+
+
+
 // import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
 // // ======================
@@ -5,6 +9,8 @@
 // // ======================
 
 // export interface Withdrawal {
+//   user: any;
+//   level_name: any;
 //   id: number;
 //   user_id: number;
 //   amount: number;
@@ -48,6 +54,18 @@
 //   new_pin: string;
 // }
 
+// // Block/unblock withdrawals
+// export interface ToggleWithdrawalsInput {
+//   user_id: number;
+//   block: boolean; // true = block, false = unblock
+// }
+
+// export interface ToggleWithdrawalsResponse {
+//   message: string;
+//   user_id: number;
+//   can_withdraw: boolean;
+// }
+
 // // ======================
 // // API Definition
 // // ======================
@@ -64,7 +82,7 @@
 //       return headers;
 //     },
 //   }),
-//   tagTypes: ["Withdrawals"],
+//   tagTypes: ["Withdrawals", "AllUsers"],
 //   endpoints: (builder) => ({
 //     // 🔹 Pin status
 //     getPinStatus: builder.query<{ has_pin: boolean }, void>({
@@ -141,6 +159,20 @@
 //       }),
 //       invalidatesTags: ["Withdrawals"],
 //     }),
+
+//     // 🔹 Admin: Block/Unblock user withdrawals
+//     toggleUserWithdrawals: builder.mutation<
+//       ToggleWithdrawalsResponse,
+//       ToggleWithdrawalsInput
+//     >({
+//       query: ({ user_id, block }) => ({
+//         url: `withdrawals/block-user`, // <-- no user_id in path
+//         method: "PUT",
+//         body: { user_id, block }, // <-- send both in JSON body
+//         headers: { "Content-Type": "application/json" },
+//       }),
+//       invalidatesTags: ["Withdrawals", "AllUsers"],
+//     }),
 //   }),
 // });
 
@@ -156,13 +188,12 @@
 //   useGetMyWithdrawalsQuery,
 //   useGetAllWithdrawalsQuery,
 //   useUpdateWithdrawalStatusMutation,
+//   useToggleUserWithdrawalsMutation, // ✅ new hook
 // } = withdrawalAPI;
 
 
 
-
-
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
 // ======================
 // Interfaces
@@ -187,13 +218,13 @@ export interface Withdrawal {
 
 export interface CreateWithdrawalInput {
   amount: number;
-  wallet_type?: "commission"; // force commission
-  method: "mpesa" | "bank";
+  wallet_type?: 'commission'; // force commission
+  method: 'mpesa' | 'bank';
   withdrawal_pin: string;
 }
 
 export interface UpdateWithdrawalStatusInput {
-  status: "success" | "canceled" | "reversed";
+  status: 'success' | 'canceled' | 'reversed';
 }
 
 // Payment details
@@ -202,6 +233,16 @@ export interface PaymentDetailsUpdateInput {
   bank_name?: string;
   bank_account_number?: string;
   full_name?: string;
+}
+
+// New interface for payment details response
+export interface PaymentDetailsResponse {
+  has_payment_details: boolean;
+  mpesa_number?: string;
+  bank_name?: string;
+  bank_account_number?: string;
+  full_name?: string;
+  message: string;
 }
 
 // PIN
@@ -231,79 +272,85 @@ export interface ToggleWithdrawalsResponse {
 // ======================
 
 export const withdrawalAPI = createApi({
-  reducerPath: "withdrawalAPI",
+  reducerPath: 'withdrawalAPI',
   baseQuery: fetchBaseQuery({
     baseUrl: import.meta.env.VITE_API_BASE_URL,
     prepareHeaders: (headers) => {
-      const token = localStorage.getItem("access_token");
+      const token = localStorage.getItem('access_token');
       if (token) {
-        headers.set("Authorization", `Bearer ${token}`);
+        headers.set('Authorization', `Bearer ${token}`);
       }
       return headers;
     },
   }),
-  tagTypes: ["Withdrawals", "AllUsers"],
+  tagTypes: ['Withdrawals', 'AllUsers'],
   endpoints: (builder) => ({
     // 🔹 Pin status
     getPinStatus: builder.query<{ has_pin: boolean }, void>({
-      query: () => "withdrawals/pin/status",
-      providesTags: ["Withdrawals"],
+      query: () => 'withdrawals/pin/status',
+      providesTags: ['Withdrawals'],
     }),
 
     // 🔹 Set PIN
     setPin: builder.mutation<void, SetPinInput>({
       query: (body) => ({
-        url: "withdrawals/pin/set",
-        method: "POST",
+        url: 'withdrawals/pin/set',
+        method: 'POST',
         body,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       }),
-      invalidatesTags: ["Withdrawals"],
+      invalidatesTags: ['Withdrawals'],
     }),
 
     // 🔹 Update PIN
     updatePin: builder.mutation<void, UpdatePinInput>({
       query: (body) => ({
-        url: "withdrawals/pin/update",
-        method: "PUT",
+        url: 'withdrawals/pin/update',
+        method: 'PUT',
         body,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       }),
-      invalidatesTags: ["Withdrawals"],
+      invalidatesTags: ['Withdrawals'],
+    }),
+
+    // 🔹 Get payment details
+    getPaymentDetails: builder.query<PaymentDetailsResponse, void>({
+      query: () => 'withdrawals/payment-details',
+      providesTags: ['Withdrawals'],
     }),
 
     // 🔹 Update payment details
     updatePaymentDetails: builder.mutation<void, PaymentDetailsUpdateInput>({
       query: (body) => ({
-        url: "withdrawals/payment-details",
-        method: "PUT",
+        url: 'withdrawals/payment-details',
+        method: 'PUT',
         body,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       }),
-      invalidatesTags: ["Withdrawals"],
+      invalidatesTags: ['Withdrawals'],
     }),
 
     // 🔹 Create withdrawal
     createWithdrawal: builder.mutation<Withdrawal, CreateWithdrawalInput>({
       query: (body) => ({
-        url: "withdrawals/",
-        method: "POST",
+        url: 'withdrawals/',
+        method: 'POST',
         body,
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       }),
-      invalidatesTags: ["Withdrawals"],
+      invalidatesTags: ['Withdrawals'],
     }),
 
     // 🔹 List my withdrawals
     getMyWithdrawals: builder.query<Withdrawal[], void>({
-      query: () => "withdrawals/me",
-      providesTags: ["Withdrawals"],
+      query: () => 'withdrawals/me',
+      providesTags: ['Withdrawals'],
     }),
 
     // 🔹 Admin: get all withdrawals
     getAllWithdrawals: builder.query<Withdrawal[], void>({
-      query: () => "withdrawals/all",
-      providesTags: ["Withdrawals"],
+      query: () => 'withdrawals/all',
+      providesTags: ['Withdrawals'],
     }),
 
     // 🔹 Update withdrawal status (Admin only)
@@ -313,11 +360,11 @@ export const withdrawalAPI = createApi({
     >({
       query: ({ withdrawal_id, status }) => ({
         url: `withdrawals/${withdrawal_id}/status`,
-        method: "PUT",
+        method: 'PUT',
         body: { status },
-        headers: { "Content-Type": "application/json" },
+        headers: { 'Content-Type': 'application/json' },
       }),
-      invalidatesTags: ["Withdrawals"],
+      invalidatesTags: ['Withdrawals'],
     }),
 
     // 🔹 Admin: Block/Unblock user withdrawals
@@ -326,12 +373,12 @@ export const withdrawalAPI = createApi({
       ToggleWithdrawalsInput
     >({
       query: ({ user_id, block }) => ({
-        url: `withdrawals/block-user`, // <-- no user_id in path
-        method: "PUT",
-        body: { user_id, block }, // <-- send both in JSON body
-        headers: { "Content-Type": "application/json" },
+        url: `withdrawals/block-user`,
+        method: 'PUT',
+        body: { user_id, block },
+        headers: { 'Content-Type': 'application/json' },
       }),
-      invalidatesTags: ["Withdrawals", "AllUsers"],
+      invalidatesTags: ['Withdrawals', 'AllUsers'],
     }),
   }),
 });
@@ -343,10 +390,11 @@ export const {
   useGetPinStatusQuery,
   useSetPinMutation,
   useUpdatePinMutation,
+  useGetPaymentDetailsQuery, // ✅ new hook
   useUpdatePaymentDetailsMutation,
   useCreateWithdrawalMutation,
   useGetMyWithdrawalsQuery,
   useGetAllWithdrawalsQuery,
   useUpdateWithdrawalStatusMutation,
-  useToggleUserWithdrawalsMutation, // ✅ new hook
+  useToggleUserWithdrawalsMutation,
 } = withdrawalAPI;
