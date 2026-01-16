@@ -2,8 +2,6 @@
 
 
 
-
-
 // import React, { useState, useRef, useEffect } from 'react';
 // import { motion, AnimatePresence } from 'framer-motion';
 // import {
@@ -33,7 +31,7 @@
 //   text: string;
 // }
 
-// const AuthPage: React.FC = () => {
+// const AuthPage: React.C = () => {
 //   const [isLogin, setIsLogin] = useState(false);
 //   const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
 //   const [signup, { isLoading: signingUp }] = useSignupMutation();
@@ -145,8 +143,19 @@
 //       console.error('Login error:', err);
 //       let errorMsg = 'An error occurred. Please try again.';
 //       // Check if the error response has a 'detail' field
-//       if (err.data && err.data.detail) {
-//         errorMsg = err.data.detail;
+//       if (err.data) {
+//         // Handle HTTPException responses
+//         if (err.data.detail) {
+//           errorMsg = err.data.detail;
+//         }
+//         // Handle plain object responses (e.g., { status: 401, message: "..." })
+//         else if (typeof err.data === 'object' && err.data.message) {
+//           errorMsg = err.data.message;
+//         }
+//         // Handle plain string responses (e.g., "Account not found...")
+//         else if (typeof err.data === 'string') {
+//           errorMsg = err.data;
+//         }
 //       }
 //       setMessage({ type: 'error', text: errorMsg });
 //     }
@@ -169,6 +178,7 @@
 //       setMessage({ type: 'error', text: 'Please complete the reCAPTCHA.' });
 //       return;
 //     }
+
 //     try {
 //       console.log('Attempting signup with:', formData);
 //       // Register the user
@@ -222,10 +232,23 @@
 //     } catch (err: any) {
 //       console.error('Signup error:', err);
 //       let errorMsg = 'An error occurred. Please try again.';
+
 //       // Check if the error response has a 'detail' field
-//       if (err.data && err.data.detail) {
-//         errorMsg = err.data.detail;
+//       if (err.data) {
+//         // Handle HTTPException responses
+//         if (err.data.detail) {
+//           errorMsg = err.data.detail;
+//         }
+//         // Handle plain object responses (e.g., { status: 400, message: "Phone number or username already registered." })
+//         else if (typeof err.data === 'object' && err.data.message) {
+//           errorMsg = err.data.message;
+//         }
+//         // Handle plain string responses (e.g., "Phone number already in use")
+//         else if (typeof err.data === 'string') {
+//           errorMsg = err.data;
+//         }
 //       }
+
 //       setMessage({ type: 'error', text: errorMsg });
 //       recaptchaRef.current?.reset();
 //     }
@@ -475,7 +498,7 @@ interface Message {
   text: string;
 }
 
-const AuthPage: React.C = () => {
+const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(false);
   const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
   const [signup, { isLoading: signingUp }] = useSignupMutation();
@@ -512,6 +535,17 @@ const AuthPage: React.C = () => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+
+    // Check password length
+    if (name === 'password' && value.length > 0 && value.length < 8) {
+      setMessage({
+        type: 'error',
+        text: 'Password must be at least 8 characters long.',
+      });
+    } else if (name === 'password' && value.length >= 8) {
+      setMessage(null);
+    }
+
     console.log(`Updated form field: ${name} = ${value}`);
   };
 
@@ -616,13 +650,21 @@ const AuthPage: React.C = () => {
       return;
     }
 
+    // Check password length
+    if (formData.password.length < 8) {
+      setMessage({
+        type: 'error',
+        text: 'Password must be at least 8 characters long.',
+      });
+      return;
+    }
+
     const token = recaptchaRef.current?.getValue() || '';
     console.log('reCAPTCHA token:', token);
     if (!token) {
       setMessage({ type: 'error', text: 'Please complete the reCAPTCHA.' });
       return;
     }
-
     try {
       console.log('Attempting signup with:', formData);
       // Register the user
@@ -676,7 +718,6 @@ const AuthPage: React.C = () => {
     } catch (err: any) {
       console.error('Signup error:', err);
       let errorMsg = 'An error occurred. Please try again.';
-
       // Check if the error response has a 'detail' field
       if (err.data) {
         // Handle HTTPException responses
