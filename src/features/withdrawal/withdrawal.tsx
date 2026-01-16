@@ -1,5 +1,6 @@
 
 
+
 // import React, { useState } from "react";
 // import { motion } from "framer-motion";
 // import { Link } from "react-router-dom";
@@ -15,8 +16,11 @@
 //   useGetMyWithdrawalsQuery,
 // } from "../withdrawal/withdrawalAPI";
 
+// // Predefined withdrawal amounts
+// const AMOUNT_OPTIONS = [240, 1000, 7000, 15000, 30000, 150000];
+
 // const Withdrawal: React.FC = () => {
-//   const [amount, setAmount] = useState<number | "">("");
+//   const [amount, setAmount] = useState<number | null>(null);
 //   const [pin, setPin] = useState<string>("");
 //   const [walletType, setWalletType] = useState<"commission">("commission");
 //   const [createWithdrawal, { isLoading: isSubmitting }] =
@@ -31,14 +35,15 @@
 //     message: string;
 //   } | null>(null);
 
-//   // Mock function to check if M-Pesa details are set
-//   // In a real app, you would fetch this from your API or context
-//   const hasMpesaDetails = true; // Replace with actual logic to check M-Pesa details
+//   const hasMpesaDetails = true; // Replace with actual check
 
 //   const handleSubmit = async (e: React.FormEvent) => {
 //     e.preventDefault();
-//     if (!amount || amount <= 0) {
-//       setFeedback({ type: "error", message: "Enter a valid amount" });
+//     if (!amount) {
+//       setFeedback({
+//         type: "error",
+//         message: "Please select an amount",
+//       });
 //       return;
 //     }
 //     if (!pin || pin.length < 4) {
@@ -47,7 +52,7 @@
 //     }
 //     try {
 //       await createWithdrawal({
-//         amount: Number(amount),
+//         amount,
 //         method: "mpesa",
 //         wallet_type: walletType,
 //         withdrawal_pin: pin,
@@ -56,7 +61,7 @@
 //         type: "success",
 //         message: "Withdrawal requested successfully",
 //       });
-//       setAmount("");
+//       setAmount(null);
 //       setPin("");
 //       refetch();
 //     } catch (error: any) {
@@ -128,16 +133,24 @@
 //         <form onSubmit={handleSubmit} className="space-y-4">
 //           <div>
 //             <label className="block text-yellow-100 mb-1">Amount (KES)</label>
-//             <input
-//               type="number"
-//               value={amount}
-//               onChange={(e) =>
-//                 setAmount(e.target.value === "" ? "" : Number(e.target.value))
-//               }
-//               className="w-full p-3 rounded-lg bg-white/10 border border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-//               placeholder="Enter amount"
-//             />
+//             <div className="flex flex-wrap gap-2 mb-2">
+//               {AMOUNT_OPTIONS.map((amt) => (
+//                 <button
+//                   type="button"
+//                   key={amt}
+//                   onClick={() => setAmount(amt)}
+//                   className={`px-4 py-2 rounded-lg font-semibold ${
+//                     amount === amt
+//                       ? "bg-yellow-500 text-gray-900"
+//                       : "bg-white/10 text-white hover:bg-white/20"
+//                   }`}
+//                 >
+//                   {amt.toLocaleString()}
+//                 </button>
+//               ))}
+//             </div>
 //           </div>
+
 //           <div>
 //             <label className="block text-yellow-100 mb-1">Withdrawal PIN</label>
 //             <input
@@ -148,6 +161,7 @@
 //               placeholder="Enter 4-digit PIN"
 //             />
 //           </div>
+
 //           <div>
 //             <label className="block text-yellow-100 mb-1">Wallet Type</label>
 //             <select
@@ -158,6 +172,7 @@
 //               <option value="commission">Commission Wallet</option>
 //             </select>
 //           </div>
+
 //           {feedback && (
 //             <div
 //               className={`flex items-center gap-2 p-3 rounded-lg ${
@@ -174,9 +189,10 @@
 //               <span>{feedback.message}</span>
 //             </div>
 //           )}
+
 //           <button
 //             type="submit"
-//             disabled={isSubmitting || !hasMpesaDetails}
+//             disabled={!amount || isSubmitting || !hasMpesaDetails}
 //             className="w-full bg-yellow-500 hover:bg-yellow-600 transition-colors py-3 rounded-lg font-semibold text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
 //           >
 //             {isSubmitting ? "Submitting..." : "Request Withdrawal"}
@@ -298,28 +314,28 @@
 
 
 
-import React, { useState } from "react";
-import { motion } from "framer-motion";
-import { Link } from "react-router-dom";
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Link } from 'react-router-dom';
 import {
   BanknotesIcon,
   ClipboardDocumentListIcon,
   CheckCircleIcon,
   ClockIcon,
   ExclamationCircleIcon,
-} from "@heroicons/react/24/solid";
+} from '@heroicons/react/24/solid';
 import {
   useCreateWithdrawalMutation,
   useGetMyWithdrawalsQuery,
-} from "../withdrawal/withdrawalAPI";
+} from '../withdrawal/withdrawalAPI';
 
 // Predefined withdrawal amounts
 const AMOUNT_OPTIONS = [240, 1000, 7000, 15000, 30000, 150000];
 
 const Withdrawal: React.FC = () => {
   const [amount, setAmount] = useState<number | null>(null);
-  const [pin, setPin] = useState<string>("");
-  const [walletType, setWalletType] = useState<"commission">("commission");
+  const [pin, setPin] = useState<string>('');
+  const [walletType, setWalletType] = useState<'commission'>('commission');
   const [createWithdrawal, { isLoading: isSubmitting }] =
     useCreateWithdrawalMutation();
   const {
@@ -328,7 +344,7 @@ const Withdrawal: React.FC = () => {
     refetch,
   } = useGetMyWithdrawalsQuery();
   const [feedback, setFeedback] = useState<{
-    type: "success" | "error";
+    type: 'success' | 'error';
     message: string;
   } | null>(null);
 
@@ -338,56 +354,57 @@ const Withdrawal: React.FC = () => {
     e.preventDefault();
     if (!amount) {
       setFeedback({
-        type: "error",
-        message: "Please select an amount",
+        type: 'error',
+        message: 'Please select an amount',
       });
       return;
     }
     if (!pin || pin.length < 4) {
-      setFeedback({ type: "error", message: "Enter your 4-digit PIN" });
+      setFeedback({ type: 'error', message: 'Enter your 4-digit PIN' });
       return;
     }
     try {
       await createWithdrawal({
         amount,
-        method: "mpesa",
+        method: 'mpesa',
         wallet_type: walletType,
         withdrawal_pin: pin,
       }).unwrap();
       setFeedback({
-        type: "success",
-        message: "Withdrawal requested successfully",
+        type: 'success',
+        message: 'Withdrawal requested successfully',
       });
       setAmount(null);
-      setPin("");
+      setPin('');
       refetch();
     } catch (error: any) {
       setFeedback({
-        type: "error",
-        message: error?.data?.detail || "Failed to request withdrawal",
+        type: 'error',
+        message: error?.data?.detail || 'Failed to request withdrawal',
       });
     }
   };
 
   const getStatusStyle = (status: string) => {
     switch (status.toLowerCase()) {
-      case "success":
+      case 'success':
         return {
-          color: "bg-green-900/50 text-green-100",
-          icon: <CheckCircleIcon className="h-5 w-5 text-green-400" />,
-          text: "Success",
+          color:
+            'bg-emerald-500/20 text-emerald-600 border border-emerald-500/30',
+          icon: <CheckCircleIcon className="h-5 w-5 text-emerald-500" />,
+          text: 'Success',
         };
-      case "reversed":
+      case 'reversed':
         return {
-          color: "bg-blue-900/50 text-blue-100",
-          icon: <ClockIcon className="h-5 w-5 text-blue-400" />,
-          text: "Reversed",
+          color: 'bg-blue-500/20 text-blue-600 border border-blue-500/30',
+          icon: <ClockIcon className="h-5 w-5 text-blue-500" />,
+          text: 'Reversed',
         };
       default:
         return {
-          color: "bg-yellow-900/50 text-yellow-100",
-          icon: <ClockIcon className="h-5 w-5 text-yellow-400" />,
-          text: "Pending",
+          color: 'bg-amber-500/20 text-amber-600 border border-amber-500/30',
+          icon: <ClockIcon className="h-5 w-5 text-amber-500" />,
+          text: 'Pending',
         };
     }
   };
@@ -396,26 +413,26 @@ const Withdrawal: React.FC = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen px-4 py-6 text-white bg-gradient-to-b from-gray-900 via-indigo-900 to-gray-950"
+      className="min-h-screen px-4 py-6 text-gray-800 bg-gradient-to-b from-indigo-50 via-white to-indigo-50"
     >
-      <h1 className="text-3xl font-bold text-yellow-400 flex items-center gap-2 mb-8">
-        <BanknotesIcon className="h-8 w-8" /> Withdraw Funds
+      <h1 className="text-3xl font-bold text-indigo-700 flex items-center gap-2 mb-8">
+        <BanknotesIcon className="h-8 w-8 text-indigo-600" /> Withdraw Funds
       </h1>
 
       {!hasMpesaDetails && (
-        <div className="max-w-md mx-auto bg-red-900/30 backdrop-blur-xl border border-red-900/50 p-6 rounded-2xl shadow mb-6">
+        <div className="max-w-md mx-auto bg-red-50/80 backdrop-blur-sm border border-red-200 p-6 rounded-2xl shadow-sm mb-6">
           <div className="flex items-center gap-3 mb-4">
-            <ExclamationCircleIcon className="h-6 w-6 text-red-400" />
-            <h3 className="text-lg font-semibold text-red-100">
+            <ExclamationCircleIcon className="h-6 w-6 text-red-500" />
+            <h3 className="text-lg font-semibold text-red-700">
               M-Pesa Details Missing
             </h3>
           </div>
-          <p className="text-red-100 mb-4">
+          <p className="text-red-600 mb-4">
             You need to set your M-Pesa details before requesting a withdrawal.
           </p>
           <Link
             to="/security"
-            className="w-full bg-yellow-500 hover:bg-yellow-600 transition-colors py-2 px-4 rounded-lg font-semibold text-gray-900 text-center block"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 transition-colors py-2 px-4 rounded-lg font-semibold text-white text-center block"
           >
             Set M-Pesa Details
           </Link>
@@ -423,23 +440,23 @@ const Withdrawal: React.FC = () => {
       )}
 
       {/* Withdrawal Form */}
-      <section className="max-w-md mx-auto bg-white/5 backdrop-blur-xl border border-white/20 p-6 rounded-2xl shadow mb-10">
-        <h2 className="text-xl font-semibold text-yellow-400 mb-4">
+      <section className="max-w-md mx-auto bg-white/90 backdrop-blur-sm border border-gray-200 p-6 rounded-2xl shadow-sm mb-10">
+        <h2 className="text-xl font-semibold text-indigo-700 mb-4">
           Request Withdrawal
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-yellow-100 mb-1">Amount (KES)</label>
+            <label className="block text-gray-600 mb-1">Amount (KES)</label>
             <div className="flex flex-wrap gap-2 mb-2">
               {AMOUNT_OPTIONS.map((amt) => (
                 <button
                   type="button"
                   key={amt}
                   onClick={() => setAmount(amt)}
-                  className={`px-4 py-2 rounded-lg font-semibold ${
+                  className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                     amount === amt
-                      ? "bg-yellow-500 text-gray-900"
-                      : "bg-white/10 text-white hover:bg-white/20"
+                      ? 'bg-indigo-600 text-white'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   }`}
                 >
                   {amt.toLocaleString()}
@@ -449,22 +466,22 @@ const Withdrawal: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-yellow-100 mb-1">Withdrawal PIN</label>
+            <label className="block text-gray-600 mb-1">Withdrawal PIN</label>
             <input
               type="password"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
-              className="w-full p-3 rounded-lg bg-white/10 border border-white/30 text-white placeholder-gray-300 focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              className="w-full p-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
               placeholder="Enter 4-digit PIN"
             />
           </div>
 
           <div>
-            <label className="block text-yellow-100 mb-1">Wallet Type</label>
+            <label className="block text-gray-600 mb-1">Wallet Type</label>
             <select
               value={walletType}
-              onChange={(e) => setWalletType(e.target.value as "commission")}
-              className="w-full p-3 rounded-lg bg-white/10 border border-white/30 text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+              onChange={(e) => setWalletType(e.target.value as 'commission')}
+              className="w-full p-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               <option value="commission">Commission Wallet</option>
             </select>
@@ -473,15 +490,15 @@ const Withdrawal: React.FC = () => {
           {feedback && (
             <div
               className={`flex items-center gap-2 p-3 rounded-lg ${
-                feedback.type === "success"
-                  ? "bg-green-900/50 text-green-100"
-                  : "bg-red-900/50 text-red-100"
+                feedback.type === 'success'
+                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                  : 'bg-red-50 text-red-700 border border-red-200'
               }`}
             >
-              {feedback.type === "success" ? (
-                <CheckCircleIcon className="h-5 w-5" />
+              {feedback.type === 'success' ? (
+                <CheckCircleIcon className="h-5 w-5 text-emerald-500" />
               ) : (
-                <ExclamationCircleIcon className="h-5 w-5" />
+                <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
               )}
               <span>{feedback.message}</span>
             </div>
@@ -490,58 +507,59 @@ const Withdrawal: React.FC = () => {
           <button
             type="submit"
             disabled={!amount || isSubmitting || !hasMpesaDetails}
-            className="w-full bg-yellow-500 hover:bg-yellow-600 transition-colors py-3 rounded-lg font-semibold text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full bg-indigo-600 hover:bg-indigo-700 transition-colors py-3 rounded-lg font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"
           >
-            {isSubmitting ? "Submitting..." : "Request Withdrawal"}
+            {isSubmitting ? 'Submitting...' : 'Request Withdrawal'}
           </button>
         </form>
       </section>
 
       {/* Withdrawal History Table */}
       <section className="max-w-6xl mx-auto">
-        <h2 className="text-xl font-semibold mb-4 text-yellow-400 flex items-center gap-2">
-          <ClipboardDocumentListIcon className="h-6 w-6" /> My Withdrawals
+        <h2 className="text-xl font-semibold mb-4 text-indigo-700 flex items-center gap-2">
+          <ClipboardDocumentListIcon className="h-6 w-6 text-indigo-600" /> My
+          Withdrawals
         </h2>
         {isLoading ? (
-          <p className="text-yellow-100 text-center">Loading withdrawals...</p>
+          <p className="text-gray-600 text-center">Loading withdrawals...</p>
         ) : withdrawals.length === 0 ? (
-          <p className="text-yellow-100 text-center">No withdrawals yet.</p>
+          <p className="text-gray-600 text-center">No withdrawals yet.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full bg-white/5 backdrop-blur-xl border border-white/20 rounded-2xl shadow">
-              <thead>
-                <tr className="border-b border-white/20">
-                  <th className="px-6 py-3 text-left text-xs font-medium text-yellow-100 uppercase tracking-wider">
+            <table className="min-w-full bg-white border border-gray-200 rounded-2xl shadow-sm">
+              <thead className="bg-indigo-50">
+                <tr className="border-b border-gray-200">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
                     Amount (KES)
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-yellow-100 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-yellow-100 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-yellow-100 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
                     Wallet
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-yellow-100 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
                     Method
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-yellow-100 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
                     Account Name
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-yellow-100 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
                     Account Number
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-yellow-100 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
                     Transaction Fee (KES)
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-yellow-100 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
                     Net Amount (KES)
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-yellow-100 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
                     Approved
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-yellow-100 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
                     Admin Remarks
                   </th>
                 </tr>
@@ -552,12 +570,12 @@ const Withdrawal: React.FC = () => {
                   return (
                     <tr
                       key={w.id}
-                      className="border-b border-white/10 hover:bg-white/5"
+                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
                     >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-white">
-                        {w.amount}
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                        {w.amount.toLocaleString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-white">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
                         <div
                           className={`flex items-center gap-1 ${color} px-3 py-1 rounded-full w-fit`}
                         >
@@ -565,34 +583,34 @@ const Withdrawal: React.FC = () => {
                           <span className="text-xs">{text}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-100">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                         {new Date(w.created_at).toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-100">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                         {w.wallet_type}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-100">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                         {w.method}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-100">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                         {w.account_name}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-100">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                         {w.account_number}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-100">
-                        {w.transaction_fee}
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {w.transaction_fee.toLocaleString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-100">
-                        {w.net_amount}
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {w.net_amount.toLocaleString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-100">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
                         {w.approved_at
                           ? new Date(w.approved_at).toLocaleDateString()
-                          : "N/A"}
+                          : 'N/A'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-100">
-                        {w.admin_remarks || "N/A"}
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                        {w.admin_remarks || 'N/A'}
                       </td>
                     </tr>
                   );
