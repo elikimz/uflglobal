@@ -389,21 +389,20 @@ const Withdrawal: React.FC = () => {
     switch (status.toLowerCase()) {
       case 'success':
         return {
-          color:
-            'bg-emerald-500/20 text-emerald-600 border border-emerald-500/30',
-          icon: <CheckCircleIcon className="h-5 w-5 text-emerald-500" />,
+          color: 'bg-teal-500/20 text-teal-200 border border-teal-500/30',
+          icon: <CheckCircleIcon className="h-5 w-5 text-teal-400" />,
           text: 'Success',
         };
       case 'reversed':
         return {
-          color: 'bg-blue-500/20 text-blue-600 border border-blue-500/30',
-          icon: <ClockIcon className="h-5 w-5 text-blue-500" />,
+          color: 'bg-blue-500/20 text-blue-200 border border-blue-500/30',
+          icon: <ClockIcon className="h-5 w-5 text-blue-400" />,
           text: 'Reversed',
         };
       default:
         return {
-          color: 'bg-amber-500/20 text-amber-600 border border-amber-500/30',
-          icon: <ClockIcon className="h-5 w-5 text-amber-500" />,
+          color: 'bg-amber-500/20 text-amber-200 border border-amber-500/30',
+          icon: <ClockIcon className="h-5 w-5 text-amber-400" />,
           text: 'Pending',
         };
     }
@@ -413,26 +412,26 @@ const Withdrawal: React.FC = () => {
     <motion.div
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="min-h-screen px-4 py-6 text-gray-800 bg-gradient-to-b from-indigo-50 via-white to-indigo-50"
+      className="min-h-screen px-4 py-6 text-gray-200 bg-gradient-to-b from-cyan-900 to-blue-900"
     >
-      <h1 className="text-3xl font-bold text-indigo-700 flex items-center gap-2 mb-8">
-        <BanknotesIcon className="h-8 w-8 text-indigo-600" /> Withdraw Funds
+      <h1 className="text-3xl font-bold text-cyan-300 flex items-center gap-2 mb-8">
+        <BanknotesIcon className="h-8 w-8 text-cyan-400" /> Withdraw Funds
       </h1>
 
       {!hasMpesaDetails && (
-        <div className="max-w-md mx-auto bg-red-50/80 backdrop-blur-sm border border-red-200 p-6 rounded-2xl shadow-sm mb-6">
+        <div className="max-w-md mx-auto bg-red-900/50 backdrop-blur-sm border border-red-700 p-6 rounded-2xl shadow-lg mb-6">
           <div className="flex items-center gap-3 mb-4">
-            <ExclamationCircleIcon className="h-6 w-6 text-red-500" />
-            <h3 className="text-lg font-semibold text-red-700">
+            <ExclamationCircleIcon className="h-6 w-6 text-red-400" />
+            <h3 className="text-lg font-semibold text-red-300">
               M-Pesa Details Missing
             </h3>
           </div>
-          <p className="text-red-600 mb-4">
+          <p className="text-red-300 mb-4">
             You need to set your M-Pesa details before requesting a withdrawal.
           </p>
           <Link
             to="/security"
-            className="w-full bg-indigo-600 hover:bg-indigo-700 transition-colors py-2 px-4 rounded-lg font-semibold text-white text-center block"
+            className="w-full bg-cyan-600 hover:bg-cyan-700 transition-colors py-2 px-4 rounded-lg font-semibold text-gray-900 text-center block"
           >
             Set M-Pesa Details
           </Link>
@@ -440,13 +439,13 @@ const Withdrawal: React.FC = () => {
       )}
 
       {/* Withdrawal Form */}
-      <section className="max-w-md mx-auto bg-white/90 backdrop-blur-sm border border-gray-200 p-6 rounded-2xl shadow-sm mb-10">
-        <h2 className="text-xl font-semibold text-indigo-700 mb-4">
+      <section className="max-w-md mx-auto bg-cyan-900/70 backdrop-blur-sm border border-cyan-700 p-6 rounded-2xl shadow-lg mb-10">
+        <h2 className="text-xl font-semibold text-cyan-300 mb-4">
           Request Withdrawal
         </h2>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-gray-600 mb-1">Amount (KES)</label>
+            <label className="block text-cyan-200 mb-1">Amount (KES)</label>
             <div className="flex flex-wrap gap-2 mb-2">
               {AMOUNT_OPTIONS.map((amt) => (
                 <button
@@ -455,8 +454,8 @@ const Withdrawal: React.FC = () => {
                   onClick={() => setAmount(amt)}
                   className={`px-4 py-2 rounded-lg font-semibold transition-colors ${
                     amount === amt
-                      ? 'bg-indigo-600 text-white'
-                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      ? 'bg-cyan-600 text-gray-900'
+                      : 'bg-cyan-800 text-cyan-200 hover:bg-cyan-700'
                   }`}
                 >
                   {amt.toLocaleString()}
@@ -466,22 +465,22 @@ const Withdrawal: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-gray-600 mb-1">Withdrawal PIN</label>
+            <label className="block text-cyan-200 mb-1">Withdrawal PIN</label>
             <input
               type="password"
               value={pin}
               onChange={(e) => setPin(e.target.value)}
-              className="w-full p-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full p-3 rounded-lg bg-cyan-800 border border-cyan-700 text-cyan-200 placeholder-cyan-400 focus:outline-none focus:ring-2 focus:ring-cyan-400"
               placeholder="Enter 4-digit PIN"
             />
           </div>
 
           <div>
-            <label className="block text-gray-600 mb-1">Wallet Type</label>
+            <label className="block text-cyan-200 mb-1">Wallet Type</label>
             <select
               value={walletType}
               onChange={(e) => setWalletType(e.target.value as 'commission')}
-              className="w-full p-3 rounded-lg bg-gray-50 border border-gray-300 text-gray-800 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="w-full p-3 rounded-lg bg-cyan-800 border border-cyan-700 text-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-400"
             >
               <option value="commission">Commission Wallet</option>
             </select>
@@ -491,14 +490,14 @@ const Withdrawal: React.FC = () => {
             <div
               className={`flex items-center gap-2 p-3 rounded-lg ${
                 feedback.type === 'success'
-                  ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                  : 'bg-red-50 text-red-700 border border-red-200'
+                  ? 'bg-teal-900/50 text-teal-200 border border-teal-700'
+                  : 'bg-red-900/50 text-red-200 border border-red-700'
               }`}
             >
               {feedback.type === 'success' ? (
-                <CheckCircleIcon className="h-5 w-5 text-emerald-500" />
+                <CheckCircleIcon className="h-5 w-5 text-teal-400" />
               ) : (
-                <ExclamationCircleIcon className="h-5 w-5 text-red-500" />
+                <ExclamationCircleIcon className="h-5 w-5 text-red-400" />
               )}
               <span>{feedback.message}</span>
             </div>
@@ -507,7 +506,7 @@ const Withdrawal: React.FC = () => {
           <button
             type="submit"
             disabled={!amount || isSubmitting || !hasMpesaDetails}
-            className="w-full bg-indigo-600 hover:bg-indigo-700 transition-colors py-3 rounded-lg font-semibold text-white disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-gray-400"
+            className="w-full bg-cyan-600 hover:bg-cyan-700 transition-colors py-3 rounded-lg font-semibold text-gray-900 disabled:opacity-50 disabled:cursor-not-allowed disabled:bg-cyan-800"
           >
             {isSubmitting ? 'Submitting...' : 'Request Withdrawal'}
           </button>
@@ -516,50 +515,50 @@ const Withdrawal: React.FC = () => {
 
       {/* Withdrawal History Table */}
       <section className="max-w-6xl mx-auto">
-        <h2 className="text-xl font-semibold mb-4 text-indigo-700 flex items-center gap-2">
-          <ClipboardDocumentListIcon className="h-6 w-6 text-indigo-600" /> My
+        <h2 className="text-xl font-semibold mb-4 text-cyan-300 flex items-center gap-2">
+          <ClipboardDocumentListIcon className="h-6 w-6 text-cyan-400" /> My
           Withdrawals
         </h2>
         {isLoading ? (
-          <p className="text-gray-600 text-center">Loading withdrawals...</p>
+          <p className="text-cyan-200 text-center">Loading withdrawals...</p>
         ) : withdrawals.length === 0 ? (
-          <p className="text-gray-600 text-center">No withdrawals yet.</p>
+          <p className="text-cyan-200 text-center">No withdrawals yet.</p>
         ) : (
           <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200 rounded-2xl shadow-sm">
-              <thead className="bg-indigo-50">
-                <tr className="border-b border-gray-200">
-                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+            <table className="min-w-full bg-cyan-900/50 border border-cyan-700 rounded-2xl shadow-lg">
+              <thead className="bg-cyan-800">
+                <tr className="border-b border-cyan-700">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-cyan-300 uppercase tracking-wider">
                     Amount (KES)
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-cyan-300 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-cyan-300 uppercase tracking-wider">
                     Date
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-cyan-300 uppercase tracking-wider">
                     Wallet
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-cyan-300 uppercase tracking-wider">
                     Method
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-cyan-300 uppercase tracking-wider">
                     Account Name
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-cyan-300 uppercase tracking-wider">
                     Account Number
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-cyan-300 uppercase tracking-wider">
                     Transaction Fee (KES)
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-cyan-300 uppercase tracking-wider">
                     Net Amount (KES)
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-cyan-300 uppercase tracking-wider">
                     Approved
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">
+                  <th className="px-6 py-3 text-left text-xs font-medium text-cyan-300 uppercase tracking-wider">
                     Admin Remarks
                   </th>
                 </tr>
@@ -570,12 +569,12 @@ const Withdrawal: React.FC = () => {
                   return (
                     <tr
                       key={w.id}
-                      className="border-b border-gray-100 hover:bg-gray-50 transition-colors"
+                      className="border-b border-cyan-800 hover:bg-cyan-800/30 transition-colors"
                     >
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-800">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-cyan-200">
                         {w.amount.toLocaleString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-800">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-cyan-200">
                         <div
                           className={`flex items-center gap-1 ${color} px-3 py-1 rounded-full w-fit`}
                         >
@@ -583,33 +582,33 @@ const Withdrawal: React.FC = () => {
                           <span className="text-xs">{text}</span>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-cyan-300">
                         {new Date(w.created_at).toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-cyan-300">
                         {w.wallet_type}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-cyan-300">
                         {w.method}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-cyan-300">
                         {w.account_name}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-cyan-300">
                         {w.account_number}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-cyan-300">
                         {w.transaction_fee.toLocaleString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-cyan-300">
                         {w.net_amount.toLocaleString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-cyan-300">
                         {w.approved_at
                           ? new Date(w.approved_at).toLocaleDateString()
                           : 'N/A'}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-cyan-300">
                         {w.admin_remarks || 'N/A'}
                       </td>
                     </tr>
