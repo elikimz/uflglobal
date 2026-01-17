@@ -305,7 +305,7 @@ const PaymentDetails: React.FC = () => {
                   </label>
                   <input
                     type="text"
-                    placeholder="e.g., Elijah Kimani"
+                    placeholder="e.g., Jone Doe"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
                     className="w-full p-3 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-900 placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
