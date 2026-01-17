@@ -263,7 +263,7 @@ const PaymentDetails: React.FC = () => {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {isEditing ? (
               <>
-                <div>
+                {/* <div>
                   <label className="block text-yellow-700 mb-1">
                     M-Pesa Number
                   </label>
@@ -274,7 +274,7 @@ const PaymentDetails: React.FC = () => {
                     onChange={(e) => setMpesaNumber(e.target.value)}
                     className="w-full p-3 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-900 placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                   />
-                </div>
+                </div> */}
                 <div>
                   <label className="block text-yellow-700 mb-1">
                     Bank Name
@@ -287,7 +287,7 @@ const PaymentDetails: React.FC = () => {
                     className="w-full p-3 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-900 placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                   />
                 </div>
-                {/* <div>
+                <div>
                   <label className="block text-yellow-700 mb-1">
                     Account Number
                   </label>
@@ -297,8 +297,8 @@ const PaymentDetails: React.FC = () => {
                     value={bankAccount}
                     onChange={(e) => setBankAccount(e.target.value)}
                     className="w-full p-3 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-900 placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                  /> */}
-                {/* </div> */}
+                  />
+                </div>
                 <div className="md:col-span-2">
                   <label className="block text-yellow-700 mb-1">
                     Full Name
@@ -316,16 +316,7 @@ const PaymentDetails: React.FC = () => {
               <>
                 {paymentDetails?.has_payment_details ? (
                   <>
-                    {paymentDetails.mpesa_number && (
-                      <div className="bg-yellow-50 p-3 rounded-lg">
-                        <p className="text-yellow-700 font-medium">
-                          M-Pesa Number
-                        </p>
-                        <p className="text-yellow-900">
-                          {paymentDetails.mpesa_number}
-                        </p>
-                      </div>
-                    )}
+                    
                     {paymentDetails.bank_name && (
                       <div className="bg-yellow-50 p-3 rounded-lg">
                         <p className="text-yellow-700 font-medium">Bank Name</p>
@@ -334,7 +325,16 @@ const PaymentDetails: React.FC = () => {
                         </p>
                       </div>
                     )}
-                    
+                    {paymentDetails.bank_account_number && (
+                      <div className="bg-yellow-50 p-3 rounded-lg">
+                        <p className="text-yellow-700 font-medium">
+                          Bank Account Number
+                        </p>
+                        <p className="text-yellow-900">
+                          {paymentDetails.bank_account_number}
+                        </p>
+                      </div>
+                    )}
                     {paymentDetails.full_name && (
                       <div className="bg-yellow-50 p-3 rounded-lg">
                         <p className="text-yellow-700 font-medium">Full Name</p>
