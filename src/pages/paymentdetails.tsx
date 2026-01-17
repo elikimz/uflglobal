@@ -287,7 +287,7 @@ const PaymentDetails: React.FC = () => {
                     className="w-full p-3 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-900 placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
                   />
                 </div>
-                <div>
+                {/* <div>
                   <label className="block text-yellow-700 mb-1">
                     Account Number
                   </label>
@@ -297,8 +297,8 @@ const PaymentDetails: React.FC = () => {
                     value={bankAccount}
                     onChange={(e) => setBankAccount(e.target.value)}
                     className="w-full p-3 rounded-lg bg-yellow-50 border border-yellow-200 text-yellow-900 placeholder-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                  />
-                </div>
+                  /> */}
+                {/* </div> */}
                 <div className="md:col-span-2">
                   <label className="block text-yellow-700 mb-1">
                     Full Name
