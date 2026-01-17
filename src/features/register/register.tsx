@@ -917,7 +917,7 @@ const AuthPage: React.FC = () => {
                 <div className="flex justify-center">
                   <ReCAPTCHA
                     ref={recaptchaRef}
-                    sitekey="6LeO0E0sAAAAAM3nvtSGcOUvbu9TRQh9cru9z5iz"
+                    sitekey="6Lej0U0sAAAAAAC7RyvXWkQtzjGuXpwxXVCu4G-q"
                     onLoad={() => console.log('reCAPTCHA loaded successfully')}
                     onErrored={() => console.error('reCAPTCHA failed to load')}
                   />
