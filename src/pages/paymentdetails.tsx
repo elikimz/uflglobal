@@ -334,16 +334,7 @@ const PaymentDetails: React.FC = () => {
                         </p>
                       </div>
                     )}
-                    {paymentDetails.bank_account_number && (
-                      <div className="bg-yellow-50 p-3 rounded-lg">
-                        <p className="text-yellow-700 font-medium">
-                          Bank Account Number
-                        </p>
-                        <p className="text-yellow-900">
-                          {paymentDetails.bank_account_number}
-                        </p>
-                      </div>
-                    )}
+                    
                     {paymentDetails.full_name && (
                       <div className="bg-yellow-50 p-3 rounded-lg">
                         <p className="text-yellow-700 font-medium">Full Name</p>
