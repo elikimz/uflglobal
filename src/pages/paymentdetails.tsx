@@ -217,15 +217,6 @@ const PaymentDetails: React.FC = () => {
     }
   };
 
-  const handleAddPaymentDetails = () => {
-    setIsEditing(true);
-    setPaymentFeedback(null);
-    // Clear any existing values when adding new details
-    setBankName('');
-    setBankAccount('');
-    setFullName('');
-    setMpesaNumber('');
-  };
 
   if (isFetching) {
     return (
