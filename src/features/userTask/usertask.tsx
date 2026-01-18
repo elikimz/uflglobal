@@ -1,6 +1,7 @@
 
 
 
+
 // import React, { useState } from "react";
 // import { ArrowLeftIcon } from "@heroicons/react/24/solid";
 // import { useGetTasksQuery } from "../tasks/taskAPI";
@@ -26,12 +27,32 @@
 //   task: Task;
 // }
 
+// interface AuditTask {
+//   id: number;
+//   user_task_id: number;
+//   user_id: number;
+//   completed_at: string;
+//   task_name: string;
+//   task_picture: string;
+// }
+
+// interface CompletedTask {
+//   id: number;
+//   user_task_id: number;
+//   user_id: number;
+//   reward: number;
+//   completed_at: string;
+//   task_name: string;
+//   task_picture: string;
+// }
+
+
 // const UserTasks: React.FC = () => {
 //   const [activeTab, setActiveTab] = useState<"doing" | "audit" | "completed">(
 //     "doing"
 //   );
-//   const [showTaskList, setShowTaskList] = useState(false); // Default to app grid
-//   const [installing, setInstalling] = useState<{ [key: number]: boolean }>({});
+//   const [showTaskList, setShowTaskList] = useState(false);
+//   const [installing, setInstalling] = useState<{ [key: number]: number }>({});
 
 //   // API Data
 //   const { data: allTasks, isLoading: allLoading } = useGetTasksQuery();
@@ -63,22 +84,30 @@
 //     const user_task_id = userTaskMap[task.id]?.id;
 //     if (!user_task_id || installing[user_task_id]) return;
 
-//     setInstalling((prev) => ({ ...prev, [user_task_id]: true }));
+//     setInstalling((prev) => ({ ...prev, [user_task_id]: 0 }));
 
-//     setTimeout(() => {
-//       completeTask(user_task_id)
-//         .unwrap()
-//         .then(() => {
-//           setTimeout(() => {
-//             refetchUserTasks();
-//             refetchAudit();
-//             setInstalling((prev) => ({ ...prev, [user_task_id]: false }));
-//           }, 4000);
-//         })
-//         .catch(() => {
-//           setInstalling((prev) => ({ ...prev, [user_task_id]: false }));
-//         });
-//     }, 2000);
+//     let progress = 0;
+//     const interval = setInterval(() => {
+//       progress += Math.floor(Math.random() * 10) + 5;
+//       if (progress >= 100) progress = 100;
+//       setInstalling((prev) => ({ ...prev, [user_task_id]: progress }));
+
+//       if (progress >= 100) {
+//         clearInterval(interval);
+//         completeTask(user_task_id)
+//           .unwrap()
+//           .then(() => {
+//             setTimeout(() => {
+//               refetchUserTasks();
+//               refetchAudit();
+//               setInstalling((prev) => ({ ...prev, [user_task_id]: 0 }));
+//             }, 4000);
+//           })
+//           .catch(() => {
+//             setInstalling((prev) => ({ ...prev, [user_task_id]: 0 }));
+//           });
+//       }
+//     }, 300);
 //   };
 
 //   if (allLoading || userLoading)
@@ -197,14 +226,16 @@
 //                       </div>
 //                       <button
 //                         onClick={() => handleInstall(task)}
-//                         disabled={installing[userTask?.id]}
+//                         disabled={!!installing[userTask?.id]}
 //                         className={`px-4 py-2 rounded-lg text-white ${
 //                           installing[userTask?.id]
 //                             ? "bg-yellow-400"
 //                             : "bg-yellow-600"
 //                         }`}
 //                       >
-//                         {installing[userTask?.id] ? "Installing..." : "Install"}
+//                         {installing[userTask?.id]
+//                           ? `${installing[userTask?.id]}%`
+//                           : "Install"}
 //                       </button>
 //                     </div>
 //                   );
@@ -213,40 +244,46 @@
 //             )}
 //             {activeTab === "audit" && (
 //               <div className="space-y-4">
-//                 {auditAndCompleted?.audit_tasks.map((a: any) => (
+//                 {auditAndCompleted?.audit_tasks.map((a: AuditTask) => (
 //                   <div
 //                     key={`audit-${a.id}`}
-//                     className="bg-yellow-100 p-4 rounded-lg shadow"
+//                     className="bg-yellow-100 p-4 rounded-lg shadow flex items-center gap-4"
 //                   >
-//                     <p className="font-bold text-yellow-800">
-//                       Audit Task: {a.user_task?.task?.app_name}
-//                     </p>
-//                     <p className="text-sm text-yellow-700">
-//                       KES {a.user_task?.task?.reward}
-//                     </p>
-//                     <p className="text-xs text-yellow-600">
-//                       Temporary audit record
-//                     </p>
+//                     <img
+//                       src={a.task_picture}
+//                       alt={a.task_name}
+//                       className="w-12 h-12 rounded-lg"
+//                     />
+//                     <div className="flex-1">
+//                       <p className="font-bold text-yellow-800">
+//                         Audit Task: {a.task_name}
+//                       </p>
+//                     </div>
 //                   </div>
 //                 ))}
 //               </div>
 //             )}
 //             {activeTab === "completed" && (
 //               <div className="space-y-4">
-//                 {auditAndCompleted?.completed_tasks.map((c: any) => (
+//                 {auditAndCompleted?.completed_tasks.map((c: CompletedTask) => (
 //                   <div
 //                     key={`completed-${c.id}`}
-//                     className="bg-green-50 p-4 rounded-lg shadow"
+//                     className="bg-green-50 p-4 rounded-lg shadow flex items-center gap-4"
 //                   >
-//                     <p className="font-bold text-yellow-800">
-//                       Completed Task: {c.user_task?.task?.app_name}
-//                     </p>
-//                     <p className="text-sm text-yellow-700">
-//                       KES {c.user_task?.task?.reward}
-//                     </p>
-//                     <p className="text-xs text-yellow-600">
-//                       Earned: KES {c.reward}
-//                     </p>
+//                     <img
+//                       src={c.task_picture}
+//                       alt={c.task_name}
+//                       className="w-12 h-12 rounded-lg"
+//                     />
+//                     <div className="flex-1">
+//                       <p className="font-bold text-yellow-800">
+//                         Completed Task: {c.task_name}
+//                       </p>
+//                       <p className="text-sm text-yellow-700">KES {c.reward}</p>
+//                       <p className="text-xs text-yellow-600">
+//                         Earned: KES {c.reward}
+//                       </p>
+//                     </div>
 //                   </div>
 //                 ))}
 //               </div>
@@ -263,17 +300,15 @@
 
 
 
-
-
-import React, { useState } from "react";
-import { ArrowLeftIcon } from "@heroicons/react/24/solid";
-import { useGetTasksQuery } from "../tasks/taskAPI";
+import React, { useState } from 'react';
+import { ArrowLeftIcon } from '@heroicons/react/24/solid';
+import { useGetTasksQuery } from '../tasks/taskAPI';
 import {
   useGetUserTasksQuery,
   useCompleteUserTaskMutation,
   useGetAuditAndCompletedTasksQuery,
   useGetUserEarningsQuery,
-} from "./userTaskAPI";
+} from './userTaskAPI';
 
 interface Task {
   id: number;
@@ -309,13 +344,13 @@ interface CompletedTask {
   task_picture: string;
 }
 
-
 const UserTasks: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<"doing" | "audit" | "completed">(
-    "doing"
+  const [activeTab, setActiveTab] = useState<'doing' | 'audit' | 'completed'>(
+    'doing',
   );
   const [showTaskList, setShowTaskList] = useState(false);
   const [installing, setInstalling] = useState<{ [key: number]: number }>({});
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // API Data
   const { data: allTasks, isLoading: allLoading } = useGetTasksQuery();
@@ -335,18 +370,22 @@ const UserTasks: React.FC = () => {
 
   // Data Processing
   const userTaskMap: Record<number, UserTask> =
-    userTasks?.reduce((acc: Record<number, UserTask>, ut: UserTask) => {
-      acc[ut.task.id] = ut;
-      return acc;
-    }, {} as Record<number, UserTask>) || ({} as Record<number, UserTask>);
+    userTasks?.reduce(
+      (acc: Record<number, UserTask>, ut: UserTask) => {
+        acc[ut.task.id] = ut;
+        return acc;
+      },
+      {} as Record<number, UserTask>,
+    ) || ({} as Record<number, UserTask>);
 
   const assignedTasks = allTasks?.filter((t: Task) => userTaskMap[t.id]) || [];
 
   // Handlers
   const handleInstall = (task: Task) => {
     const user_task_id = userTaskMap[task.id]?.id;
-    if (!user_task_id || installing[user_task_id]) return;
+    if (!user_task_id || isProcessing || installing[user_task_id]) return;
 
+    setIsProcessing(true);
     setInstalling((prev) => ({ ...prev, [user_task_id]: 0 }));
 
     let progress = 0;
@@ -364,10 +403,12 @@ const UserTasks: React.FC = () => {
               refetchUserTasks();
               refetchAudit();
               setInstalling((prev) => ({ ...prev, [user_task_id]: 0 }));
+              setIsProcessing(false);
             }, 4000);
           })
           .catch(() => {
             setInstalling((prev) => ({ ...prev, [user_task_id]: 0 }));
+            setIsProcessing(false);
           });
       }
     }, 300);
@@ -431,6 +472,10 @@ const UserTasks: React.FC = () => {
             <p className="text-sm text-yellow-700">
               If you need assistance, please contact your hiring manager!
             </p>
+            <p className="text-sm text-yellow-700 font-bold mt-2">
+              Please complete tasks one at a time. Other tasks will be disabled
+              while one is processing.
+            </p>
           </div>
         </>
       ) : (
@@ -448,13 +493,13 @@ const UserTasks: React.FC = () => {
 
           {/* Tabs */}
           <div className="flex space-x-4 border-b border-yellow-200 mb-6">
-            {(["doing", "audit", "completed"] as const).map((tab) => (
+            {(['doing', 'audit', 'completed'] as const).map((tab) => (
               <button
                 key={tab}
                 className={`px-4 py-2 text-yellow-700 ${
                   activeTab === tab
-                    ? "border-b-2 border-yellow-600 font-bold"
-                    : ""
+                    ? 'border-b-2 border-yellow-600 font-bold'
+                    : ''
                 }`}
                 onClick={() => setActiveTab(tab)}
               >
@@ -465,7 +510,7 @@ const UserTasks: React.FC = () => {
 
           {/* Task List Content */}
           <div>
-            {activeTab === "doing" && (
+            {activeTab === 'doing' && (
               <div className="space-y-4">
                 {assignedTasks.map((task) => {
                   const userTask = userTaskMap[task.id];
@@ -489,23 +534,27 @@ const UserTasks: React.FC = () => {
                       </div>
                       <button
                         onClick={() => handleInstall(task)}
-                        disabled={!!installing[userTask?.id]}
+                        disabled={isProcessing || !!installing[userTask?.id]}
                         className={`px-4 py-2 rounded-lg text-white ${
                           installing[userTask?.id]
-                            ? "bg-yellow-400"
-                            : "bg-yellow-600"
+                            ? 'bg-yellow-400'
+                            : isProcessing
+                              ? 'bg-gray-400'
+                              : 'bg-yellow-600'
                         }`}
                       >
                         {installing[userTask?.id]
                           ? `${installing[userTask?.id]}%`
-                          : "Install"}
+                          : isProcessing && !installing[userTask?.id]
+                            ? 'Processing...'
+                            : 'Install'}
                       </button>
                     </div>
                   );
                 })}
               </div>
             )}
-            {activeTab === "audit" && (
+            {activeTab === 'audit' && (
               <div className="space-y-4">
                 {auditAndCompleted?.audit_tasks.map((a: AuditTask) => (
                   <div
@@ -526,7 +575,7 @@ const UserTasks: React.FC = () => {
                 ))}
               </div>
             )}
-            {activeTab === "completed" && (
+            {activeTab === 'completed' && (
               <div className="space-y-4">
                 {auditAndCompleted?.completed_tasks.map((c: CompletedTask) => (
                   <div
