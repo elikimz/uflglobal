@@ -1,6 +1,5 @@
 
 
-
 // import React, { useState, useRef, useEffect } from 'react';
 // import { motion, AnimatePresence } from 'framer-motion';
 // import {
@@ -210,42 +209,30 @@
 //       }).unwrap();
 //       console.log('Signup response:', signupRes);
 
-//       // Auto-login after successful registration
-//       const loginRes = await loginUser({
-//         username: formData.username,
-//         password: formData.password,
-//       }).unwrap();
-//       console.log('Auto-login response:', loginRes);
-//       if (!loginRes.access_token) {
-//         console.error('No access_token in auto-login response');
-//         throw new Error('No access token received');
-//       }
-
-//       // Store the access token
-//       localStorage.setItem('access_token', loginRes.access_token);
-//       console.log(
-//         'Token stored in localStorage:',
-//         localStorage.getItem('access_token'),
-//       );
-
-//       // Decode the token to get the user's role
-//       const decoded = decodeToken(loginRes.access_token);
-//       console.log('Decoded token role:', decoded.role);
-//       const role = decoded?.role || 'user';
-
 //       // Show success message
 //       setMessage({
 //         type: 'success',
-//         text: 'Registration successful! Redirecting...',
+//         text: 'Registration successful! Redirecting to login...',
 //       });
 
-//       // Redirect based on role
+//       // Reset form and switch to login mode
 //       setTimeout(() => {
-//         console.log(
-//           'Redirecting to:',
-//           role === 'admin' ? '/admin/dashboard' : '/user/dashboard',
-//         );
-//         navigate(role === 'admin' ? '/admin/dashboard' : '/user/dashboard');
+//         // Reset form data but keep invite code if it was provided
+//         setFormData({
+//           username: '',
+//           phone_number: '',
+//           password: '',
+//           confirmPassword: '',
+//           invite_code: formData.invite_code, // Keep the invite code if it was in the URL
+//         });
+
+//         // Switch to login form
+//         setIsLogin(true);
+
+//         // Clear message after switching
+//         setTimeout(() => {
+//           setMessage(null);
+//         }, 1000);
 //       }, 1200);
 //     } catch (err: any) {
 //       console.error('Signup error:', err);
@@ -484,12 +471,15 @@
 
 
 
+
+
+
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
-  FiUser,
   FiLock,
   FiPhone,
+  FiUser,
   FiTag,
   FiCheckCircle,
   FiXCircle,
@@ -513,11 +503,19 @@ interface Message {
   text: string;
 }
 
+interface FormData {
+  username: string;
+  phone_number: string;
+  password: string;
+  confirmPassword: string;
+  invite_code: string;
+}
+
 const AuthPage: React.FC = () => {
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLogin, setIsLogin] = useState<boolean>(true);
   const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
   const [signup, { isLoading: signingUp }] = useSignupMutation();
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     username: '',
     phone_number: '',
     password: '',
@@ -525,8 +523,8 @@ const AuthPage: React.FC = () => {
     invite_code: '',
   });
   const [message, setMessage] = useState<Message | null>(null);
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState<boolean>(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState<boolean>(false);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -534,7 +532,6 @@ const AuthPage: React.FC = () => {
   // Extract invite code from URL
   useEffect(() => {
     const inviteCode = searchParams.get('invite_code');
-    console.log('Invite code from URL:', inviteCode);
     if (inviteCode) {
       setFormData((prev) => ({ ...prev, invite_code: inviteCode }));
     }
@@ -551,7 +548,6 @@ const AuthPage: React.FC = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // Check password length
     if (name === 'password' && value.length > 0 && value.length < 8) {
       setMessage({
         type: 'error',
@@ -560,8 +556,6 @@ const AuthPage: React.FC = () => {
     } else if (name === 'password' && value.length >= 8) {
       setMessage(null);
     }
-
-    console.log(`Updated form field: ${name} = ${value}`);
   };
 
   // Toggle password visibility
@@ -576,7 +570,6 @@ const AuthPage: React.FC = () => {
   // Decode JWT token to extract role and other payload data
   const decodeToken = (token: string): DecodedToken => {
     try {
-      console.log('Decoding token:', token);
       const base64Url = token.split('.')[1];
       const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
       const jsonPayload = decodeURIComponent(
@@ -585,11 +578,9 @@ const AuthPage: React.FC = () => {
           .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
           .join(''),
       );
-      const decoded = JSON.parse(jsonPayload);
-      console.log('Decoded token payload:', decoded);
-      return decoded;
+      return JSON.parse(jsonPayload);
     } catch (e) {
-      console.error('Failed to decode token:', e, 'Token was:', token);
+      console.error('Failed to decode token:', e);
       return {};
     }
   };
@@ -599,56 +590,32 @@ const AuthPage: React.FC = () => {
     e.preventDefault();
     setMessage(null);
     try {
-      console.log('Attempting login with:', formData);
       const res = await loginUser({
-        username: formData.username,
+        phone_number: formData.phone_number,
         password: formData.password,
       }).unwrap();
-      console.log('Login response:', res);
+
       if (!res.access_token) {
-        console.error('No access_token in login response');
         throw new Error('No access token received');
       }
-      // Store the access token
-      localStorage.setItem('access_token', res.access_token);
-      console.log(
-        'Token stored in localStorage:',
-        localStorage.getItem('access_token'),
-      );
 
-      // Decode the token to get the user's role
+      localStorage.setItem('access_token', res.access_token);
       const decoded = decodeToken(res.access_token);
-      console.log('Decoded token role:', decoded.role);
       const role = decoded?.role || 'user';
 
-      // Show success message
       setMessage({ type: 'success', text: 'Login successful!' });
 
-      // Redirect based on role
       setTimeout(() => {
-        console.log(
-          'Redirecting to:',
-          role === 'admin' ? '/admin/dashboard' : '/user/dashboard',
-        );
         navigate(role === 'admin' ? '/admin/dashboard' : '/user/dashboard');
       }, 1200);
     } catch (err: any) {
-      console.error('Login error:', err);
       let errorMsg = 'An error occurred. Please try again.';
-      // Check if the error response has a 'detail' field
-      if (err.data) {
-        // Handle HTTPException responses
-        if (err.data.detail) {
-          errorMsg = err.data.detail;
-        }
-        // Handle plain object responses (e.g., { status: 401, message: "..." })
-        else if (typeof err.data === 'object' && err.data.message) {
-          errorMsg = err.data.message;
-        }
-        // Handle plain string responses (e.g., "Account not found...")
-        else if (typeof err.data === 'string') {
-          errorMsg = err.data;
-        }
+      if (err.data?.detail) {
+        errorMsg = err.data.detail;
+      } else if (typeof err.data === 'object' && err.data?.message) {
+        errorMsg = err.data.message;
+      } else if (typeof err.data === 'string') {
+        errorMsg = err.data;
       }
       setMessage({ type: 'error', text: errorMsg });
     }
@@ -659,13 +626,11 @@ const AuthPage: React.FC = () => {
     e.preventDefault();
     setMessage(null);
 
-    // Check if passwords match
     if (formData.password !== formData.confirmPassword) {
       setMessage({ type: 'error', text: 'Passwords do not match.' });
       return;
     }
 
-    // Check password length
     if (formData.password.length < 8) {
       setMessage({
         type: 'error',
@@ -675,15 +640,13 @@ const AuthPage: React.FC = () => {
     }
 
     const token = recaptchaRef.current?.getValue() || '';
-    console.log('reCAPTCHA token:', token);
     if (!token) {
       setMessage({ type: 'error', text: 'Please complete the reCAPTCHA.' });
       return;
     }
+
     try {
-      console.log('Attempting signup with:', formData);
-      // Register the user
-      const signupRes = await signup({
+      await signup({
         username: formData.username,
         phone_number: formData.phone_number,
         password: formData.password,
@@ -691,58 +654,36 @@ const AuthPage: React.FC = () => {
         recaptcha_token: token,
         data: '',
       }).unwrap();
-      console.log('Signup response:', signupRes);
 
-      // Show success message
       setMessage({
         type: 'success',
         text: 'Registration successful! Redirecting to login...',
       });
 
-      // Reset form and switch to login mode
       setTimeout(() => {
-        // Reset form data but keep invite code if it was provided
         setFormData({
           username: '',
           phone_number: '',
           password: '',
           confirmPassword: '',
-          invite_code: formData.invite_code, // Keep the invite code if it was in the URL
+          invite_code: formData.invite_code,
         });
-
-        // Switch to login form
         setIsLogin(true);
-
-        // Clear message after switching
-        setTimeout(() => {
-          setMessage(null);
-        }, 1000);
       }, 1200);
     } catch (err: any) {
-      console.error('Signup error:', err);
       let errorMsg = 'An error occurred. Please try again.';
-      // Check if the error response has a 'detail' field
-      if (err.data) {
-        // Handle HTTPException responses
-        if (err.data.detail) {
-          errorMsg = err.data.detail;
-        }
-        // Handle plain object responses (e.g., { status: 400, message: "Phone number or username already registered." })
-        else if (typeof err.data === 'object' && err.data.message) {
-          errorMsg = err.data.message;
-        }
-        // Handle plain string responses (e.g., "Phone number already in use")
-        else if (typeof err.data === 'string') {
-          errorMsg = err.data;
-        }
+      if (err.data?.detail) {
+        errorMsg = err.data.detail;
+      } else if (typeof err.data === 'object' && err.data?.message) {
+        errorMsg = err.data.message;
+      } else if (typeof err.data === 'string') {
+        errorMsg = err.data;
       }
-
       setMessage({ type: 'error', text: errorMsg });
       recaptchaRef.current?.reset();
     }
   };
 
-  // Input field styling
   const inputClass =
     'w-full px-4 py-3 pl-12 rounded-full bg-indigo-50 border border-indigo-300 text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent';
 
@@ -759,11 +700,7 @@ const AuthPage: React.FC = () => {
           transition={{ duration: 0.6, ease: 'easeInOut' }}
           className="hidden md:flex w-1/2 items-center justify-center bg-gradient-to-br from-indigo-500 to-purple-600"
         >
-          <img
-            src={ustwologo}
-            alt="Company Logo"
-            className="h-64 drop-shadow-lg"
-          />
+          <img src={ustwologo} alt="Company Logo" className="h-64 drop-shadow-lg" />
         </motion.div>
         {/* Right Form */}
         <div className="w-full md:w-1/2 p-10">
@@ -805,10 +742,10 @@ const AuthPage: React.FC = () => {
                 className="space-y-5"
               >
                 <div className="relative">
-                  <FiUser className="absolute left-4 top-3.5 text-indigo-500" />
+                  <FiPhone className="absolute left-4 top-3.5 text-indigo-500" />
                   <input
-                    name="username"
-                    placeholder="Phone"
+                    name="phone_number"
+                    placeholder="Phone Number"
                     className={inputClass}
                     onChange={handleChange}
                     required
