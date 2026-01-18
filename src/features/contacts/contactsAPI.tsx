@@ -48,6 +48,7 @@ export const contactsAPI = createApi({
         method: "POST",
         body,
       }),
+    
       invalidatesTags: ["Contacts"],
     }),
 
