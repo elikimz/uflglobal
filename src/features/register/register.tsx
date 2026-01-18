@@ -1,7 +1,6 @@
 
 
 
-
 // import React, { useState, useRef, useEffect } from 'react';
 // import { motion, AnimatePresence } from 'framer-motion';
 // import {
@@ -31,7 +30,7 @@
 //   text: string;
 // }
 
-// const AuthPage: React.C = () => {
+// const AuthPage: React.FC = () => {
 //   const [isLogin, setIsLogin] = useState(false);
 //   const [loginUser, { isLoading: loggingIn }] = useLoginUserMutation();
 //   const [signup, { isLoading: signingUp }] = useSignupMutation();
@@ -68,6 +67,17 @@
 //   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 //     const { name, value } = e.target;
 //     setFormData((prev) => ({ ...prev, [name]: value }));
+
+//     // Check password length
+//     if (name === 'password' && value.length > 0 && value.length < 8) {
+//       setMessage({
+//         type: 'error',
+//         text: 'Password must be at least 8 characters long.',
+//       });
+//     } else if (name === 'password' && value.length >= 8) {
+//       setMessage(null);
+//     }
+
 //     console.log(`Updated form field: ${name} = ${value}`);
 //   };
 
@@ -172,13 +182,21 @@
 //       return;
 //     }
 
+//     // Check password length
+//     if (formData.password.length < 8) {
+//       setMessage({
+//         type: 'error',
+//         text: 'Password must be at least 8 characters long.',
+//       });
+//       return;
+//     }
+
 //     const token = recaptchaRef.current?.getValue() || '';
 //     console.log('reCAPTCHA token:', token);
 //     if (!token) {
 //       setMessage({ type: 'error', text: 'Please complete the reCAPTCHA.' });
 //       return;
 //     }
-
 //     try {
 //       console.log('Attempting signup with:', formData);
 //       // Register the user
@@ -232,7 +250,6 @@
 //     } catch (err: any) {
 //       console.error('Signup error:', err);
 //       let errorMsg = 'An error occurred. Please try again.';
-
 //       // Check if the error response has a 'detail' field
 //       if (err.data) {
 //         // Handle HTTPException responses
@@ -467,8 +484,6 @@
 
 
 
-
-
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -678,42 +693,30 @@ const AuthPage: React.FC = () => {
       }).unwrap();
       console.log('Signup response:', signupRes);
 
-      // Auto-login after successful registration
-      const loginRes = await loginUser({
-        username: formData.username,
-        password: formData.password,
-      }).unwrap();
-      console.log('Auto-login response:', loginRes);
-      if (!loginRes.access_token) {
-        console.error('No access_token in auto-login response');
-        throw new Error('No access token received');
-      }
-
-      // Store the access token
-      localStorage.setItem('access_token', loginRes.access_token);
-      console.log(
-        'Token stored in localStorage:',
-        localStorage.getItem('access_token'),
-      );
-
-      // Decode the token to get the user's role
-      const decoded = decodeToken(loginRes.access_token);
-      console.log('Decoded token role:', decoded.role);
-      const role = decoded?.role || 'user';
-
       // Show success message
       setMessage({
         type: 'success',
-        text: 'Registration successful! Redirecting...',
+        text: 'Registration successful! Redirecting to login...',
       });
 
-      // Redirect based on role
+      // Reset form and switch to login mode
       setTimeout(() => {
-        console.log(
-          'Redirecting to:',
-          role === 'admin' ? '/admin/dashboard' : '/user/dashboard',
-        );
-        navigate(role === 'admin' ? '/admin/dashboard' : '/user/dashboard');
+        // Reset form data but keep invite code if it was provided
+        setFormData({
+          username: '',
+          phone_number: '',
+          password: '',
+          confirmPassword: '',
+          invite_code: formData.invite_code, // Keep the invite code if it was in the URL
+        });
+
+        // Switch to login form
+        setIsLogin(true);
+
+        // Clear message after switching
+        setTimeout(() => {
+          setMessage(null);
+        }, 1000);
       }, 1200);
     } catch (err: any) {
       console.error('Signup error:', err);
