@@ -44,7 +44,7 @@ export const contactsAPI = createApi({
       Partial<Contact>
     >({
       query: (body) => ({
-        url: "contacts",
+        url: "contacts/",
         method: "POST",
         body,
       }),
