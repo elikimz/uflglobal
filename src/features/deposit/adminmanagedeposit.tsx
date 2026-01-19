@@ -1,3 +1,7 @@
+
+
+
+
 // import React from "react";
 // import { motion } from "framer-motion";
 // import {
@@ -43,6 +47,14 @@
 //     }
 //   };
 
+//   // Sort deposits by created_at in descending order (newest first)
+//   const sortedDeposits = deposits
+//     ? [...deposits].sort(
+//         (a, b) =>
+//           new Date(b.created_at).getTime() - new Date(a.created_at).getTime()
+//       )
+//     : [];
+
 //   return (
 //     <motion.div
 //       initial={{ opacity: 0 }}
@@ -57,7 +69,6 @@
 //           Approve, reject, or delete user deposits
 //         </p>
 //       </div>
-
 //       <div className="flex justify-end mb-4 max-w-md mx-auto">
 //         <button
 //           onClick={() => refetch()}
@@ -67,12 +78,11 @@
 //           Refresh
 //         </button>
 //       </div>
-
 //       <div className="max-w-3xl mx-auto space-y-3">
 //         {isLoading ? (
 //           <p className="text-indigo-200 text-center">Loading deposits...</p>
-//         ) : deposits && deposits.length > 0 ? (
-//           deposits.map((deposit) => (
+//         ) : sortedDeposits.length > 0 ? (
+//           sortedDeposits.map((deposit) => (
 //             <motion.div
 //               key={deposit.id}
 //               className="bg-white/10 backdrop-blur-xl rounded-2xl border border-white/20 p-4 text-sm text-indigo-100 shadow-sm hover:bg-white/20 transition flex flex-col md:flex-row md:justify-between items-start md:items-center gap-2"
@@ -93,9 +103,7 @@
 //                   </div>
 //                 )}
 //               </div>
-
 //               <div className="flex items-center gap-2 mt-2 md:mt-0">
-//                 {/* Status label */}
 //                 <span
 //                   className={`text-xs font-semibold px-2 py-1 rounded-full ${
 //                     deposit.status === "approved"
@@ -107,8 +115,6 @@
 //                 >
 //                   {deposit.status}
 //                 </span>
-
-//                 {/* Approve button */}
 //                 {deposit.status === "pending" && (
 //                   <>
 //                     <button
@@ -129,8 +135,6 @@
 //                     </button>
 //                   </>
 //                 )}
-
-//                 {/* Delete button */}
 //                 <button
 //                   onClick={() => handleDelete(deposit.id)}
 //                   disabled={deleting}
@@ -155,8 +159,7 @@
 
 
 
-
-import React from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import {
   ArrowPathIcon,
@@ -175,17 +178,23 @@ const AdminManageDeposits: React.FC = () => {
   const [updateDepositStatus, { isLoading: updating }] =
     useUpdateDepositStatusMutation();
   const [deleteDeposit, { isLoading: deleting }] = useDeleteDepositMutation();
+  const [processingDepositId, setProcessingDepositId] = useState<number | null>(null);
 
   const handleStatusChange = async (
     id: number,
     status: "approved" | "rejected"
   ) => {
+    if (processingDepositId === id) return; // Prevent duplicate clicks
+    setProcessingDepositId(id);
+
     try {
       await updateDepositStatus({ deposit_id: id, status }).unwrap();
       refetch();
     } catch (err) {
       console.error("Failed to update status:", err);
       alert("Failed to update deposit status");
+    } finally {
+      setProcessingDepositId(null); // Reset after API call completes
     }
   };
 
@@ -273,19 +282,41 @@ const AdminManageDeposits: React.FC = () => {
                   <>
                     <button
                       onClick={() => handleStatusChange(deposit.id, "approved")}
-                      disabled={updating}
-                      className="bg-green-600 hover:bg-green-700 px-2 py-1 rounded-md transition text-white flex items-center gap-1"
+                      disabled={processingDepositId === deposit.id || updating}
+                      className={`bg-green-600 hover:bg-green-700 px-2 py-1 rounded-md transition text-white flex items-center gap-1 ${
+                        processingDepositId === deposit.id ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                     >
-                      <CheckCircleIcon className="h-4 w-4" />
-                      Approve
+                      {processingDepositId === deposit.id ? (
+                        <>
+                          <ArrowPathIcon className="h-4 w-4 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircleIcon className="h-4 w-4" />
+                          Approve
+                        </>
+                      )}
                     </button>
                     <button
                       onClick={() => handleStatusChange(deposit.id, "rejected")}
-                      disabled={updating}
-                      className="bg-red-600 hover:bg-red-700 px-2 py-1 rounded-md transition text-white flex items-center gap-1"
+                      disabled={processingDepositId === deposit.id || updating}
+                      className={`bg-red-600 hover:bg-red-700 px-2 py-1 rounded-md transition text-white flex items-center gap-1 ${
+                        processingDepositId === deposit.id ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                     >
-                      <XCircleIcon className="h-4 w-4" />
-                      Reject
+                      {processingDepositId === deposit.id ? (
+                        <>
+                          <ArrowPathIcon className="h-4 w-4 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <XCircleIcon className="h-4 w-4" />
+                          Reject
+                        </>
+                      )}
                     </button>
                   </>
                 )}
