@@ -113,6 +113,15 @@ const AdminDashboard: React.FC = () => {
       description: "View settings.",
       route: "/admin/analysis",
     },
+     {
+      id: "edit wallet",
+      title: "Edit Wallet",
+      icon: <ChartBarIcon className="h-6 w-6" />,
+      description: "View edit wallet.",
+      route: "/admin/edit-wallet",
+    },
+    
+
     
   ];
 

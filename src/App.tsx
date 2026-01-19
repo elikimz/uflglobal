@@ -40,6 +40,7 @@ import AdminAnalysis from "./features/earnings/adminanalysis";
 import CompanyActivities from "./pages/companyactivity";
 import UFLDetails from "./pages/membersbenefit";
 // import LoginPage from "./features/login/login";
+import AdminManageWallet from "./features/withdrawal/adminupdatewallet";
 
 // Define routes
 const router = createBrowserRouter([
@@ -57,16 +58,16 @@ const router = createBrowserRouter([
       />
     ),
   },
-  // {
-  //   path: '/login',
-  //   element: <LoginPage />,
-  //   errorElement: (
-  //     <ErrorPage
-  //       code="🚧"
-  //       message="This section is being crafted to serve you better. Please check back soon!"
-  //     />
-  //   ),
-  // },
+  {
+    path: '/admin/edit-wallet',
+    element: <AdminManageWallet />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
 
   {
     path: '/user/dashboard',
