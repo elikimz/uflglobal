@@ -1,7 +1,5 @@
 
 
-
-
 // import React, { useState, useEffect } from "react";
 // import { motion } from "framer-motion";
 // import { useNavigate } from "react-router-dom";
@@ -52,6 +50,18 @@
 //       }
 //     }
 //   };
+
+//   // Sort levels: "temporary worker" first, then LV1, LV2, etc.
+//   const sortedLevels = levels
+//     ? [...levels].sort((a, b) => {
+//         if (a.name.toLowerCase() === "temporary worker") return -1;
+//         if (b.name.toLowerCase() === "temporary worker") return 1;
+//         // Extract the numeric part from the level name (e.g., "LV1" -> 1)
+//         const aNum = parseInt(a.name.replace(/[^\d]/g, ""), 10) || 0;
+//         const bNum = parseInt(b.name.replace(/[^\d]/g, ""), 10) || 0;
+//         return aNum - bNum;
+//       })
+//     : [];
 
 //   return (
 //     <motion.div
@@ -107,8 +117,8 @@
 //                   Loading levels...
 //                 </td>
 //               </tr>
-//             ) : levels && levels.length > 0 ? (
-//               levels.map((level) => (
+//             ) : sortedLevels.length > 0 ? (
+//               sortedLevels.map((level) => (
 //                 <tr
 //                   key={level.id}
 //                   className="even:bg-yellow-50 odd:bg-yellow-100 hover:bg-yellow-200 transition"
@@ -151,6 +161,7 @@
 // export default Levels;
 
 
+
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -161,8 +172,9 @@ import { ArrowPathIcon, TrophyIcon } from "@heroicons/react/24/solid";
 const Levels: React.FC = () => {
   const navigate = useNavigate();
   const { data: levels, isLoading, error, refetch } = useGetLevelsQuery();
-  const [createUserLevel] = useCreateUserLevelMutation();
+  const [createUserLevel, { isLoading: isEnrolling }] = useCreateUserLevelMutation();
   const [notification, setNotification] = useState<string | null>(null);
+  const [enrollingLevelId, setEnrollingLevelId] = useState<number | null>(null);
 
   // Debug: log response from backend
   useEffect(() => {
@@ -177,6 +189,9 @@ const Levels: React.FC = () => {
   };
 
   const handleEnroll = async (levelId: number) => {
+    if (enrollingLevelId === levelId) return; // Prevent duplicate clicks
+    setEnrollingLevelId(levelId);
+
     try {
       await createUserLevel({ level_id: levelId }).unwrap();
       showNotification("Enrollment successful! Redirecting to your jobs...");
@@ -199,6 +214,8 @@ const Levels: React.FC = () => {
       } else {
         showNotification(error?.error || "An unknown error occurred.");
       }
+    } finally {
+      setEnrollingLevelId(null); // Reset after API call completes
     }
   };
 
@@ -288,9 +305,12 @@ const Levels: React.FC = () => {
                   <td className="px-4 py-2">
                     <button
                       onClick={() => handleEnroll(level.id)}
-                      className="bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded-xl text-white text-sm transition"
+                      disabled={enrollingLevelId === level.id || isEnrolling}
+                      className={`bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded-xl text-white text-sm transition ${
+                        enrollingLevelId === level.id || isEnrolling ? "opacity-50 cursor-not-allowed" : ""
+                      }`}
                     >
-                      Enroll
+                      {enrollingLevelId === level.id || isEnrolling ? "Processing..." : "Enroll"}
                     </button>
                   </td>
                 </tr>

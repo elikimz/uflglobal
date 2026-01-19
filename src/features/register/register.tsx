@@ -594,6 +594,7 @@ const AuthPage: React.FC = () => {
       const res = await loginUser({
         username: formData.phone_number,
         password: formData.password,
+
       }).unwrap();
 
       if (!res.access_token) {
