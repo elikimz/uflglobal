@@ -296,6 +296,7 @@
 
 
 
+
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
@@ -518,8 +519,10 @@ const AdminManageWithdrawal: React.FC = () => {
             <tbody>
               {filteredWithdrawals.map((w: any) => {
                 const { color, icon, text } = getStatusStyle(w.status);
-                const levelName =
-                  w.level_name || w.user?.level?.level_name || "N/A";
+                const levelName = w.level_name || w.user?.level?.level_name || "N/A";
+                // Use phone number as account number if account_number is not provided
+                const accountNumber = w.account_number || w.user?.phone_number || "N/A";
+
                 return (
                   <tr
                     key={w.id}
@@ -552,9 +555,9 @@ const AdminManageWithdrawal: React.FC = () => {
                       {w.account_name}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-yellow-100 flex items-center gap-1">
-                      {w.account_number}
+                      {accountNumber}
                       <button
-                        onClick={() => copyToClipboard(w.account_number)}
+                        onClick={() => copyToClipboard(accountNumber)}
                         className="text-yellow-300 hover:text-yellow-400"
                       >
                         <DocumentDuplicateIcon className="h-4 w-4" />
