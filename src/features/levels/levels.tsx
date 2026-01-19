@@ -172,7 +172,7 @@ import { ArrowPathIcon, TrophyIcon } from "@heroicons/react/24/solid";
 const Levels: React.FC = () => {
   const navigate = useNavigate();
   const { data: levels, isLoading, error, refetch } = useGetLevelsQuery();
-  const [createUserLevel, { isLoading: isEnrolling }] = useCreateUserLevelMutation();
+  const [createUserLevel] = useCreateUserLevelMutation();
   const [notification, setNotification] = useState<string | null>(null);
   const [enrollingLevelId, setEnrollingLevelId] = useState<number | null>(null);
 
@@ -305,12 +305,12 @@ const Levels: React.FC = () => {
                   <td className="px-4 py-2">
                     <button
                       onClick={() => handleEnroll(level.id)}
-                      disabled={enrollingLevelId === level.id || isEnrolling}
+                      disabled={enrollingLevelId !== null && enrollingLevelId !== level.id}
                       className={`bg-yellow-600 hover:bg-yellow-700 px-3 py-1 rounded-xl text-white text-sm transition ${
-                        enrollingLevelId === level.id || isEnrolling ? "opacity-50 cursor-not-allowed" : ""
+                        enrollingLevelId === level.id ? "opacity-50 cursor-not-allowed" : ""
                       }`}
                     >
-                      {enrollingLevelId === level.id || isEnrolling ? "Processing..." : "Enroll"}
+                      {enrollingLevelId === level.id ? "Processing..." : "Enroll"}
                     </button>
                   </td>
                 </tr>
