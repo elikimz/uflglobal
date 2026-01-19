@@ -20,7 +20,7 @@ const ErrorPage: React.FC<ErrorPageProps> = ({
         {/* Error Icon */}
         <div className="flex justify-center mb-6">
           <div className="p-4 bg-indigo-100 rounded-full inline-block animate-pulse">
-            <FiAlertTriangle className="text-indigo-600 text-4xl" />
+            <FiAlertTriangle className="text-indigo-650 text-4xl" />
           </div>
         </div>
 
