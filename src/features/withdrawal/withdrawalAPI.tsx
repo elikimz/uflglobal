@@ -291,6 +291,8 @@ export interface Wallet {
   commission_wallet: number;
   created_at: string;
   updated_at: string;
+  username: string;
+  level_name: string | null;
 }
 
 export interface WalletUpdateInput {

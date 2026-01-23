@@ -7,6 +7,7 @@ import {
   DocumentCheckIcon,
 } from "@heroicons/react/24/outline";
 
+
 const AdvertisingPosition: React.FC = () => {
   return (
     <motion.div

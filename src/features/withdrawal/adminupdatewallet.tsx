@@ -1,3 +1,5 @@
+
+
 // import React, { useState } from 'react';
 // import { motion } from 'framer-motion';
 // import {
@@ -38,11 +40,15 @@
 //   const [searchTerm, setSearchTerm] = useState<string>('');
 //   const [feedback, setFeedback] = useState<Feedback>({ type: null, message: '' });
 
+//   // Sort wallets by ID in ascending order
+//   const sortedWallets: Wallet[] = [...(wallets as Wallet[])].sort((a, b) => a.id - b.id);
+
 //   // Filter wallets based on search term
-//   const filteredWallets: Wallet[] = (wallets as Wallet[]).filter(wallet =>
+//   const filteredWallets: Wallet[] = sortedWallets.filter(wallet =>
 //     wallet.user_id.toString().includes(searchTerm) ||
 //     wallet.recharge_wallet.toString().includes(searchTerm) ||
-//     wallet.commission_wallet.toString().includes(searchTerm)
+//     wallet.commission_wallet.toString().includes(searchTerm) ||
+//     wallet.id.toString().includes(searchTerm)
 //   );
 
 //   const handleEditClick = (wallet: Wallet) => {
@@ -108,7 +114,7 @@
 //           <div className="relative">
 //             <input
 //               type="text"
-//               placeholder="Search wallets..."
+//               placeholder="Search wallets by ID, User ID, or amount..."
 //               value={searchTerm}
 //               onChange={(e) => setSearchTerm(e.target.value)}
 //               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -142,6 +148,7 @@
 //               <table className="min-w-full divide-y divide-gray-200">
 //                 <thead className="bg-indigo-50">
 //                   <tr>
+//                     <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">ID</th>
 //                     <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">User ID</th>
 //                     <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Recharge Wallet</th>
 //                     <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Commission Wallet</th>
@@ -152,6 +159,7 @@
 //                 <tbody className="bg-white divide-y divide-gray-200">
 //                   {filteredWallets.map((wallet: Wallet) => (
 //                     <tr key={wallet.id} className="hover:bg-gray-50 transition-colors">
+//                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{wallet.id}</td>
 //                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{wallet.user_id}</td>
 //                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
 //                         KES {wallet.recharge_wallet.toFixed(2)}
@@ -247,9 +255,10 @@
 //                 </button>
 //                 <button
 //                   onClick={handleUpdateWallet}
-//                   className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
+//                   className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-750 transition-colors"
 //                 >
-//                   Save Changes
+//                   Save
+//                    Changes
 //                 </button>
 //               </div>
 //             </motion.div>
@@ -261,6 +270,9 @@
 // };
 
 // export default AdminWalletManagement;
+
+
+
 
 
 
@@ -284,6 +296,8 @@ interface Wallet {
   commission_wallet: number;
   created_at: string;
   updated_at: string;
+  username: string;
+  level_name: string | null;
 }
 
 interface WalletUpdateInput {
@@ -309,10 +323,12 @@ const AdminWalletManagement: React.FC = () => {
 
   // Filter wallets based on search term
   const filteredWallets: Wallet[] = sortedWallets.filter(wallet =>
+    wallet.id.toString().includes(searchTerm) ||
     wallet.user_id.toString().includes(searchTerm) ||
+    wallet.username.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (wallet.level_name && wallet.level_name.toLowerCase().includes(searchTerm.toLowerCase())) ||
     wallet.recharge_wallet.toString().includes(searchTerm) ||
-    wallet.commission_wallet.toString().includes(searchTerm) ||
-    wallet.id.toString().includes(searchTerm)
+    wallet.commission_wallet.toString().includes(searchTerm)
   );
 
   const handleEditClick = (wallet: Wallet) => {
@@ -378,7 +394,7 @@ const AdminWalletManagement: React.FC = () => {
           <div className="relative">
             <input
               type="text"
-              placeholder="Search wallets by ID, User ID, or amount..."
+              placeholder="Search wallets by ID, User ID, username, level, or amount..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
@@ -414,6 +430,8 @@ const AdminWalletManagement: React.FC = () => {
                   <tr>
                     <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">ID</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">User ID</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Username</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Level</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Recharge Wallet</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Commission Wallet</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-indigo-700 uppercase tracking-wider">Created At</th>
@@ -425,6 +443,10 @@ const AdminWalletManagement: React.FC = () => {
                     <tr key={wallet.id} className="hover:bg-gray-50 transition-colors">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{wallet.id}</td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{wallet.user_id}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{wallet.username}</td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {wallet.level_name || 'None'}
+                      </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         KES {wallet.recharge_wallet.toFixed(2)}
                       </td>
@@ -485,6 +507,14 @@ const AdminWalletManagement: React.FC = () => {
               className="bg-white rounded-xl shadow-xl p-6 w-full max-w-md"
             >
               <h2 className="text-xl font-bold text-indigo-800 mb-4">Edit Wallet Balance</h2>
+              <div className="mb-4 p-3 bg-indigo-50 rounded-lg">
+                <p className="text-sm font-medium text-indigo-800">
+                  Editing wallet for: <span className="font-bold">{wallets.find(w => w.id === editingWalletId)?.username}</span>
+                </p>
+                <p className="text-sm text-indigo-700">
+                  Level: <span className="font-medium">{wallets.find(w => w.id === editingWalletId)?.level_name || 'None'}</span>
+                </p>
+              </div>
 
               <div className="space-y-4">
                 <div>
@@ -519,10 +549,9 @@ const AdminWalletManagement: React.FC = () => {
                 </button>
                 <button
                   onClick={handleUpdateWallet}
-                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-750 transition-colors"
+                  className="px-4 py-2 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-colors"
                 >
-                  Save
-                   Changes
+                  Save Changes
                 </button>
               </div>
             </motion.div>
