@@ -2,15 +2,15 @@
 
 
 
-// import React, { useState } from "react";
-// import { ArrowLeftIcon } from "@heroicons/react/24/solid";
-// import { useGetTasksQuery } from "../tasks/taskAPI";
+// import React, { useState } from 'react';
+// import { ArrowLeftIcon } from '@heroicons/react/24/solid';
+// import { useGetTasksQuery } from '../tasks/taskAPI';
 // import {
 //   useGetUserTasksQuery,
 //   useCompleteUserTaskMutation,
 //   useGetAuditAndCompletedTasksQuery,
 //   useGetUserEarningsQuery,
-// } from "./userTaskAPI";
+// } from './userTaskAPI';
 
 // interface Task {
 //   id: number;
@@ -46,13 +46,13 @@
 //   task_picture: string;
 // }
 
-
 // const UserTasks: React.FC = () => {
-//   const [activeTab, setActiveTab] = useState<"doing" | "audit" | "completed">(
-//     "doing"
+//   const [activeTab, setActiveTab] = useState<'doing' | 'audit' | 'completed'>(
+//     'doing',
 //   );
 //   const [showTaskList, setShowTaskList] = useState(false);
 //   const [installing, setInstalling] = useState<{ [key: number]: number }>({});
+//   const [isProcessing, setIsProcessing] = useState(false);
 
 //   // API Data
 //   const { data: allTasks, isLoading: allLoading } = useGetTasksQuery();
@@ -72,18 +72,22 @@
 
 //   // Data Processing
 //   const userTaskMap: Record<number, UserTask> =
-//     userTasks?.reduce((acc: Record<number, UserTask>, ut: UserTask) => {
-//       acc[ut.task.id] = ut;
-//       return acc;
-//     }, {} as Record<number, UserTask>) || ({} as Record<number, UserTask>);
+//     userTasks?.reduce(
+//       (acc: Record<number, UserTask>, ut: UserTask) => {
+//         acc[ut.task.id] = ut;
+//         return acc;
+//       },
+//       {} as Record<number, UserTask>,
+//     ) || ({} as Record<number, UserTask>);
 
 //   const assignedTasks = allTasks?.filter((t: Task) => userTaskMap[t.id]) || [];
 
 //   // Handlers
 //   const handleInstall = (task: Task) => {
 //     const user_task_id = userTaskMap[task.id]?.id;
-//     if (!user_task_id || installing[user_task_id]) return;
+//     if (!user_task_id || isProcessing || installing[user_task_id]) return;
 
+//     setIsProcessing(true);
 //     setInstalling((prev) => ({ ...prev, [user_task_id]: 0 }));
 
 //     let progress = 0;
@@ -101,10 +105,12 @@
 //               refetchUserTasks();
 //               refetchAudit();
 //               setInstalling((prev) => ({ ...prev, [user_task_id]: 0 }));
+//               setIsProcessing(false);
 //             }, 4000);
 //           })
 //           .catch(() => {
 //             setInstalling((prev) => ({ ...prev, [user_task_id]: 0 }));
+//             setIsProcessing(false);
 //           });
 //       }
 //     }, 300);
@@ -168,6 +174,10 @@
 //             <p className="text-sm text-yellow-700">
 //               If you need assistance, please contact your hiring manager!
 //             </p>
+//             <p className="text-sm text-yellow-700 font-bold mt-2">
+//               Please complete tasks one at a time. Other tasks will be disabled
+//               while one is processing.
+//             </p>
 //           </div>
 //         </>
 //       ) : (
@@ -185,13 +195,13 @@
 
 //           {/* Tabs */}
 //           <div className="flex space-x-4 border-b border-yellow-200 mb-6">
-//             {(["doing", "audit", "completed"] as const).map((tab) => (
+//             {(['doing', 'audit', 'completed'] as const).map((tab) => (
 //               <button
 //                 key={tab}
 //                 className={`px-4 py-2 text-yellow-700 ${
 //                   activeTab === tab
-//                     ? "border-b-2 border-yellow-600 font-bold"
-//                     : ""
+//                     ? 'border-b-2 border-yellow-600 font-bold'
+//                     : ''
 //                 }`}
 //                 onClick={() => setActiveTab(tab)}
 //               >
@@ -202,7 +212,7 @@
 
 //           {/* Task List Content */}
 //           <div>
-//             {activeTab === "doing" && (
+//             {activeTab === 'doing' && (
 //               <div className="space-y-4">
 //                 {assignedTasks.map((task) => {
 //                   const userTask = userTaskMap[task.id];
@@ -226,23 +236,27 @@
 //                       </div>
 //                       <button
 //                         onClick={() => handleInstall(task)}
-//                         disabled={!!installing[userTask?.id]}
+//                         disabled={isProcessing || !!installing[userTask?.id]}
 //                         className={`px-4 py-2 rounded-lg text-white ${
 //                           installing[userTask?.id]
-//                             ? "bg-yellow-400"
-//                             : "bg-yellow-600"
+//                             ? 'bg-yellow-400'
+//                             : isProcessing
+//                               ? 'bg-gray-400'
+//                               : 'bg-yellow-600'
 //                         }`}
 //                       >
 //                         {installing[userTask?.id]
 //                           ? `${installing[userTask?.id]}%`
-//                           : "Install"}
+//                           : isProcessing && !installing[userTask?.id]
+//                             ? 'Processing...'
+//                             : 'Install'}
 //                       </button>
 //                     </div>
 //                   );
 //                 })}
 //               </div>
 //             )}
-//             {activeTab === "audit" && (
+//             {activeTab === 'audit' && (
 //               <div className="space-y-4">
 //                 {auditAndCompleted?.audit_tasks.map((a: AuditTask) => (
 //                   <div
@@ -263,7 +277,7 @@
 //                 ))}
 //               </div>
 //             )}
-//             {activeTab === "completed" && (
+//             {activeTab === 'completed' && (
 //               <div className="space-y-4">
 //                 {auditAndCompleted?.completed_tasks.map((c: CompletedTask) => (
 //                   <div
@@ -299,9 +313,9 @@
 
 
 
-
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
+import { useSearchParams } from 'react-router-dom';
 import { useGetTasksQuery } from '../tasks/taskAPI';
 import {
   useGetUserTasksQuery,
@@ -345,12 +359,20 @@ interface CompletedTask {
 }
 
 const UserTasks: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'doing' | 'audit' | 'completed'>(
-    'doing',
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showTaskList, setShowTaskList] = useState(false);
   const [installing, setInstalling] = useState<{ [key: number]: number }>({});
   const [isProcessing, setIsProcessing] = useState(false);
+
+  // Initialize activeTab from URL query parameters
+  const [activeTab, setActiveTab] = useState<'doing' | 'audit' | 'completed'>(
+    (searchParams.get('tab') as 'doing' | 'audit' | 'completed') || 'doing'
+  );
+
+  // Update URL query parameters when activeTab changes
+  useEffect(() => {
+    setSearchParams({ tab: activeTab });
+  }, [activeTab, setSearchParams]);
 
   // API Data
   const { data: allTasks, isLoading: allLoading } = useGetTasksQuery();

@@ -66,7 +66,7 @@ export const levelsAPI = createApi({
     // 🔹 Create a new level
     createLevel: builder.mutation<Level, CreateLevelInput>({
       query: (body) => ({
-        url: "levels",
+        url: "levels/",
         method: "POST",
         body,
         headers: { "Content-Type": "application/json" },
