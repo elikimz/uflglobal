@@ -33,7 +33,7 @@
 //       invalidatesTags: ["UserTask"],
 //     }),
 
-//     // NEW: GET /user-tasks/audit-and-completed
+//     // GET /user-tasks/audit-and-completed
 //     getAuditAndCompletedTasks: builder.query<
 //       { audit_tasks: any[]; completed_tasks: any[] },
 //       void
@@ -41,16 +41,28 @@
 //       query: () => `/user-tasks/audit-and-completed`,
 //       providesTags: ["UserTask"],
 //     }),
+
+//     // ⭐ NEW: GET /user-tasks/earnings
+//     getUserEarnings: builder.query<
+//       {
+//         todays_earnings: number;
+//         total_earnings: number;
+//         completed_tasks_count: number;
+//       },
+//       void
+//     >({
+//       query: () => `/user-tasks/earnings`,
+//       providesTags: ["UserTask"], // refresh earnings after completing a task
+//     }),
 //   }),
 // });
 
 // export const {
 //   useGetUserTasksQuery,
 //   useCompleteUserTaskMutation,
-//   useGetAuditAndCompletedTasksQuery, // <-- new hook
+//   useGetAuditAndCompletedTasksQuery,
+//   useGetUserEarningsQuery, // ⭐ new hook
 // } = userTasksAPI;
-
-
 
 
 
@@ -95,7 +107,7 @@ export const userTasksAPI = createApi({
       providesTags: ["UserTask"],
     }),
 
-    // ⭐ NEW: GET /user-tasks/earnings
+    // GET /user-tasks/earnings
     getUserEarnings: builder.query<
       {
         todays_earnings: number;
@@ -107,6 +119,24 @@ export const userTasksAPI = createApi({
       query: () => `/user-tasks/earnings`,
       providesTags: ["UserTask"], // refresh earnings after completing a task
     }),
+
+    // ⭐ NEW: Admin - Complete all user tasks
+    adminCompleteAllTasks: builder.mutation<{ message: string; updated_tasks: number }, void>({
+      query: () => ({
+        url: `/user-tasks/admin/complete-all`,
+        method: "POST",
+      }),
+      invalidatesTags: ["UserTask"],
+    }),
+
+    // ⭐ NEW: Admin - Reset all completed tasks
+    adminResetAllTasks: builder.mutation<{ message: string; updated_tasks: number }, void>({
+      query: () => ({
+        url: `/user-tasks/admin/reset-all`,
+        method: "POST",
+      }),
+      invalidatesTags: ["UserTask"],
+    }),
   }),
 });
 
@@ -114,5 +144,7 @@ export const {
   useGetUserTasksQuery,
   useCompleteUserTaskMutation,
   useGetAuditAndCompletedTasksQuery,
-  useGetUserEarningsQuery, // ⭐ new hook
+  useGetUserEarningsQuery,
+  useAdminCompleteAllTasksMutation, // ⭐ new
+  useAdminResetAllTasksMutation,     // ⭐ new
 } = userTasksAPI;

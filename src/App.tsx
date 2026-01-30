@@ -41,6 +41,7 @@ import CompanyActivities from "./pages/companyactivity";
 import UFLDetails from "./pages/membersbenefit";
 // import LoginPage from "./features/login/login";
 import AdminManageWallet from "./features/withdrawal/adminupdatewallet";
+import AdminResetTasks from "./features/userTask/adminresettasks";
 
 // Define routes
 const router = createBrowserRouter([
@@ -386,6 +387,18 @@ const router = createBrowserRouter([
       />
     ),
   },
+  {
+    path: '/admin/edit-reset-task',
+    element: <AdminResetTasks />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+
+  
   // Catch-all route (for 404)
   {
     path: '*',
