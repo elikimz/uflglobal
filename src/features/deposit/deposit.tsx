@@ -77,10 +77,10 @@ const Deposit: React.FC = () => {
       });
       return;
     }
-    if (Number(form.amount) < 2400) {
+    if (Number(form.amount) < 1500) {
       setMessage({
         type: "error",
-        text: "Minimum deposit amount is KES 2400.",
+        text: "Minimum deposit amount is KES 1500.",
       });
       return;
     }
