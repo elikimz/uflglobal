@@ -1,9 +1,9 @@
 
 
 
-
-// import React, { useState } from 'react';
+// import React, { useState, useEffect } from 'react';
 // import { ArrowLeftIcon } from '@heroicons/react/24/solid';
+// import { useSearchParams } from 'react-router-dom';
 // import { useGetTasksQuery } from '../tasks/taskAPI';
 // import {
 //   useGetUserTasksQuery,
@@ -47,12 +47,20 @@
 // }
 
 // const UserTasks: React.FC = () => {
-//   const [activeTab, setActiveTab] = useState<'doing' | 'audit' | 'completed'>(
-//     'doing',
-//   );
+//   const [searchParams, setSearchParams] = useSearchParams();
 //   const [showTaskList, setShowTaskList] = useState(false);
 //   const [installing, setInstalling] = useState<{ [key: number]: number }>({});
 //   const [isProcessing, setIsProcessing] = useState(false);
+
+//   // Initialize activeTab from URL query parameters
+//   const [activeTab, setActiveTab] = useState<'doing' | 'audit' | 'completed'>(
+//     (searchParams.get('tab') as 'doing' | 'audit' | 'completed') || 'doing'
+//   );
+
+//   // Update URL query parameters when activeTab changes
+//   useEffect(() => {
+//     setSearchParams({ tab: activeTab });
+//   }, [activeTab, setSearchParams]);
 
 //   // API Data
 //   const { data: allTasks, isLoading: allLoading } = useGetTasksQuery();
@@ -313,9 +321,13 @@
 
 
 
+
+
 import React, { useState, useEffect } from 'react';
 import { ArrowLeftIcon } from '@heroicons/react/24/solid';
 import { useSearchParams } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useGetTasksQuery } from '../tasks/taskAPI';
 import {
   useGetUserTasksQuery,
@@ -364,12 +376,11 @@ const UserTasks: React.FC = () => {
   const [installing, setInstalling] = useState<{ [key: number]: number }>({});
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Initialize activeTab from URL query parameters
+  // Active tab from URL query
   const [activeTab, setActiveTab] = useState<'doing' | 'audit' | 'completed'>(
     (searchParams.get('tab') as 'doing' | 'audit' | 'completed') || 'doing'
   );
 
-  // Update URL query parameters when activeTab changes
   useEffect(() => {
     setSearchParams({ tab: activeTab });
   }, [activeTab, setSearchParams]);
@@ -386,23 +397,23 @@ const UserTasks: React.FC = () => {
   const { data: earningsData } = useGetUserEarningsQuery();
   const [completeTask] = useCompleteUserTaskMutation();
 
-  // Dynamic Earnings
+  // Earnings
   const todaysEarnings = earningsData?.todays_earnings || 0;
   const totalBalance = earningsData?.total_earnings || 0;
 
-  // Data Processing
+  // Map user tasks by task id
   const userTaskMap: Record<number, UserTask> =
     userTasks?.reduce(
       (acc: Record<number, UserTask>, ut: UserTask) => {
         acc[ut.task.id] = ut;
         return acc;
       },
-      {} as Record<number, UserTask>,
+      {} as Record<number, UserTask>
     ) || ({} as Record<number, UserTask>);
 
   const assignedTasks = allTasks?.filter((t: Task) => userTaskMap[t.id]) || [];
 
-  // Handlers
+  // ======= Handle Task Installation / Completion =======
   const handleInstall = (task: Task) => {
     const user_task_id = userTaskMap[task.id]?.id;
     if (!user_task_id || isProcessing || installing[user_task_id]) return;
@@ -421,6 +432,7 @@ const UserTasks: React.FC = () => {
         completeTask(user_task_id)
           .unwrap()
           .then(() => {
+            toast.success(`Task "${task.app_name}" completed successfully!`);
             setTimeout(() => {
               refetchUserTasks();
               refetchAudit();
@@ -428,7 +440,13 @@ const UserTasks: React.FC = () => {
               setIsProcessing(false);
             }, 4000);
           })
-          .catch(() => {
+          .catch((error: any) => {
+            // Show API error message
+            if (error?.data?.detail) {
+              toast.error(error.data.detail);
+            } else {
+              toast.error('Failed to complete task. Please try again.');
+            }
             setInstalling((prev) => ({ ...prev, [user_task_id]: 0 }));
             setIsProcessing(false);
           });
@@ -445,6 +463,8 @@ const UserTasks: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-yellow-50 p-4 text-yellow-900">
+      <ToastContainer position="top-right" autoClose={4000} />
+      
       {!showTaskList ? (
         <>
           {/* App Grid */}
@@ -463,7 +483,7 @@ const UserTasks: React.FC = () => {
             ))}
           </div>
 
-          {/* Earnings Cards */}
+          {/* Earnings */}
           <div className="grid grid-cols-2 gap-4 mb-4">
             <div className="bg-yellow-100 p-4 rounded-lg shadow">
               <p className="text-sm text-yellow-700">Today's earnings</p>
@@ -475,7 +495,7 @@ const UserTasks: React.FC = () => {
             </div>
           </div>
 
-          {/* Start Task Button */}
+          {/* Start Task */}
           <div className="bg-yellow-100 p-4 rounded-lg shadow mb-4">
             <button
               className="w-full bg-yellow-600 text-white py-2 rounded-lg mt-4"
@@ -485,12 +505,10 @@ const UserTasks: React.FC = () => {
             </button>
           </div>
 
-          {/* Important Notice */}
+          {/* Notice */}
           <div className="bg-yellow-100 p-4 rounded-lg shadow">
             <p className="font-bold mb-2 text-yellow-800">Important Notice</p>
-            <p className="text-sm text-yellow-700">
-              Working hours: 00:01-23:59
-            </p>
+            <p className="text-sm text-yellow-700">Working hours: 00:01-23:59</p>
             <p className="text-sm text-yellow-700">
               If you need assistance, please contact your hiring manager!
             </p>
@@ -502,7 +520,7 @@ const UserTasks: React.FC = () => {
         </>
       ) : (
         <>
-          {/* Task List Header with Back Arrow and Title */}
+          {/* Header */}
           <div className="flex items-center gap-4 mb-6">
             <button
               className="p-2 rounded-full hover:bg-yellow-200 transition-colors"
@@ -530,7 +548,7 @@ const UserTasks: React.FC = () => {
             ))}
           </div>
 
-          {/* Task List Content */}
+          {/* Task Lists */}
           <div>
             {activeTab === 'doing' && (
               <div className="space-y-4">
@@ -547,12 +565,8 @@ const UserTasks: React.FC = () => {
                         className="w-12 h-12"
                       />
                       <div className="flex-1">
-                        <p className="font-bold text-yellow-800">
-                          {task.app_name}
-                        </p>
-                        <p className="text-sm text-yellow-700">
-                          KES {task.reward}
-                        </p>
+                        <p className="font-bold text-yellow-800">{task.app_name}</p>
+                        <p className="text-sm text-yellow-700">KES {task.reward}</p>
                       </div>
                       <button
                         onClick={() => handleInstall(task)}
@@ -614,9 +628,7 @@ const UserTasks: React.FC = () => {
                         Completed Task: {c.task_name}
                       </p>
                       <p className="text-sm text-yellow-700">KES {c.reward}</p>
-                      <p className="text-xs text-yellow-600">
-                        Earned: KES {c.reward}
-                      </p>
+                      <p className="text-xs text-yellow-600">Earned: KES {c.reward}</p>
                     </div>
                   </div>
                 ))}
