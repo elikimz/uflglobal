@@ -1,4 +1,5 @@
 
+
 // // profileAPI.ts
 // import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 
@@ -71,13 +72,30 @@
 //       query: () => "user-profile/all-users",
 //       providesTags: ["AllUsers"],
 //     }),
+
+//     // 🔹 Toggle user withdrawal access (admin)
+//     toggleUserWithdraw: builder.mutation<
+//       { message: string },
+//       { user_id: number; can_withdraw: boolean }
+//     >({
+//       query: ({ user_id, can_withdraw }) => ({
+//         url: "user-profile/toggle-withdraw",
+//         method: "PUT",
+//         body: { user_id, can_withdraw },
+//       }),
+//       invalidatesTags: ["AllUsers"], // refresh all users after toggle
+//     }),
 //   }),
 // });
 
 // // ======================
 // // Hooks Export
 // // ======================
-// export const { useGetUserProfileQuery, useGetAllUsersQuery } = userProfileAPI;
+// export const {
+//   useGetUserProfileQuery,
+//   useGetAllUsersQuery,
+//   useToggleUserWithdrawMutation,
+// } = userProfileAPI;
 
 
 
@@ -124,6 +142,21 @@ export interface UserProfile {
 }
 
 // ======================
+// New Interface for Active Users
+// ======================
+export interface ActiveUser {
+  id: number;
+  phone_number: string;
+  username: string;
+  is_active: boolean;
+  can_withdraw: boolean;
+  is_suspended: boolean;
+  role: string;
+  created_at: string;
+  level?: Level | null;
+}
+
+// ======================
 // API Definition
 // ======================
 export const userProfileAPI = createApi({
@@ -140,7 +173,7 @@ export const userProfileAPI = createApi({
       return headers;
     },
   }),
-  tagTypes: ["UserProfile", "AllUsers"],
+  tagTypes: ["UserProfile", "AllUsers", "ActiveUsers"], // Added ActiveUsers tag
   endpoints: (builder) => ({
     // 🔹 Get current authenticated user's profile
     getUserProfile: builder.query<UserProfile, void>({
@@ -154,6 +187,12 @@ export const userProfileAPI = createApi({
       providesTags: ["AllUsers"],
     }),
 
+    // 🔥 NEW: Get all active users (admin)
+    getAllActiveUsers: builder.query<ActiveUser[], void>({
+      query: () => "user-profile/active",
+      providesTags: ["ActiveUsers"],
+    }),
+
     // 🔹 Toggle user withdrawal access (admin)
     toggleUserWithdraw: builder.mutation<
       { message: string },
@@ -164,7 +203,7 @@ export const userProfileAPI = createApi({
         method: "PUT",
         body: { user_id, can_withdraw },
       }),
-      invalidatesTags: ["AllUsers"], // refresh all users after toggle
+      invalidatesTags: ["AllUsers", "ActiveUsers"], // refresh both tags after toggle
     }),
   }),
 });
@@ -175,5 +214,6 @@ export const userProfileAPI = createApi({
 export const {
   useGetUserProfileQuery,
   useGetAllUsersQuery,
+  useGetAllActiveUsersQuery, // New hook
   useToggleUserWithdrawMutation,
 } = userProfileAPI;

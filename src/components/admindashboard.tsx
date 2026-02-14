@@ -134,6 +134,14 @@ const AdminDashboard: React.FC = () => {
       description: "View total successful withdrawals.",
       route: "/admin/total-successful-withdrawals",
     },
+     {
+      id: "View Active Members",
+      title: "View Active Members",
+      icon: <ChartBarIcon className="h-6 w-6" />,
+      description: "View active members.",
+      route: "/admin/view-active-members",
+    },
+    
     
     
 

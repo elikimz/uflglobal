@@ -44,6 +44,8 @@ import AdminManageWallet from "./features/withdrawal/adminupdatewallet";
 import AdminResetTasks from "./features/userTask/adminresettasks";
 import AdminTotalWithdrawal from "./pages/successifulwithdwal";
 
+import AdminActiveMembers from "./features/profile/adminactiveusers";
+
 // Define routes
 const router = createBrowserRouter([
   {
@@ -401,6 +403,18 @@ const router = createBrowserRouter([
   {
     path: '/admin/total-successful-withdrawals',
     element: <AdminTotalWithdrawal />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+
+
+  },
+  {
+    path: '/admin/view-active-members',
+    element: <AdminActiveMembers />,
     errorElement: (
       <ErrorPage
         code="🚧"
