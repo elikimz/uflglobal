@@ -286,6 +286,8 @@ export interface UserDetails {
 }
 
 export interface WithdrawalWithUserDetails {
+  withdrawals: any;
+  total_withdrawn: number;
   withdrawal_id: number;
   amount: number;
   net_amount: number;
