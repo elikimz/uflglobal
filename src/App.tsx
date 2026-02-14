@@ -42,6 +42,7 @@ import UFLDetails from "./pages/membersbenefit";
 // import LoginPage from "./features/login/login";
 import AdminManageWallet from "./features/withdrawal/adminupdatewallet";
 import AdminResetTasks from "./features/userTask/adminresettasks";
+import AdminTotalWithdrawal from "./pages/successifulwithdwal";
 
 // Define routes
 const router = createBrowserRouter([
@@ -397,6 +398,17 @@ const router = createBrowserRouter([
       />
     ),
   },
+  {
+    path: '/admin/total-successful-withdrawals',
+    element: <AdminTotalWithdrawal />,
+    errorElement: (
+      <ErrorPage
+        code="🚧"
+        message="This section is being crafted to serve you better. Please check back soon!"
+      />
+    ),
+  },
+
 
   
   // Catch-all route (for 404)

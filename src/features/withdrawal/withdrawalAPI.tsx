@@ -74,6 +74,23 @@
 //   can_withdraw: boolean;
 // }
 
+// // Wallet interfaces
+// export interface Wallet {
+//   id: number;
+//   user_id: number;
+//   recharge_wallet: number;
+//   commission_wallet: number;
+//   created_at: string;
+//   updated_at: string;
+//   username: string;
+//   level_name: string | null;
+// }
+
+// export interface WalletUpdateInput {
+//   recharge_wallet?: number;
+//   commission_wallet?: number;
+// }
+
 // // ======================
 // // API Definition
 // // ======================
@@ -90,7 +107,7 @@
 //       return headers;
 //     },
 //   }),
-//   tagTypes: ['Withdrawals', 'AllUsers'],
+//   tagTypes: ['Withdrawals', 'AllUsers', 'Wallets'],
 //   endpoints: (builder) => ({
 //     // 🔹 Pin status
 //     getPinStatus: builder.query<{ has_pin: boolean }, void>({
@@ -187,6 +204,26 @@
 //       }),
 //       invalidatesTags: ['Withdrawals', 'AllUsers'],
 //     }),
+
+//     // 🔹 Admin: Get all wallets
+//     getAllWallets: builder.query<Wallet[], void>({
+//       query: () => 'wallets/all',
+//       providesTags: ['Wallets'],
+//     }),
+
+//     // 🔹 Admin: Update wallet balance
+//     updateWalletBalance: builder.mutation<
+//       Wallet,
+//       { wallet_id: number } & WalletUpdateInput
+//     >({
+//       query: ({ wallet_id, ...body }) => ({
+//         url: `wallets/${wallet_id}`,
+//         method: 'PATCH',
+//         body,
+//         headers: { 'Content-Type': 'application/json' },
+//       }),
+//       invalidatesTags: ['Wallets'],
+//     }),
 //   }),
 // });
 
@@ -197,14 +234,18 @@
 //   useGetPinStatusQuery,
 //   useSetPinMutation,
 //   useUpdatePinMutation,
-//   useGetPaymentDetailsQuery, // ✅ new hook
+//   useGetPaymentDetailsQuery,
 //   useUpdatePaymentDetailsMutation,
 //   useCreateWithdrawalMutation,
 //   useGetMyWithdrawalsQuery,
 //   useGetAllWithdrawalsQuery,
 //   useUpdateWithdrawalStatusMutation,
 //   useToggleUserWithdrawalsMutation,
+//   useGetAllWalletsQuery,       // ✅ new hook
+//   useUpdateWalletBalanceMutation,  // ✅ new hook
 // } = withdrawalAPI;
+
+
 
 
 
@@ -232,9 +273,36 @@ export interface Withdrawal {
   approved_at?: string;
 }
 
+export interface UserDetails {
+  user_id: number;
+  phone_number: string;
+  username: string;
+  level_name: string | null;
+  wallet_balance: number;
+  mpesa_number: string | null;
+  bank_name: string | null;
+  bank_account_number: string | null;
+  full_name: string | null;
+}
+
+export interface WithdrawalWithUserDetails {
+  withdrawal_id: number;
+  amount: number;
+  net_amount: number;
+  method: string;
+  status: string;
+  created_at: string;
+  approved_at?: string;
+  user: UserDetails;
+}
+
+export interface WithdrawalTotalResponse {
+  total_success_withdrawn: number;
+}
+
 export interface CreateWithdrawalInput {
   amount: number;
-  wallet_type?: 'commission'; // force commission
+  wallet_type?: 'commission';
   method: 'mpesa' | 'bank';
   withdrawal_pin: string;
 }
@@ -243,7 +311,6 @@ export interface UpdateWithdrawalStatusInput {
   status: 'success' | 'canceled' | 'reversed';
 }
 
-// Payment details
 export interface PaymentDetailsUpdateInput {
   mpesa_number?: string;
   bank_name?: string;
@@ -251,7 +318,6 @@ export interface PaymentDetailsUpdateInput {
   full_name?: string;
 }
 
-// New interface for payment details response
 export interface PaymentDetailsResponse {
   has_payment_details: boolean;
   mpesa_number?: string;
@@ -261,7 +327,6 @@ export interface PaymentDetailsResponse {
   message: string;
 }
 
-// PIN
 export interface SetPinInput {
   pin: string;
 }
@@ -271,10 +336,9 @@ export interface UpdatePinInput {
   new_pin: string;
 }
 
-// Block/unblock withdrawals
 export interface ToggleWithdrawalsInput {
   user_id: number;
-  block: boolean; // true = block, false = unblock
+  block: boolean;
 }
 
 export interface ToggleWithdrawalsResponse {
@@ -283,7 +347,6 @@ export interface ToggleWithdrawalsResponse {
   can_withdraw: boolean;
 }
 
-// Wallet interfaces
 export interface Wallet {
   id: number;
   user_id: number;
@@ -310,21 +373,18 @@ export const withdrawalAPI = createApi({
     baseUrl: import.meta.env.VITE_API_BASE_URL,
     prepareHeaders: (headers) => {
       const token = localStorage.getItem('access_token');
-      if (token) {
-        headers.set('Authorization', `Bearer ${token}`);
-      }
+      if (token) headers.set('Authorization', `Bearer ${token}`);
       return headers;
     },
   }),
   tagTypes: ['Withdrawals', 'AllUsers', 'Wallets'],
   endpoints: (builder) => ({
-    // 🔹 Pin status
+
     getPinStatus: builder.query<{ has_pin: boolean }, void>({
       query: () => 'withdrawals/pin/status',
       providesTags: ['Withdrawals'],
     }),
 
-    // 🔹 Set PIN
     setPin: builder.mutation<void, SetPinInput>({
       query: (body) => ({
         url: 'withdrawals/pin/set',
@@ -335,7 +395,6 @@ export const withdrawalAPI = createApi({
       invalidatesTags: ['Withdrawals'],
     }),
 
-    // 🔹 Update PIN
     updatePin: builder.mutation<void, UpdatePinInput>({
       query: (body) => ({
         url: 'withdrawals/pin/update',
@@ -346,13 +405,11 @@ export const withdrawalAPI = createApi({
       invalidatesTags: ['Withdrawals'],
     }),
 
-    // 🔹 Get payment details
     getPaymentDetails: builder.query<PaymentDetailsResponse, void>({
       query: () => 'withdrawals/payment-details',
       providesTags: ['Withdrawals'],
     }),
 
-    // 🔹 Update payment details
     updatePaymentDetails: builder.mutation<void, PaymentDetailsUpdateInput>({
       query: (body) => ({
         url: 'withdrawals/payment-details',
@@ -363,7 +420,6 @@ export const withdrawalAPI = createApi({
       invalidatesTags: ['Withdrawals'],
     }),
 
-    // 🔹 Create withdrawal
     createWithdrawal: builder.mutation<Withdrawal, CreateWithdrawalInput>({
       query: (body) => ({
         url: 'withdrawals/',
@@ -374,19 +430,28 @@ export const withdrawalAPI = createApi({
       invalidatesTags: ['Withdrawals'],
     }),
 
-    // 🔹 List my withdrawals
     getMyWithdrawals: builder.query<Withdrawal[], void>({
       query: () => 'withdrawals/me',
       providesTags: ['Withdrawals'],
     }),
 
-    // 🔹 Admin: get all withdrawals
     getAllWithdrawals: builder.query<Withdrawal[], void>({
       query: () => 'withdrawals/all',
       providesTags: ['Withdrawals'],
     }),
 
-    // 🔹 Update withdrawal status (Admin only)
+    // ⭐ USER TOTAL SUCCESS WITHDRAWALS
+    getMySuccessWithdrawalTotal: builder.query<WithdrawalTotalResponse, void>({
+      query: () => 'withdrawals/me/success/total',
+      providesTags: ['Withdrawals'],
+    }),
+
+    // ⭐ ADMIN: FETCH ALL SUCCESSFUL WITHDRAWALS WITH USER DETAILS
+    getAllSuccessWithdrawals: builder.query<WithdrawalWithUserDetails[], void>({
+      query: () => 'withdrawals/success',
+      providesTags: ['Withdrawals'],
+    }),
+
     updateWithdrawalStatus: builder.mutation<
       Withdrawal,
       { withdrawal_id: number } & UpdateWithdrawalStatusInput
@@ -400,7 +465,6 @@ export const withdrawalAPI = createApi({
       invalidatesTags: ['Withdrawals'],
     }),
 
-    // 🔹 Admin: Block/Unblock user withdrawals
     toggleUserWithdrawals: builder.mutation<
       ToggleWithdrawalsResponse,
       ToggleWithdrawalsInput
@@ -414,13 +478,11 @@ export const withdrawalAPI = createApi({
       invalidatesTags: ['Withdrawals', 'AllUsers'],
     }),
 
-    // 🔹 Admin: Get all wallets
     getAllWallets: builder.query<Wallet[], void>({
       query: () => 'wallets/all',
       providesTags: ['Wallets'],
     }),
 
-    // 🔹 Admin: Update wallet balance
     updateWalletBalance: builder.mutation<
       Wallet,
       { wallet_id: number } & WalletUpdateInput
@@ -439,6 +501,7 @@ export const withdrawalAPI = createApi({
 // ======================
 // Hooks Export
 // ======================
+
 export const {
   useGetPinStatusQuery,
   useSetPinMutation,
@@ -448,8 +511,10 @@ export const {
   useCreateWithdrawalMutation,
   useGetMyWithdrawalsQuery,
   useGetAllWithdrawalsQuery,
+  useGetMySuccessWithdrawalTotalQuery,
+  useGetAllSuccessWithdrawalsQuery, // ⭐ New hook
   useUpdateWithdrawalStatusMutation,
   useToggleUserWithdrawalsMutation,
-  useGetAllWalletsQuery,       // ✅ new hook
-  useUpdateWalletBalanceMutation,  // ✅ new hook
+  useGetAllWalletsQuery,
+  useUpdateWalletBalanceMutation,
 } = withdrawalAPI;

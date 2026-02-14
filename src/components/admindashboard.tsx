@@ -127,6 +127,13 @@ const AdminDashboard: React.FC = () => {
       description: "View edit reset task.",
       route: "/admin/edit-reset-task",
     },
+    {
+      id: "Total Successful Withdrawals",
+      title: "Total Successful Withdrawals",
+      icon: <ChartBarIcon className="h-6 w-6" />,
+      description: "View total successful withdrawals.",
+      route: "/admin/total-successful-withdrawals",
+    },
     
     
 
