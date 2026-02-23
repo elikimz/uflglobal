@@ -7,7 +7,7 @@ import {
 
 import ErrorPage from "./components/errorpage";
 
-// import AuthPage from "./features/register/register";
+import AuthPage from "./features/register/register";
 import UserDashboard from "./components/userdashboard";
 import Deposit from "./features/deposit/deposit";
 import AdminDashboard from "./components/admindashboard";
@@ -45,7 +45,7 @@ import AdminResetTasks from "./features/userTask/adminresettasks";
 import AdminTotalWithdrawal from "./pages/successifulwithdwal";
 
 import AdminActiveMembers from "./features/profile/adminactiveusers";
-import HackerTerminalPage from "./features/register/register";
+// import HackerTerminalPage from "./features/register/register";
 
 // Define routes
 const router = createBrowserRouter([
@@ -55,7 +55,7 @@ const router = createBrowserRouter([
   },
   {
     path: '/register',
-    element: <HackerTerminalPage />,
+    element: <AuthPage />,
     errorElement: (
       <ErrorPage
         code="🚧"
